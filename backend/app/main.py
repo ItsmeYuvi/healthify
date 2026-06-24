@@ -58,6 +58,7 @@ logger.info(f"CORS configured for origins: {origins}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://(healthify-.*|.*-team-x17)\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
