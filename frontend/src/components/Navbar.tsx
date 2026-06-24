@@ -13,6 +13,22 @@ interface UserInfo {
   fullName: string;
 }
 
+const decodeToken = (token: string) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+};
+
 export function Navbar() {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
@@ -30,6 +46,14 @@ export function Navbar() {
     setIsLoggedIn(!!token);
 
     if (token) {
+      const payload = decodeToken(token);
+      if (payload && payload.sub) {
+        setUser({
+          email: payload.sub,
+          fullName: payload.sub.split('@')[0],
+        });
+      }
+
       axios
         .get(`${API_BASE_URL}/api/v1/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -96,7 +120,7 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/80">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 text-xl font-bold text-emerald-600 dark:text-emerald-450">
+        <Link href={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-2 text-xl font-bold text-emerald-600 dark:text-emerald-450">
           <Dumbbell className="h-6 w-6" />
           <span>Healthify</span>
         </Link>
@@ -113,14 +137,14 @@ export function Navbar() {
             </>
           )}
 
-          {isLoggedIn && user ? (
+          {isLoggedIn ? (
             <div className="relative" id="avatar-dropdown-container">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-1.5 focus:outline-none hover:opacity-90 select-none group"
               >
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-bold text-sm">
-                  {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {user ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase() : "U"}
                 </div>
                 <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-gray-950 dark:text-gray-400 dark:group-hover:text-white transition-colors" />
               </button>
@@ -129,10 +153,10 @@ export function Navbar() {
                 <div className="absolute right-0 mt-2.5 w-60 rounded-2xl border border-gray-250 bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-900 animate-in fade-in slide-in-from-top-2 duration-150 z-50">
                   <div className="space-y-1 pb-3 border-b border-gray-100 dark:border-gray-800">
                     <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                      {user.fullName}
+                      {user ? user.fullName : "User"}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                      {user.email}
+                      {user ? user.email : "Loading..."}
                     </p>
                   </div>
                   <div className="pt-2 space-y-1">
