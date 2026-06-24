@@ -1,4 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
+import certifi
 
 from app.core.config import settings
 from app.core.logging import logger
@@ -11,7 +12,13 @@ async def get_db_client() -> AsyncIOMotorClient:
     global _client
     if _client is None:
         logger.info("Initializing MongoDB connection...")
-        _client = AsyncIOMotorClient(settings.mongodb_uri)
+        _client = AsyncIOMotorClient(
+            settings.mongodb_uri,
+            tlsCAFile=certifi.where(),
+            serverSelectionTimeoutMS=30000,
+            connectTimeoutMS=30000,
+            socketTimeoutMS=30000,
+        )
     return _client
 
 
