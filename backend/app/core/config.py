@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     api_port: int = Field(default=8000, alias="API_PORT")
     api_base_url: str = Field(default="http://localhost:8000", alias="API_BASE_URL")
 
+    # Frontend (for CORS)
+    frontend_url: str = Field(default="http://localhost:3000", alias="FRONTEND_URL")
+
     # Security
     jwt_secret_key: str = Field(..., alias="JWT_SECRET_KEY")
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")

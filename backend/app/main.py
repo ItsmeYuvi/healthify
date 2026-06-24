@@ -37,12 +37,23 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 origins = [
     "http://localhost:3000",
     "https://localhost:3000",
-    "https://healthify-8nox0uj8v-team-x17.vercel.app",
 ]
 
-# Allow additional origins from env var (comma-separated)
-if settings.api_base_url and settings.api_base_url not in origins:
-    origins.append(settings.api_base_url)
+# Add the configured frontend URL (set via FRONTEND_URL env var on Render)
+if settings.frontend_url and settings.frontend_url not in origins:
+    origins.append(settings.frontend_url)
+
+# Also add known production domains as fallback
+known_production_domains = [
+    "https://healthify-hmlk3dmhj-team-x17.vercel.app",
+    "https://healthify-8nox0uj8v-team-x17.vercel.app",
+    "https://healthify-team-x17.vercel.app",
+]
+for domain in known_production_domains:
+    if domain not in origins:
+        origins.append(domain)
+
+logger.info(f"CORS configured for origins: {origins}")
 
 app.add_middleware(
     CORSMiddleware,
