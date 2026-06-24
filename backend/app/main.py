@@ -35,7 +35,8 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 origins = [
     "http://localhost:3000",
     "https://localhost:3000",
-    # Vercel domain will be added after deployment
+    "https://healthify-backend-6occ.onrender.com",
+    "*",  # Temporary: allow all origins for Vercel deployment
 ]
 
 app.add_middleware(
