@@ -10,7 +10,57 @@ genai.configure(api_key=settings.gemini_api_key)
 model = genai.GenerativeModel(settings.gemini_model)
 
 
-def _get_fallback_meals_for_day(day: int, diet_preference: str) -> list:
+def _calculate_fallback_targets(profile: FitnessProfileCreate) -> dict:
+    weight = profile.weight_kg
+    height = profile.height_cm
+    age = profile.age
+    
+    # Mifflin-St Jeor Equation
+    if profile.gender.lower() == "male":
+        bmr = 10.0 * weight + 6.25 * height - 5.0 * age + 5.0
+    else:
+        bmr = 10.0 * weight + 6.25 * height - 5.0 * age - 161.0
+        
+    # Activity factor
+    activity = profile.activity_level.value.lower()
+    if "sedentary" in activity:
+        activity_factor = 1.2
+    elif "lightly" in activity:
+        activity_factor = 1.375
+    elif "moderately" in activity:
+        activity_factor = 1.55
+    elif "very" in activity:
+        activity_factor = 1.725
+    elif "super" in activity:
+        activity_factor = 1.9
+    else:
+        activity_factor = 1.2
+        
+    tdee = bmr * activity_factor
+    
+    # Goal adjustment
+    goal = profile.goal.value.lower()
+    if "fat_loss" in goal:
+        target_calories = int(tdee * 0.8)
+    elif "weight_gain" in goal or "muscle_build" in goal:
+        target_calories = int(tdee * 1.1)
+    else:
+        target_calories = int(tdee)
+        
+    # Standard macro splits: 30% Protein, 45% Carbs, 25% Fats
+    protein_g = round((target_calories * 0.30) / 4.0, 1)
+    carbs_g = round((target_calories * 0.45) / 4.0, 1)
+    fats_g = round((target_calories * 0.25) / 9.0, 1)
+    
+    return {
+        "calories": target_calories,
+        "protein_g": protein_g,
+        "carbs_g": carbs_g,
+        "fats_g": fats_g
+    }
+
+
+def _get_raw_fallback_meals(day: int, diet_preference: str) -> list:
     pref = diet_preference.lower() if diet_preference else "no_preference"
     
     if "keto" in pref:
@@ -38,7 +88,7 @@ def _get_fallback_meals_for_day(day: int, diet_preference: str) -> list:
             5: [
                 {"meal_type": "breakfast", "name": "Scrambled Paneer & Mushrooms", "calories": 380, "protein_g": 18.0, "carbs_g": 5.0, "fats_g": 32.0, "ingredients": ["Paneer", "Button mushrooms", "Olive oil", "Green chilies"], "instructions": "Sauté mushrooms, add crumbled paneer and spices."},
                 {"meal_type": "lunch", "name": "Sautéed Butter Prawns with Spinach", "calories": 440, "protein_g": 30.0, "carbs_g": 4.0, "fats_g": 32.0, "ingredients": ["Prawns", "Butter", "Garlic", "Spinach"], "instructions": "Sauté prawns in garlic butter, add spinach until wilted."},
-                {"meal_type": "dinner", "name": "Grilled Chicken Breast with Avocado", "calories": 490, "protein_g": 40.0, "carbs_g": 6.0, "fats_g": 33.0, "ingredients": ["Chicken breast", "Olive oil", "Avocado", "Lime"], "instructions": "Grill chicken, serve with sliced avocado and lime."}
+                {"meal_type": "dinner", "name": "Grilled Chicken Breast with Avocado", "calories": 490, "protein_g": 40.0, "carbs_g": 6.0, "fats_g": 33.0, "ingredients": ["Chicken breast", "Olive oil", "Avocado", "Lime"], "instructions": "Run chicken on grill, serve with sliced avocado and lime."}
             ],
             6: [
                 {"meal_type": "breakfast", "name": "Egg Spinach Muffins", "calories": 360, "protein_g": 22.0, "carbs_g": 3.0, "fats_g": 28.0, "ingredients": ["4 Eggs", "Spinach", "Cheese", "Olive oil"], "instructions": "Whisk eggs with spinach and cheese, bake in muffin tin."},
@@ -168,22 +218,79 @@ def _get_fallback_meals_for_day(day: int, diet_preference: str) -> list:
     return meals.get(day, meals[1])
 
 
-def _get_fallback_exercises_for_day(day: int) -> list:
+def _get_fallback_meals_for_day(day: int, diet_preference: str, targets: dict) -> list:
+    base_meals = _get_raw_fallback_meals(day, diet_preference)
+    scaled_meals = []
+    proportions = {
+        "breakfast": 0.30,
+        "lunch": 0.40,
+        "dinner": 0.30
+    }
+    
+    for meal in base_meals:
+        m_type = meal["meal_type"]
+        prop = proportions.get(m_type, 0.30)
+        scaled_meal = meal.copy()
+        scaled_meal["calories"] = int(targets["calories"] * prop)
+        scaled_meal["protein_g"] = round(targets["protein_g"] * prop, 1)
+        scaled_meal["carbs_g"] = round(targets["carbs_g"] * prop, 1)
+        scaled_meal["fats_g"] = round(targets["fats_g"] * prop, 1)
+        scaled_meals.append(scaled_meal)
+        
+    return scaled_meals
+
+
+def _get_fallback_exercises_for_day(day: int, goal: str) -> list:
+    g = goal.lower() if goal else "general_health"
+    
+    if "muscle" in g or "gain" in g:
+        reps_val = "8-10"
+        sets_val = 4
+        rest_val = 90
+    elif "loss" in g or "endurance" in g:
+        reps_val = "15-20"
+        sets_val = 3
+        rest_val = 45
+    else:
+        reps_val = "12-15"
+        sets_val = 3
+        rest_val = 60
+
     exercises = {
         1: [
-            {"name": "Bodyweight Squats", "focus_area": "Quads & Glutes", "sets": 3, "reps": "15", "rest_seconds": 60, "instruction": "Stand with feet shoulder-width apart. Lower your hips back and down. Keep chest up.", "notes": "Warmup exercise"},
-            {"name": "Pushups", "focus_area": "Chest & Triceps", "sets": 3, "reps": "10-12", "rest_seconds": 60, "instruction": "Start in a high plank. Lower body until chest is just above floor. Push back up.", "notes": "Focus on form"},
-            {"name": "Plank", "focus_area": "Core", "sets": 3, "reps": "30 seconds", "rest_seconds": 45, "instruction": "Hold a forearm plank position. Keep body in a straight line.", "notes": "Keep core tight"}
+            {"name": "Bodyweight Squats", "focus_area": "Quads & Glutes", "sets": sets_val, "reps": reps_val, "rest_seconds": rest_val, "instruction": "Stand with feet shoulder-width apart. Lower your hips back and down. Keep chest up.", "notes": "Warmup exercise"},
+            {"name": "Pushups", "focus_area": "Chest & Triceps", "sets": sets_val, "reps": reps_val, "rest_seconds": rest_val, "instruction": "Start in a high plank. Lower body until chest is just above floor. Push back up.", "notes": "Focus on form"},
+            {"name": "Plank", "focus_area": "Core", "sets": sets_val, "reps": "30-45 seconds" if "loss" in g or "endurance" in g else "60 seconds", "rest_seconds": rest_val, "instruction": "Hold a forearm plank position. Keep body in a straight line.", "notes": "Keep core tight"}
+        ],
+        2: [
+            {"name": "Bicycle Crunches", "focus_area": "Abs & Obliques", "sets": sets_val, "reps": "20 total", "rest_seconds": rest_val, "instruction": "Lie flat on back. Alternate touching opposite elbow to opposite knee while cycling legs.", "notes": "Move slowly and control"},
+            {"name": "Supermans", "focus_area": "Lower Back & Glutes", "sets": sets_val, "reps": "12-15", "rest_seconds": rest_val, "instruction": "Lie face down. Simultaneously lift arms, chest, and legs off the floor. Hold for 2 seconds.", "notes": "Strengthens posterior chain"},
+            {"name": "Bird-Dog", "focus_area": "Core & Stability", "sets": sets_val, "reps": "10 per side", "rest_seconds": rest_val, "instruction": "On hands and knees, extend opposite arm and leg straight out. Return to start and alternate.", "notes": "Keep hips square to floor"}
         ],
         3: [
-            {"name": "Lunges", "focus_area": "Quads & Glutes", "sets": 3, "reps": "12 per leg", "rest_seconds": 60, "instruction": "Step forward with one leg, lower hips until both knees bend at 90-degree angles. Keep torso upright.", "notes": "Focus on balance"},
-            {"name": "Glute Bridges", "focus_area": "Glutes & Hamstrings", "sets": 3, "reps": "15", "rest_seconds": 45, "instruction": "Lie on your back, knees bent. Raise hips off the floor until your knees, hips, and shoulders form a straight line.", "notes": "Squeeze glutes at top"},
-            {"name": "Bicycle Crunches", "focus_area": "Abs & Obliques", "sets": 3, "reps": "20 total", "rest_seconds": 45, "instruction": "Lie flat on back. Alternate touching opposite elbow to opposite knee while cycling legs.", "notes": "Move slowly and control"}
+            {"name": "Forward Lunges", "focus_area": "Quads & Glutes", "sets": sets_val, "reps": "12 per leg", "rest_seconds": rest_val, "instruction": "Step forward with one leg, lower hips until both knees bend at 90-degree angles. Keep torso upright.", "notes": "Focus on balance"},
+            {"name": "Glute Bridges", "focus_area": "Glutes & Hamstrings", "sets": sets_val, "reps": "15", "rest_seconds": rest_val, "instruction": "Lie on your back, knees bent. Raise hips off the floor until your knees, hips, and shoulders form a straight line.", "notes": "Squeeze glutes at top"},
+            {"name": "Calf Raises", "focus_area": "Calves", "sets": sets_val, "reps": "20", "rest_seconds": rest_val, "instruction": "Stand on the edge of a step. Raise heels as high as possible, then lower them below the step level.", "notes": "Hold at the peak for 1 second"}
+        ],
+        4: [
+            {"name": "Incline Pushups", "focus_area": "Lower Chest", "sets": sets_val, "reps": reps_val, "rest_seconds": rest_val, "instruction": "Place hands on an elevated surface like a bench. Lower chest to the surface and push up.", "notes": "Keep body straight"},
+            {"name": "Tricep Bench Dips", "focus_area": "Triceps", "sets": sets_val, "reps": reps_val, "rest_seconds": rest_val, "instruction": "Sit on edge of a chair/bench. Slide off with hands supporting weight. Lower hips, then push back up.", "notes": "Keep elbows close to body"},
+            {"name": "Shoulder Taps", "focus_area": "Shoulders & Core", "sets": sets_val, "reps": "20 total", "rest_seconds": rest_val, "instruction": "In a high plank, tap your left shoulder with your right hand, then right shoulder with left hand.", "notes": "Minimize hip rocking"}
         ],
         5: [
-            {"name": "Mountain Climbers", "focus_area": "Core & Cardio", "sets": 3, "reps": "40 seconds", "rest_seconds": 45, "instruction": "Start in a high plank. Alternate bringing knees to chest as fast as possible.", "notes": "Maintain a flat back"},
-            {"name": "Burpees", "focus_area": "Full Body & Cardio", "sets": 3, "reps": "8-10", "rest_seconds": 60, "instruction": "Drop into a squat, kick feet back to plank, do a pushup, jump back to squat, then jump up explosively.", "notes": "Take your time"},
-            {"name": "Supermans", "focus_area": "Lower Back & Glutes", "sets": 3, "reps": "12", "rest_seconds": 45, "instruction": "Lie face down. Simultaneously lift arms, chest, and legs off the floor. Hold for 2 seconds.", "notes": "Strengthens posterior chain"}
+            {"name": "Mountain Climbers", "focus_area": "Core & Cardio", "sets": sets_val, "reps": "40 seconds" if "loss" in g or "endurance" in g else "30 seconds", "rest_seconds": rest_val, "instruction": "Start in a high plank. Alternate bringing knees to chest as fast as possible.", "notes": "Maintain a flat back"},
+            {"name": "Burpees", "focus_area": "Full Body & Cardio", "sets": sets_val, "reps": "8-10" if "muscle" in g else "12-15", "rest_seconds": rest_val, "instruction": "Drop into a squat, kick feet back to plank, do a pushup, jump back to squat, then jump up explosively.", "notes": "Take your time"},
+            {"name": "Jumping Jacks", "focus_area": "Full Body & Cardio", "sets": sets_val, "reps": "60 seconds" if "loss" in g or "endurance" in g else "45 seconds", "rest_seconds": rest_val, "instruction": "Start with feet together and arms at sides. Jump while spreading legs and raising arms overhead.", "notes": "Keep a steady rhythm"}
+        ],
+        6: [
+            {"name": "High Knees", "focus_area": "Cardio & Legs", "sets": sets_val, "reps": "45 seconds", "rest_seconds": rest_val, "instruction": "Run in place, bringing your knees up to hip height. Pump your arms.", "notes": "Land softly on toes"},
+            {"name": "Side Planks", "focus_area": "Obliques", "sets": sets_val, "reps": "30 seconds per side", "rest_seconds": rest_val, "instruction": "Lie on side supported by elbow. Lift hips until body is in straight line. Hold.", "notes": "Keep hips high"},
+            {"name": "Flutter Kicks", "focus_area": "Lower Abs", "sets": sets_val, "reps": "30 seconds", "rest_seconds": rest_val, "instruction": "Lie on back, hands under hips. Lift legs slightly. Alternately kick legs up and down.", "notes": "Press lower back into floor"}
+        ],
+        7: [
+            {"name": "Bodyweight Squats", "focus_area": "Quads & Glutes", "sets": sets_val, "reps": reps_val, "rest_seconds": rest_val, "instruction": "Stand with feet shoulder-width apart. Lower your hips back and down. Keep chest up.", "notes": "Focus on range of motion"},
+            {"name": "Pushups", "focus_area": "Chest & Triceps", "sets": sets_val, "reps": reps_val, "rest_seconds": rest_val, "instruction": "Start in a high plank. Lower body until chest is just above floor. Push back up.", "notes": "Maintain strict form"},
+            {"name": "Plank", "focus_area": "Core", "sets": sets_val, "reps": "45 seconds", "rest_seconds": rest_val, "instruction": "Hold a forearm plank position. Keep body in a straight line.", "notes": "Keep core tight"}
         ]
     }
     return exercises.get(day, [])
@@ -194,11 +301,23 @@ def _get_fallback_yoga_for_day(day: int) -> list:
         1: [
             {"name": "Child's Pose", "focus_area": "Lower Back", "duration_seconds": 180, "difficulty": "beginner", "instruction": "Kneel, sit on heels, stretch arms forward and lower chest to floor.", "benefits": "Stretches lower back"}
         ],
-        3: [
+        2: [
             {"name": "Cobra Pose", "focus_area": "Spine & Chest", "duration_seconds": 120, "difficulty": "beginner", "instruction": "Lie face down. Place hands under shoulders. Press tops of feet down and lift chest.", "benefits": "Strengthens spine and opens chest"}
         ],
-        5: [
+        3: [
             {"name": "Downward-Facing Dog", "focus_area": "Hamstrings & Shoulders", "duration_seconds": 150, "difficulty": "beginner", "instruction": "Start on hands and knees. Lift hips up and back to form an inverted V shape. Keep heels pressing down.", "benefits": "Stretches hamstrings and calves, strengthens shoulders"}
+        ],
+        4: [
+            {"name": "Warrior I Pose", "focus_area": "Hips & Legs", "duration_seconds": 180, "difficulty": "beginner", "instruction": "Step one foot back, bend front knee to 90 degrees. Reach arms overhead and look up.", "benefits": "Builds leg strength and stretches hips"}
+        ],
+        5: [
+            {"name": "Tree Pose", "focus_area": "Legs & Balance", "duration_seconds": 120, "difficulty": "beginner", "instruction": "Stand on one leg, place the sole of other foot on inner thigh or calf. Bring hands to chest.", "benefits": "Improves balance and focus, strengthens ankles"}
+        ],
+        6: [
+            {"name": "Sphinx Pose", "focus_area": "Lower Back & Chest", "duration_seconds": 180, "difficulty": "beginner", "instruction": "Lie on belly, elbows under shoulders, forearms flat. Press into forearms and lift chest.", "benefits": "Gentle backbend that opens chest and stimulates abdominal organs"}
+        ],
+        7: [
+            {"name": "Cat-Cow Stretch", "focus_area": "Spine & Neck", "duration_seconds": 120, "difficulty": "beginner", "instruction": "On hands and knees, arch back up (Cat) then curve spine down and lift head (Cow).", "benefits": "Improves spinal mobility and coordination"}
         ]
     }
     return yoga.get(day, [])
@@ -305,16 +424,31 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
         return plan_data
     except Exception as e:
         logger.error(f"Gemini generation failed: {e}")
-        # Return a fallback minimal plan with 7 days meals and workout_days_per_week workouts
+        
+        # Calculate target calories and macros based on user profile
+        targets = _calculate_fallback_targets(profile)
+        
+        # Select workout days dynamically to match exactly the user's input
+        workout_days = set()
+        w_days = profile.workout_days_per_week
+        if w_days >= 7:
+            workout_days = {1, 2, 3, 4, 5, 6, 7}
+        elif w_days == 6:
+            workout_days = {1, 2, 3, 5, 6, 7}
+        elif w_days == 5:
+            workout_days = {1, 2, 3, 5, 6}
+        elif w_days == 4:
+            workout_days = {1, 3, 5, 6}
+        elif w_days == 3:
+            workout_days = {1, 3, 5}
+        elif w_days == 2:
+            workout_days = {1, 5}
+        else:
+            workout_days = {1}
+            
         daily_plans = []
         for d in range(1, 8):
-            if profile.workout_days_per_week >= 3:
-                is_workout_day = d in (1, 3, 5)
-            elif profile.workout_days_per_week == 2:
-                is_workout_day = d in (1, 5)
-            else:
-                is_workout_day = d == 1
-            
+            is_workout_day = d in workout_days
             focus = "Rest & Recovery"
             exercises = []
             yoga_routine = []
@@ -322,28 +456,30 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
             if is_workout_day:
                 if d == 1:
                     focus = "Full Body Conditioning"
+                elif d == 2:
+                    focus = "Core & Balance"
                 elif d == 3:
-                    focus = "Lower Body & Core"
+                    focus = "Lower Body & Glutes"
+                elif d == 4:
+                    focus = "Upper Body Strength"
                 elif d == 5:
-                    focus = "Upper Body & HIIT Cardio"
+                    focus = "Cardio & HIIT"
+                elif d == 6:
+                    focus = "Cardio & Core"
                 else:
-                    focus = "Strength Training"
+                    focus = "Full Body Strength"
                 
-                exercises = _get_fallback_exercises_for_day(d)
-                if not exercises:
-                    exercises = _get_fallback_exercises_for_day(1)
+                exercises = _get_fallback_exercises_for_day(d, profile.goal.value)
                 
                 if profile.yoga_interest:
                     yoga_routine = _get_fallback_yoga_for_day(d)
-                    if not yoga_routine:
-                        yoga_routine = _get_fallback_yoga_for_day(1)
             
             daily_plans.append({
                 "day": d,
                 "focus": focus,
                 "exercises": exercises,
                 "yoga_routine": yoga_routine,
-                "meals": _get_fallback_meals_for_day(d, profile.diet_preference.value)
+                "meals": _get_fallback_meals_for_day(d, profile.diet_preference.value, targets)
             })
         return {
             "plan_name": "Basic Fitness Plan",
