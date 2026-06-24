@@ -137,7 +137,7 @@ export function PlanForm() {
   if (!authChecked) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-555 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
       </div>
     );
   }
@@ -145,13 +145,13 @@ export function PlanForm() {
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6 text-gray-900 dark:text-gray-100">
       {error && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-650 dark:text-red-400">
+        <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-600 dark:text-red-400">
           <ShieldAlert className="h-4.5 w-4.5 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
-      <div className="card shadow-md border border-gray-250 bg-white p-8 dark:border-gray-800 dark:bg-gray-900/60 relative overflow-hidden space-y-6">
+      <div className="card shadow-md border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-gray-900/60 relative overflow-hidden space-y-6">
         <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
 
@@ -181,7 +181,7 @@ export function PlanForm() {
               min={10}
               max={100}
               placeholder="e.g., 25"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             />
           </div>
 
@@ -191,7 +191,7 @@ export function PlanForm() {
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             >
               <option value="male" className="dark:bg-gray-950">Male</option>
               <option value="female" className="dark:bg-gray-950">Female</option>
@@ -210,7 +210,7 @@ export function PlanForm() {
               min={50}
               max={300}
               placeholder="e.g., 175"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             />
           </div>
 
@@ -225,7 +225,7 @@ export function PlanForm() {
               min={20}
               max={500}
               placeholder="e.g., 70"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             />
           </div>
 
@@ -235,7 +235,7 @@ export function PlanForm() {
               name="activity_level"
               value={form.activity_level}
               onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             >
               {activityLevels.map((a) => (
                 <option key={a.value} value={a.value} className="dark:bg-gray-950">{a.label}</option>
@@ -249,7 +249,7 @@ export function PlanForm() {
               name="diet_preference"
               value={form.diet_preference}
               onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             >
               {dietPreferences.map((d) => (
                 <option key={d.value} value={d.value} className="dark:bg-gray-950">{d.label}</option>
@@ -258,29 +258,54 @@ export function PlanForm() {
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Workout Days / Week</label>
-            <input
-              type="number"
-              min={1}
-              max={7}
-              name="workout_days_per_week"
-              value={form.workout_days_per_week}
-              onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
-            />
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400 block mb-2">
+              Workout Days / Week
+            </label>
+            <div className="flex gap-2 mt-1">
+              {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                <button
+                  key={day}
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, workout_days_per_week: day }))}
+                  className={`flex-1 h-10 rounded-xl font-bold border transition-all text-sm flex items-center justify-center ${
+                    form.workout_days_per_week === day
+                      ? "bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-600/25 scale-[1.05] dark:bg-emerald-500 dark:border-emerald-500"
+                      : "bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-850"
+                  }`}
+                >
+                  {day}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Workout Duration (mins)</label>
-            <input
-              type="number"
-              min={10}
-              max={300}
-              name="workout_duration_minutes"
-              value={form.workout_duration_minutes}
-              onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
-            />
+            <div className="flex items-center justify-between mb-2">
+              <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">
+                Workout Duration
+              </label>
+              <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded border border-emerald-100 dark:border-emerald-900/30">
+                {form.workout_duration_minutes} mins
+              </span>
+            </div>
+            <div className="space-y-1.5 mt-1.5">
+              <input
+                type="range"
+                min="15"
+                max="120"
+                step="5"
+                name="workout_duration_minutes"
+                value={form.workout_duration_minutes}
+                onChange={handleChange}
+                className="w-full h-1.5 rounded-lg bg-gray-200 dark:bg-gray-800 appearance-none cursor-pointer accent-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              />
+              <div className="flex justify-between text-[9px] text-gray-400 dark:text-gray-500 px-0.5 font-bold uppercase tracking-wider">
+                <span>15m Express</span>
+                <span>45m Standard</span>
+                <span>60m Intense</span>
+                <span>120m Extreme</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -293,7 +318,7 @@ export function PlanForm() {
               value={form.allergies}
               onChange={handleChange}
               placeholder="e.g., peanuts, dairy, gluten (leave blank if none)"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             />
           </div>
 
@@ -305,7 +330,7 @@ export function PlanForm() {
               value={form.medical_conditions}
               onChange={handleChange}
               placeholder="e.g., asthma, diabetes, hypertension (leave blank if none)"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             />
           </div>
 
@@ -316,7 +341,7 @@ export function PlanForm() {
               id="yoga_interest"
               checked={form.yoga_interest}
               onChange={handleChange}
-              className="h-5 w-5 rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-955 text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
+              className="h-5 w-5 rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
             />
             <label htmlFor="yoga_interest" className="text-sm font-semibold text-gray-750 dark:text-gray-300 cursor-pointer flex items-center gap-1.5 selection:bg-transparent">
               <Heart className="h-4 w-4 text-rose-500 animate-pulse" />
