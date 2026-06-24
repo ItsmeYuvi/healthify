@@ -32,13 +32,17 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS - restrict to frontend origin in production
+# CORS - must list exact origins when allow_credentials=True
+# "*" does NOT work with credentials in browsers
 origins = [
     "http://localhost:3000",
     "https://localhost:3000",
-    "https://healthify-backend-6occ.onrender.com",
-    "*",  # Temporary: allow all origins for Vercel deployment
+    "https://healthify-8nox0uj8v-team-x17.vercel.app",
 ]
+
+# Allow additional origins from env var (comma-separated)
+if settings.api_base_url and settings.api_base_url not in origins:
+    origins.append(settings.api_base_url)
 
 app.add_middleware(
     CORSMiddleware,
