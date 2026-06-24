@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
-import { Calendar, Dumbbell, Salad, User } from "lucide-react";
+import { Calendar, Dumbbell, Salad, User, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 interface Plan {
@@ -16,20 +17,50 @@ interface Plan {
 }
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
-    if (!token) return;
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    // Fetch user info
+    axios
+      .get(`${API_BASE_URL}/api/v1/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setUserName(res.data.full_name);
+      })
+      .catch(() => {
+        // If auth fails, redirect
+        localStorage.removeItem("access_token");
+        router.push("/login");
+      });
+
+    // Fetch plans
     axios
       .get(`${API_BASE_URL}/api/v1/plans/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setPlans(res.data))
-      .catch(() => {})
+      .catch((err) => {
+        const status = err.response?.status;
+        if (status === 401) {
+          localStorage.removeItem("access_token");
+          router.push("/login");
+        } else {
+          setError("Failed to load plans. Please try again.");
+        }
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [router]);
 
   if (loading) {
     return (
@@ -42,14 +73,28 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <User className="h-6 w-6 text-primary-600" />
-          My Dashboard
-        </h1>
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <User className="h-6 w-6 text-primary-600" />
+            My Dashboard
+          </h1>
+          {userName && (
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Welcome back, {userName}!
+            </p>
+          )}
+        </div>
         <Link href="/plan" className="btn-primary">
           + New Plan
         </Link>
       </div>
+
+      {error && (
+        <div className="flex items-center gap-2 rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+          <AlertCircle className="h-4 w-4" />
+          {error}
+        </div>
+      )}
 
       {plans.length === 0 ? (
         <div className="card text-center py-12">

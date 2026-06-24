@@ -19,7 +19,7 @@ export default function HomePage() {
           Select your goal, input your metrics, and let Gemini AI craft a custom exercise, yoga, and meal plan tailored just for you.
         </p>
         <div className="flex gap-4">
-          <Link href="/plan" className="btn-primary text-lg px-6 py-3">
+          <Link href="/login" className="btn-primary text-lg px-6 py-3">
             Get Started
           </Link>
           <Link href="/login" className="btn-secondary text-lg px-6 py-3">

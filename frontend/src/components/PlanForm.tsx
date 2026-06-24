@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
@@ -35,6 +35,8 @@ const dietPreferences = [
 export function PlanForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [authChecked, setAuthChecked] = useState(false);
   const [form, setForm] = useState({
     goal: "fat_loss",
     age: "",
@@ -50,6 +52,16 @@ export function PlanForm() {
     yoga_interest: false,
   });
 
+  // Check auth on mount
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+    setAuthChecked(true);
+  }, [router]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
@@ -62,8 +74,17 @@ export function PlanForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("You are not logged in. Please sign in first.");
+      setLoading(false);
+      router.push("/login");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("access_token");
       const payload = {
         ...form,
         age: Number(form.age),
@@ -73,27 +94,62 @@ export function PlanForm() {
         medical_conditions: form.medical_conditions.split(",").map((s) => s.trim()).filter(Boolean),
       };
 
-      const profileRes = await axios.post(`${API_BASE_URL}/api/v1/plans/profile`, payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const headers = { Authorization: `Bearer ${token}` };
 
+      // Step 1: Create profile
+      const profileRes = await axios.post(`${API_BASE_URL}/api/v1/plans/profile`, payload, { headers });
       const profileId = profileRes.data.id;
-      await axios.post(
+
+      // Step 2: Generate AI plan
+      const generateRes = await axios.post(
         `${API_BASE_URL}/api/v1/plans/generate`,
         { profile_id: profileId },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers }
       );
 
+      console.log("Plan generated:", generateRes.data);
       router.push("/dashboard");
-    } catch (err) {
-      alert("Failed to generate plan. Please make sure you are logged in.");
+    } catch (err: any) {
+      console.error("Plan generation error:", err);
+      const status = err.response?.status;
+      const detail = err.response?.data?.detail;
+      const message = err.message;
+
+      if (status === 401) {
+        setError("Session expired. Please log in again.");
+        localStorage.removeItem("access_token");
+        setTimeout(() => router.push("/login"), 2000);
+      } else if (status === 500) {
+        setError(detail || "Server error. The AI service may be temporarily unavailable. Please try again.");
+      } else if (status === 422) {
+        setError("Invalid form data. Please check all fields and try again.");
+      } else if (message === "Network Error") {
+        setError("Cannot connect to server. Please check your internet connection.");
+      } else {
+        setError(detail || message || "Failed to generate plan. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  // Show loading while checking auth
+  if (!authChecked) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-600 border-t-transparent" />
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
+      {error && (
+        <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+          {error}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
           <label className="label">Goal</label>
@@ -106,7 +162,7 @@ export function PlanForm() {
 
         <div>
           <label className="label">Age</label>
-          <input type="number" name="age" value={form.age} onChange={handleChange} required className="input" />
+          <input type="number" name="age" value={form.age} onChange={handleChange} required min={10} max={100} className="input" />
         </div>
 
         <div>
@@ -120,12 +176,12 @@ export function PlanForm() {
 
         <div>
           <label className="label">Height (cm)</label>
-          <input type="number" name="height_cm" value={form.height_cm} onChange={handleChange} required className="input" />
+          <input type="number" name="height_cm" value={form.height_cm} onChange={handleChange} required min={50} max={300} className="input" />
         </div>
 
         <div>
           <label className="label">Weight (kg)</label>
-          <input type="number" name="weight_kg" value={form.weight_kg} onChange={handleChange} required className="input" />
+          <input type="number" name="weight_kg" value={form.weight_kg} onChange={handleChange} required min={20} max={500} className="input" />
         </div>
 
         <div>

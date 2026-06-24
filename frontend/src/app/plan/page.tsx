@@ -1,9 +1,20 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { PlanForm } from "@/components/PlanForm";
 import { Sparkles } from "lucide-react";
 
 export default function PlanPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      router.push("/login");
+    }
+  }, [router]);
+
   return (
     <div className="space-y-8">
       <div className="text-center">
