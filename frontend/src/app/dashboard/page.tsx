@@ -30,7 +30,7 @@ export default function DashboardPage() {
       return;
     }
 
-    // Fetch user info
+    // Fetch user info (non-critical - don't redirect on failure)
     axios
       .get(`${API_BASE_URL}/api/v1/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -38,13 +38,12 @@ export default function DashboardPage() {
       .then((res) => {
         setUserName(res.data.full_name);
       })
-      .catch(() => {
-        // If auth fails, redirect
-        localStorage.removeItem("access_token");
-        router.push("/login");
+      .catch((err) => {
+        console.warn("[Dashboard] /auth/me failed (CORS or server):", err.message);
+        // Don't redirect - token might still be valid for other endpoints
       });
 
-    // Fetch plans
+    // Fetch plans (critical auth check)
     axios
       .get(`${API_BASE_URL}/api/v1/plans/`, {
         headers: { Authorization: `Bearer ${token}` },
