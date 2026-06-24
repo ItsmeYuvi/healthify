@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     # Gemini AI
     gemini_api_key: str = Field(..., alias="GEMINI_API_KEY")
-    gemini_model: str = Field(default="gemini-1.5-flash-latest", alias="GEMINI_MODEL")
+    gemini_model: str = Field(default="gemini-2.5-flash", alias="GEMINI_MODEL")
 
     # MongoDB
     mongodb_uri: str = Field(..., alias="MONGODB_URI")
