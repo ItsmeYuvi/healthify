@@ -8,6 +8,8 @@ class Exercise(BaseModel):
     sets: int
     reps: str
     rest_seconds: int
+    focus_area: Optional[str] = None
+    instruction: Optional[str] = None
     notes: Optional[str] = None
 
 
@@ -15,6 +17,8 @@ class YogaPose(BaseModel):
     name: str
     duration_seconds: int
     difficulty: str
+    focus_area: Optional[str] = None
+    instruction: Optional[str] = None
     benefits: str
 
 

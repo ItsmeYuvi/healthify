@@ -10,6 +10,200 @@ genai.configure(api_key=settings.gemini_api_key)
 model = genai.GenerativeModel(settings.gemini_model)
 
 
+def _get_fallback_meals_for_day(day: int, diet_preference: str) -> list:
+    pref = diet_preference.lower() if diet_preference else "no_preference"
+    
+    if "keto" in pref:
+        meals = {
+            1: [
+                {"meal_type": "breakfast", "name": "Butter Paneer Bhurji", "calories": 420, "protein_g": 20.0, "carbs_g": 6.0, "fats_g": 35.0, "ingredients": ["Paneer", "Butter", "Onions", "Spices"], "instructions": "Sauté paneer in butter with spices and onions."},
+                {"meal_type": "lunch", "name": "Grilled Chicken Tikka with Salad", "calories": 510, "protein_g": 40.0, "carbs_g": 5.0, "fats_g": 35.0, "ingredients": ["Chicken breast", "Yogurt marinade", "Butter", "Cucumber", "Lettuce"], "instructions": "Grill marinated chicken, brush with butter, serve with salad."},
+                {"meal_type": "dinner", "name": "Salmon Butter Fry with Broccoli", "calories": 550, "protein_g": 35.0, "carbs_g": 6.0, "fats_g": 42.0, "ingredients": ["Salmon fillet", "Butter", "Broccoli", "Garlic"], "instructions": "Pan-fry salmon in butter. Sauté broccoli with garlic."}
+            ],
+            2: [
+                {"meal_type": "breakfast", "name": "Cheese Omelette in Ghee", "calories": 440, "protein_g": 24.0, "carbs_g": 2.0, "fats_g": 36.0, "ingredients": ["3 Eggs", "Cheddar cheese", "Ghee", "Spinach"], "instructions": "Whisk eggs, cook in ghee, fold in cheese and spinach."},
+                {"meal_type": "lunch", "name": "Tofu & Mushroom Stir-Fry", "calories": 390, "protein_g": 18.0, "carbs_g": 7.0, "fats_g": 32.0, "ingredients": ["Tofu", "Mushrooms", "Sesame oil", "Zucchini", "Soy sauce"], "instructions": "Stir-fry tofu and vegetables in sesame oil."},
+                {"meal_type": "dinner", "name": "Chicken Malai Tikka", "calories": 440, "protein_g": 38.0, "carbs_g": 4.0, "fats_g": 30.0, "ingredients": ["Chicken breast", "Heavy cream", "Cheese", "Spices"], "instructions": "Bake cream-marinated chicken tikka until tender."}
+            ],
+            3: [
+                {"meal_type": "breakfast", "name": "Bulletproof Coffee & Nuts Mix", "calories": 310, "protein_g": 6.0, "carbs_g": 4.0, "fats_g": 30.0, "ingredients": ["Coffee", "MCT Oil", "Butter", "Almonds", "Walnuts"], "instructions": "Blend coffee with oil and butter. Serve with nuts."},
+                {"meal_type": "lunch", "name": "Egg Salad with Keto Mayo", "calories": 460, "protein_g": 21.0, "carbs_g": 3.0, "fats_g": 40.0, "ingredients": ["3 Eggs", "Keto mayonnaise", "Celery", "Mustard"], "instructions": "Chop boiled eggs, mix with mayo, celery, and mustard."},
+                {"meal_type": "dinner", "name": "Grilled Butter Paneer Tikka", "calories": 530, "protein_g": 28.0, "carbs_g": 7.0, "fats_g": 45.0, "ingredients": ["Paneer cubes", "Bell peppers", "Butter", "Spices"], "instructions": "Skewer paneer and peppers, grill with butter."}
+            ],
+            4: [
+                {"meal_type": "breakfast", "name": "Avocado Spinach Protein Smoothie", "calories": 350, "protein_g": 26.0, "carbs_g": 5.0, "fats_g": 25.0, "ingredients": ["Avocado", "Spinach", "Whey protein", "Unsweetened almond milk"], "instructions": "Blend all ingredients until smooth."},
+                {"meal_type": "lunch", "name": "Chicken Curry in Coconut Milk", "calories": 480, "protein_g": 36.0, "carbs_g": 6.0, "fats_g": 34.0, "ingredients": ["Chicken", "Coconut milk", "Curry spices", "Onion"], "instructions": "Simmer chicken in thick spiced coconut milk curry."},
+                {"meal_type": "dinner", "name": "Baked Cod with Lemon Butter", "calories": 410, "protein_g": 32.0, "carbs_g": 2.0, "fats_g": 30.0, "ingredients": ["Cod fillet", "Butter", "Lemon juice", "Garlic"], "instructions": "Bake cod drizzled with melted garlic lemon butter."}
+            ],
+            5: [
+                {"meal_type": "breakfast", "name": "Scrambled Paneer & Mushrooms", "calories": 380, "protein_g": 18.0, "carbs_g": 5.0, "fats_g": 32.0, "ingredients": ["Paneer", "Button mushrooms", "Olive oil", "Green chilies"], "instructions": "Sauté mushrooms, add crumbled paneer and spices."},
+                {"meal_type": "lunch", "name": "Sautéed Butter Prawns with Spinach", "calories": 440, "protein_g": 30.0, "carbs_g": 4.0, "fats_g": 32.0, "ingredients": ["Prawns", "Butter", "Garlic", "Spinach"], "instructions": "Sauté prawns in garlic butter, add spinach until wilted."},
+                {"meal_type": "dinner", "name": "Grilled Chicken Breast with Avocado", "calories": 490, "protein_g": 40.0, "carbs_g": 6.0, "fats_g": 33.0, "ingredients": ["Chicken breast", "Olive oil", "Avocado", "Lime"], "instructions": "Grill chicken, serve with sliced avocado and lime."}
+            ],
+            6: [
+                {"meal_type": "breakfast", "name": "Egg Spinach Muffins", "calories": 360, "protein_g": 22.0, "carbs_g": 3.0, "fats_g": 28.0, "ingredients": ["4 Eggs", "Spinach", "Cheese", "Olive oil"], "instructions": "Whisk eggs with spinach and cheese, bake in muffin tin."},
+                {"meal_type": "lunch", "name": "Paneer Butter Masala (Keto Style)", "calories": 520, "protein_g": 20.0, "carbs_g": 8.0, "fats_g": 46.0, "ingredients": ["Paneer", "Heavy cream", "Butter", "Tomato paste", "Spices"], "instructions": "Simmer paneer in a rich, buttery, cream-thickened tomato gravy."},
+                {"meal_type": "dinner", "name": "Grilled Chicken Chop with Cauliflower Mash", "calories": 480, "protein_g": 36.0, "carbs_g": 5.0, "fats_g": 34.0, "ingredients": ["Chicken chop", "Cauliflower", "Butter", "Cream"], "instructions": "Grill chicken. Mash steamed cauliflower with butter and cream."}
+            ],
+            7: [
+                {"meal_type": "breakfast", "name": "Keto Almond Flour Pancakes", "calories": 390, "protein_g": 12.0, "carbs_g": 6.0, "fats_g": 35.0, "ingredients": ["Almond flour", "Eggs", "Heavy cream", "Butter"], "instructions": "Mix ingredients, cook in butter like pancakes."},
+                {"meal_type": "lunch", "name": "Chicken Caesar Salad (No Croutons)", "calories": 460, "protein_g": 34.0, "carbs_g": 4.0, "fats_g": 34.0, "ingredients": ["Grilled chicken", "Romaine lettuce", "Parmesan", "Caesar dressing"], "instructions": "Toss lettuce with dressing, top with grilled chicken and cheese."},
+                {"meal_type": "dinner", "name": "Lamb Seekh Kebab with Mint Dip", "calories": 490, "protein_g": 32.0, "carbs_g": 5.0, "fats_g": 38.0, "ingredients": ["Minced lamb", "Spices", "Greek yogurt", "Mint"], "instructions": "Skewer and grill kebabs, serve with mint yogurt dip."}
+            ]
+        }
+    elif "vegan" in pref:
+        meals = {
+            1: [
+                {"meal_type": "breakfast", "name": "Tofu Scramble with Spinach & Oats Toast", "calories": 340, "protein_g": 18.0, "carbs_g": 38.0, "fats_g": 12.0, "ingredients": ["Tofu", "Spinach", "Turmeric", "Oats bread"], "instructions": "Crumble tofu, sauté with turmeric and spinach. Serve with toasted oats bread."},
+                {"meal_type": "lunch", "name": "Masala Soya Chunks Curry", "calories": 420, "protein_g": 28.0, "carbs_g": 45.0, "fats_g": 10.0, "ingredients": ["Soya chunks", "Onions", "Tomatoes", "Garlic", "Spices"], "instructions": "Boil soya chunks, then simmer in a spicy onion-tomato gravy."},
+                {"meal_type": "dinner", "name": "Dal Tadka with Brown Rice", "calories": 400, "protein_g": 15.0, "carbs_g": 65.0, "fats_g": 8.0, "ingredients": ["Yellow lentils", "Brown rice", "Cumin", "Garlic", "Olive oil"], "instructions": "Cook lentils and rice. Temper lentils with cumin, garlic, and oil."}
+            ],
+            2: [
+                {"meal_type": "breakfast", "name": "Moong Dal Chilla with Tofu Stuffing", "calories": 350, "protein_g": 16.0, "carbs_g": 48.0, "fats_g": 10.0, "ingredients": ["Moong dal batter", "Crumbled tofu", "Onions", "Chili"], "instructions": "Pour batter on griddle, stuff with seasoned tofu, fold."},
+                {"meal_type": "lunch", "name": "Chana Masala with Chapati & Salad", "calories": 480, "protein_g": 18.0, "carbs_g": 72.0, "fats_g": 12.0, "ingredients": ["Chickpeas", "Spices", "2 Whole wheat chapatis", "Cucumber", "Tomato"], "instructions": "Cook chickpeas in spicy gravy, serve with chapatis and salad."},
+                {"meal_type": "dinner", "name": "Spinach Tofu Curry", "calories": 410, "protein_g": 22.0, "carbs_g": 32.0, "fats_g": 20.0, "ingredients": ["Tofu", "Spinach purée", "Garlic", "Coconut milk"], "instructions": "Cook tofu cubes in spiced spinach purée with a splash of coconut milk."}
+            ],
+            3: [
+                {"meal_type": "breakfast", "name": "Vegetable Oats Upma", "calories": 330, "protein_g": 10.0, "carbs_g": 52.0, "fats_g": 9.0, "ingredients": ["Rolled oats", "Mustard seeds", "Carrots", "Beans", "Almonds"], "instructions": "Dry roast oats. Sauté mustard seeds, veggies, and almonds, add oats and water."},
+                {"meal_type": "lunch", "name": "Yellow Split Pea Dal with Quinoa", "calories": 440, "protein_g": 18.0, "carbs_g": 68.0, "fats_g": 10.0, "ingredients": ["Yellow split peas", "Quinoa", "Spinach", "Lemon juice"], "instructions": "Cook split peas and quinoa separately. Combine and garnish with spinach and lemon."},
+                {"meal_type": "dinner", "name": "Grilled Tofu with Stir-fried Green Beans", "calories": 380, "protein_g": 20.0, "carbs_g": 22.0, "fats_g": 24.0, "ingredients": ["Tofu block", "Green beans", "Carrots", "Soy sauce", "Sesame oil"], "instructions": "Grill tofu. Stir-fry green beans and carrots in sesame oil with soy sauce."}
+            ],
+            4: [
+                {"meal_type": "breakfast", "name": "Mixed Sprouts Salad", "calories": 310, "protein_g": 14.0, "carbs_g": 48.0, "fats_g": 8.0, "ingredients": ["Moong sprouts", "Pomegranate", "Peanuts", "Lemon", "Coriander"], "instructions": "Mix steamed sprouts with peanuts, pomegranate, lemon juice, and coriander."},
+                {"meal_type": "lunch", "name": "Tofu Wrap with Mint Chutney", "calories": 440, "protein_g": 22.0, "carbs_g": 54.0, "fats_g": 14.0, "ingredients": ["Whole wheat tortilla", "Grilled tofu", "Onions", "Mint coriander chutney"], "instructions": "Spread mint chutney on tortilla, fill with tofu and onions, wrap tightly."},
+                {"meal_type": "dinner", "name": "Moong Dal Khichdi (Vegan)", "calories": 400, "protein_g": 14.0, "carbs_g": 68.0, "fats_g": 8.0, "ingredients": ["Moong dal", "Rice", "Turmeric", "Cumin", "Olive oil"], "instructions": "Pressure cook dal and rice with turmeric. Temper with cumin in oil."}
+            ],
+            5: [
+                {"meal_type": "breakfast", "name": "Besan Chilla (Chickpea Pancakes)", "calories": 320, "protein_g": 12.0, "carbs_g": 46.0, "fats_g": 10.0, "ingredients": ["Gram flour (Besan)", "Onions", "Ajwain", "Green coriander"], "instructions": "Make a smooth batter with water and chopped onions, cook on pan."},
+                {"meal_type": "lunch", "name": "Rajma Masala with Brown Rice", "calories": 450, "protein_g": 16.0, "carbs_g": 72.0, "fats_g": 10.0, "ingredients": ["Red kidney beans", "Brown rice", "Ginger-garlic paste", "Tomato"], "instructions": "Simmer kidney beans in thick ginger-garlic tomato gravy. Serve with brown rice."},
+                {"meal_type": "dinner", "name": "Soya Chunks Bhurji", "calories": 390, "protein_g": 26.0, "carbs_g": 38.0, "fats_g": 12.0, "ingredients": ["Soya granules", "Onions", "Tomatoes", "Capsicum", "Oil"], "instructions": "Sauté chopped onions, tomatoes, capsicum. Add boiled soya granules and spices."}
+            ],
+            6: [
+                {"meal_type": "breakfast", "name": "Vegetable Dalia (Broken Wheat)", "calories": 320, "protein_g": 10.0, "carbs_g": 55.0, "fats_g": 7.0, "ingredients": ["Broken wheat (Dalia)", "Green peas", "Carrots", "Oil"], "instructions": "Roast dalia, cook with water and mixed vegetables in a pressure cooker."},
+                {"meal_type": "lunch", "name": "Mushroom Tikka with Peppers", "calories": 340, "protein_g": 12.0, "carbs_g": 38.0, "fats_g": 16.0, "ingredients": ["Button mushrooms", "Bell peppers", "Soy yogurt marinade", "Spices"], "instructions": "Marinate mushrooms and peppers in spiced soy yogurt, grill till charred."},
+                {"meal_type": "dinner", "name": "Mixed Lentil Soup with Roasted Makhana", "calories": 350, "protein_g": 16.0, "carbs_g": 52.0, "fats_g": 9.0, "ingredients": ["Masoor dal", "Moong dal", "Foxnuts (Makhana)", "Olive oil"], "instructions": "Boil mixed lentils, temper with cumin. Serve with roasted makhana."}
+            ],
+            7: [
+                {"meal_type": "breakfast", "name": "Idli with Sambar & Coconut Chutney", "calories": 350, "protein_g": 10.0, "carbs_g": 62.0, "fats_g": 6.0, "ingredients": ["3 Rice Idlis", "Mixed vegetable sambar", "Coconut", "Mustard seeds"], "instructions": "Steam idlis, serve hot with vegetable sambar and fresh coconut chutney."},
+                {"meal_type": "lunch", "name": "Aloo Baingan with Chapati & Salad", "calories": 410, "protein_g": 10.0, "carbs_g": 64.0, "fats_g": 12.0, "ingredients": ["Potatoes", "Eggplant", "Spices", "2 Chapatis", "Salad greens"], "instructions": "Cook potatoes and eggplant with Indian spices. Serve with chapatis and salad."},
+                {"meal_type": "dinner", "name": "Vegetable Pulao with Mint Chutney", "calories": 400, "protein_g": 10.0, "carbs_g": 68.0, "fats_g": 10.0, "ingredients": ["Basmati rice", "Carrots", "Peas", "Spices", "Mint leaves"], "instructions": "Cook rice with vegetables and whole spices. Serve with fresh mint chutney."}
+            ]
+        }
+    elif "vegetarian" in pref or "gluten_free" in pref:
+        meals = {
+            1: [
+                {"meal_type": "breakfast", "name": "Paneer Bhurji with Whole Wheat Roti", "calories": 380, "protein_g": 22.0, "carbs_g": 35.0, "fats_g": 16.0, "ingredients": ["Paneer", "Butter", "Onions", "2 Rotis"], "instructions": "Sauté crumbled paneer in butter with onions and spices, serve with rotis."},
+                {"meal_type": "lunch", "name": "Masala Soya Chunks Curry", "calories": 420, "protein_g": 28.0, "carbs_g": 45.0, "fats_g": 10.0, "ingredients": ["Soya chunks", "Tomato gravy", "Spices", "Cucumber salad"], "instructions": "Simmer boiled soya chunks in rich onion-tomato gravy. Serve with cucumber salad."},
+                {"meal_type": "dinner", "name": "Dal Tadka with Brown Rice", "calories": 400, "protein_g": 15.0, "carbs_g": 65.0, "fats_g": 8.0, "ingredients": ["Yellow lentils", "Brown rice", "Ghee", "Garlic", "Cumin"], "instructions": "Cook lentils and rice. Temper lentils with garlic and cumin in ghee."}
+            ],
+            2: [
+                {"meal_type": "breakfast", "name": "Moong Dal Chilla with Paneer Stuffing", "calories": 360, "protein_g": 18.0, "carbs_g": 46.0, "fats_g": 12.0, "ingredients": ["Moong dal batter", "Crumbled paneer", "Green chili", "Corriander"], "instructions": "Spread batter on pan, stuff with paneer, grill until golden."},
+                {"meal_type": "lunch", "name": "Chana Masala with Chapati & Salad", "calories": 480, "protein_g": 18.0, "carbs_g": 72.0, "fats_g": 12.0, "ingredients": ["Chickpeas", "Spices", "2 Whole wheat chapatis", "Salad greens"], "instructions": "Cook chickpeas in spicy masala gravy, serve with chapatis and fresh salad."},
+                {"meal_type": "dinner", "name": "Palak Paneer", "calories": 430, "protein_g": 24.0, "carbs_g": 18.0, "fats_g": 30.0, "ingredients": ["Paneer", "Spinach purée", "Ghee", "Cream", "Spices"], "instructions": "Cook paneer cubes in spiced spinach purée finished with cream."}
+            ],
+            3: [
+                {"meal_type": "breakfast", "name": "Vegetable Oats Upma with Almonds", "calories": 330, "protein_g": 10.0, "carbs_g": 52.0, "fats_g": 9.0, "ingredients": ["Oats", "Veggies", "Mustard seeds", "Almonds"], "instructions": "Sauté veggies and roasted oats with mustard seeds and water."},
+                {"meal_type": "lunch", "name": "Kadhi Pakora with Steamed Rice", "calories": 450, "protein_g": 12.0, "carbs_g": 70.0, "fats_g": 14.0, "ingredients": ["Besan (Gram flour)", "Yogurt", "Spices", "Rice", "Salad"], "instructions": "Make yogurt-gram flour curry with dumplings, serve over steamed rice."},
+                {"meal_type": "dinner", "name": "Grilled Tofu with Stir-fried Green Beans", "calories": 380, "protein_g": 20.0, "carbs_g": 22.0, "fats_g": 24.0, "ingredients": ["Tofu", "Green beans", "Carrots", "Sesame oil"], "instructions": "Grill tofu, toss with stir-fried green beans and carrots in sesame oil."}
+            ],
+            4: [
+                {"meal_type": "breakfast", "name": "Sprouts Salad with Pomegranate & Curd", "calories": 310, "protein_g": 15.0, "carbs_g": 42.0, "fats_g": 9.0, "ingredients": ["Mixed sprouts", "Pomegranate", "Yogurt (Curd)", "Spices"], "instructions": "Combine steamed sprouts with pomegranate, low-fat yogurt, and salt."},
+                {"meal_type": "lunch", "name": "Paneer Wrap with Mint Chutney", "calories": 460, "protein_g": 22.0, "carbs_g": 48.0, "fats_g": 20.0, "ingredients": ["Whole wheat chapati", "Grilled paneer", "Mint chutney", "Onions"], "instructions": "Wrap grilled paneer and sliced onions in a chapati spread with mint chutney."},
+                {"meal_type": "dinner", "name": "Moong Dal Khichdi & Curd", "calories": 420, "protein_g": 15.0, "carbs_g": 68.0, "fats_g": 10.0, "ingredients": ["Moong dal", "Rice", "Ghee", "Curd"], "instructions": "Cook dal and rice together with turmeric, top with ghee, serve with curd."}
+            ],
+            5: [
+                {"meal_type": "breakfast", "name": "Besan Chilla with Mint Chutney", "calories": 320, "protein_g": 12.0, "carbs_g": 46.0, "fats_g": 10.0, "ingredients": ["Besan (Gram flour)", "Spices", "Onions", "Mint leaves"], "instructions": "Prepare besan batter with spices, spread on griddle. Serve with mint chutney."},
+                {"meal_type": "lunch", "name": "Rajma Masala with Brown Rice", "calories": 450, "protein_g": 16.0, "carbs_g": 72.0, "fats_g": 10.0, "ingredients": ["Kidney beans", "Brown rice", "Tomatoes", "Onions", "Spices"], "instructions": "Cook kidney beans in spiced tomato gravy, serve with brown rice."},
+                {"meal_type": "dinner", "name": "Soya Chunks Bhurji with Chapati", "calories": 410, "protein_g": 26.0, "carbs_g": 44.0, "fats_g": 14.0, "ingredients": ["Soya granules", "Onions", "Tomato", "1 Chapati", "Cucumber raita"], "instructions": "Sauté soya granules with onions and tomato, serve with chapati and raita."}
+            ],
+            6: [
+                {"meal_type": "breakfast", "name": "Vegetable Dalia (Broken Wheat)", "calories": 320, "protein_g": 10.0, "carbs_g": 55.0, "fats_g": 7.0, "ingredients": ["Broken wheat (Dalia)", "Veggies", "Ghee"], "instructions": "Cook dalia with mixed vegetables and spices in pressure cooker, top with ghee."},
+                {"meal_type": "lunch", "name": "Paneer Tikka with Grilled Bell Peppers", "calories": 440, "protein_g": 24.0, "carbs_g": 15.0, "fats_g": 32.0, "ingredients": ["Paneer", "Yogurt marinade", "Bell peppers", "Onions"], "instructions": "Marinate paneer and veggies in spiced yogurt, bake/grill until charred."},
+                {"meal_type": "dinner", "name": "Mixed Lentil Soup with Roasted Makhana", "calories": 350, "protein_g": 16.0, "carbs_g": 52.0, "fats_g": 9.0, "ingredients": ["Mixed dals", "Ghee", "Foxnuts (Makhana)"], "instructions": "Prepare mixed lentil soup. Serve with crunchy dry-roasted makhana."}
+            ],
+            7: [
+                {"meal_type": "breakfast", "name": "Idli with Sambar & Coconut Chutney", "calories": 350, "protein_g": 10.0, "carbs_g": 62.0, "fats_g": 6.0, "ingredients": ["3 Rice Idlis", "Vegetable Sambar", "Coconut chutney"], "instructions": "Steam idlis, serve with warm vegetable sambar and fresh coconut chutney."},
+                {"meal_type": "lunch", "name": "Aloo Baingan with Chapati & Salad", "calories": 410, "protein_g": 10.0, "carbs_g": 64.0, "fats_g": 12.0, "ingredients": ["Potatoes", "Eggplant", "2 Chapatis", "Salad greens"], "instructions": "Cook potatoes and eggplant in typical Indian masala. Serve with chapatis and salad."},
+                {"meal_type": "dinner", "name": "Vegetable Pulao with Mixed Veg Raita", "calories": 430, "protein_g": 12.0, "carbs_g": 66.0, "fats_g": 12.0, "ingredients": ["Basmati rice", "Veggies", "Yogurt", "Cucumber", "Spices"], "instructions": "Cook spiced vegetable rice. Serve with cool cucumber raita."}
+            ]
+        }
+    else:
+        meals = {
+            1: [
+                {"meal_type": "breakfast", "name": "Paneer Bhurji with Whole Wheat Roti", "calories": 380, "protein_g": 22.0, "carbs_g": 35.0, "fats_g": 16.0, "ingredients": ["Paneer", "Butter", "Onions", "2 Rotis"], "instructions": "Sauté crumbled paneer in butter with onions and spices, serve with rotis."},
+                {"meal_type": "lunch", "name": "Tandoori Chicken Tikka with Salad", "calories": 450, "protein_g": 40.0, "carbs_g": 12.0, "fats_g": 18.0, "ingredients": ["Chicken breast", "Yogurt", "Lemon", "Cucumber", "Onion"], "instructions": "Grill marinated chicken tikka cubes, serve with lemon and onion cucumber salad."},
+                {"meal_type": "dinner", "name": "Dal Tadka with Brown Rice & Broccoli", "calories": 400, "protein_g": 15.0, "carbs_g": 65.0, "fats_g": 8.0, "ingredients": ["Yellow lentils", "Brown rice", "Broccoli", "Garlic", "Ghee"], "instructions": "Cook dal and brown rice. Temper dal with garlic in ghee. Serve with steamed broccoli."}
+            ],
+            2: [
+                {"meal_type": "breakfast", "name": "Egg White Scramble with Oats Toast", "calories": 320, "protein_g": 24.0, "carbs_g": 28.0, "fats_g": 10.0, "ingredients": ["3 Egg whites", "Spinach", "Olive oil", "2 slices Oats bread"], "instructions": "Scramble egg whites with spinach in oil. Serve with toasted oats bread."},
+                {"meal_type": "lunch", "name": "Chicken Curry with Chapati & Veggies", "calories": 520, "protein_g": 38.0, "carbs_g": 45.0, "fats_g": 16.0, "ingredients": ["Chicken curry", "2 Chapatis", "Stir-fried vegetables"], "instructions": "Cook chicken curry in light gravy. Serve with hot chapatis and veggies."},
+                {"meal_type": "dinner", "name": "Baked Salmon Tikka with Quinoa", "calories": 480, "protein_g": 35.0, "carbs_g": 30.0, "fats_g": 18.0, "ingredients": ["Salmon fillet", "Tandoori marinade", "Quinoa", "Asparagus"], "instructions": "Bake marinated salmon, serve with cooked quinoa and grilled asparagus."}
+            ],
+            3: [
+                {"meal_type": "breakfast", "name": "Moong Dal Chilla with Mint Chutney", "calories": 310, "protein_g": 14.0, "carbs_g": 45.0, "fats_g": 8.0, "ingredients": ["Moong dal batter", "Onions", "Green chili", "Mint chutney"], "instructions": "Make thin pancakes from split green gram batter, serve with spicy mint chutney."},
+                {"meal_type": "lunch", "name": "Fish Curry with Steamed Brown Rice", "calories": 470, "protein_g": 32.0, "carbs_g": 50.0, "fats_g": 12.0, "ingredients": ["Fish fillet", "Coconut tamarind curry", "Brown rice", "Salad"], "instructions": "Cook fish in coconut tamarind curry, serve over steamed brown rice and salad."},
+                {"meal_type": "dinner", "name": "Grilled Herb Chicken with Zucchini", "calories": 420, "protein_g": 42.0, "carbs_g": 15.0, "fats_g": 10.0, "ingredients": ["Chicken breast", "Herbs", "Zucchini", "Olive oil"], "instructions": "Grill herb-crusted chicken breast. Sauté zucchini in olive oil."}
+            ],
+            4: [
+                {"meal_type": "breakfast", "name": "Oats Upma with Peanuts", "calories": 340, "protein_g": 10.0, "carbs_g": 50.0, "fats_g": 12.0, "ingredients": ["Oats", "Mustard seeds", "Veggies", "Peanuts"], "instructions": "Cook roasted oats with tempered mustard seeds, onions, mixed veggies, and peanuts."},
+                {"meal_type": "lunch", "name": "Egg Bhurji (3 eggs) with Rotis", "calories": 490, "protein_g": 28.0, "carbs_g": 38.0, "fats_g": 18.0, "ingredients": ["3 Eggs", "Onions", "Tomatoes", "Green chilies", "2 Rotis"], "instructions": "Scramble eggs with sautéed onions, tomatoes, and spices. Serve with hot rotis."},
+                {"meal_type": "dinner", "name": "Mixed Lentil Soup with Grilled Paneer", "calories": 410, "protein_g": 24.0, "carbs_g": 30.0, "fats_g": 14.0, "ingredients": ["Mixed lentils", "Paneer block", "Spices", "Ghee"], "instructions": "Prepare hot lentil soup. Serve with pan-grilled paneer cubes."},
+            ],
+            5: [
+                {"meal_type": "breakfast", "name": "Sattu Shake with Banana", "calories": 360, "protein_g": 18.0, "carbs_g": 55.0, "fats_g": 6.0, "ingredients": ["Sattu (Chickpea flour)", "Water or Milk", "1 Banana", "Jaggery (optional)"], "instructions": "Blend sattu powder, milk/water, banana, and a touch of jaggery until smooth."},
+                {"meal_type": "lunch", "name": "Chicken Salad Wrap", "calories": 440, "protein_g": 35.0, "carbs_g": 30.0, "fats_g": 12.0, "ingredients": ["Chicken breast", "Whole wheat wrap", "Lettuce", "Yogurt dip"], "instructions": "Wrap shredded boiled chicken and lettuce in a wrap with mint yogurt spread."},
+                {"meal_type": "dinner", "name": "Stir-fried Tofu with Broccoli & Peppers", "calories": 390, "protein_g": 20.0, "carbs_g": 25.0, "fats_g": 18.0, "ingredients": ["Tofu block", "Broccoli", "Bell peppers", "Soy sauce", "Ginger", "Oil"], "instructions": "Sauté tofu, broccoli, and peppers with soy sauce and ginger in minimal oil."}
+            ],
+            6: [
+                {"meal_type": "breakfast", "name": "Vegetable Dalia (Broken Wheat)", "calories": 320, "protein_g": 12.0, "carbs_g": 52.0, "fats_g": 8.0, "ingredients": ["Dalia", "Peas", "Carrots", "Onion", "Ghee"], "instructions": "Pressure cook roasted dalia with onions, carrots, peas, and a dollop of ghee."},
+                {"meal_type": "lunch", "name": "Poha with Sprouts & Peanuts", "calories": 380, "protein_g": 12.0, "carbs_g": 55.0, "fats_g": 10.0, "ingredients": ["Flattened rice (Poha)", "Sprouts", "Peanuts", "Onions", "Curry leaves"], "instructions": "Sauté onions, peanuts, curry leaves, add steamed sprouts and washed poha, cook."},
+                {"meal_type": "dinner", "name": "Baked Garlic Butter Fish & Cauliflower", "calories": 450, "protein_g": 36.0, "carbs_g": 18.0, "fats_g": 20.0, "ingredients": ["Fish fillet", "Garlic", "Butter", "Cauliflower florets"], "instructions": "Bake fish in garlic butter. Roast cauliflower alongside."}
+            ],
+            7: [
+                {"meal_type": "breakfast", "name": "Idli with Sambar & Coconut Chutney", "calories": 350, "protein_g": 10.0, "carbs_g": 62.0, "fats_g": 6.0, "ingredients": ["3 Rice Idlis", "Mixed veggie Sambar", "Coconut chutney"], "instructions": "Steam idlis, serve with warm vegetable sambar and fresh coconut chutney."},
+                {"meal_type": "lunch", "name": "Rajma Masala with Jeera Rice", "calories": 460, "protein_g": 18.0, "carbs_g": 72.0, "fats_g": 10.0, "ingredients": ["Red kidney beans", "Basmati rice", "Jeera (Cumin)", "Ghee"], "instructions": "Simmer kidney beans in thick spiced gravy. Serve with hot cumin rice."},
+                {"meal_type": "dinner", "name": "Chicken Tikka Salad", "calories": 410, "protein_g": 38.0, "carbs_g": 12.0, "fats_g": 18.0, "ingredients": ["Grilled chicken tikka", "Salad greens", "Olive oil dressing"], "instructions": "Toss chicken tikka with mixed greens and a light olive oil vinaigrette."}
+            ]
+        }
+    return meals.get(day, meals[1])
+
+
+def _get_fallback_exercises_for_day(day: int) -> list:
+    exercises = {
+        1: [
+            {"name": "Bodyweight Squats", "focus_area": "Quads & Glutes", "sets": 3, "reps": "15", "rest_seconds": 60, "instruction": "Stand with feet shoulder-width apart. Lower your hips back and down. Keep chest up.", "notes": "Warmup exercise"},
+            {"name": "Pushups", "focus_area": "Chest & Triceps", "sets": 3, "reps": "10-12", "rest_seconds": 60, "instruction": "Start in a high plank. Lower body until chest is just above floor. Push back up.", "notes": "Focus on form"},
+            {"name": "Plank", "focus_area": "Core", "sets": 3, "reps": "30 seconds", "rest_seconds": 45, "instruction": "Hold a forearm plank position. Keep body in a straight line.", "notes": "Keep core tight"}
+        ],
+        3: [
+            {"name": "Lunges", "focus_area": "Quads & Glutes", "sets": 3, "reps": "12 per leg", "rest_seconds": 60, "instruction": "Step forward with one leg, lower hips until both knees bend at 90-degree angles. Keep torso upright.", "notes": "Focus on balance"},
+            {"name": "Glute Bridges", "focus_area": "Glutes & Hamstrings", "sets": 3, "reps": "15", "rest_seconds": 45, "instruction": "Lie on your back, knees bent. Raise hips off the floor until your knees, hips, and shoulders form a straight line.", "notes": "Squeeze glutes at top"},
+            {"name": "Bicycle Crunches", "focus_area": "Abs & Obliques", "sets": 3, "reps": "20 total", "rest_seconds": 45, "instruction": "Lie flat on back. Alternate touching opposite elbow to opposite knee while cycling legs.", "notes": "Move slowly and control"}
+        ],
+        5: [
+            {"name": "Mountain Climbers", "focus_area": "Core & Cardio", "sets": 3, "reps": "40 seconds", "rest_seconds": 45, "instruction": "Start in a high plank. Alternate bringing knees to chest as fast as possible.", "notes": "Maintain a flat back"},
+            {"name": "Burpees", "focus_area": "Full Body & Cardio", "sets": 3, "reps": "8-10", "rest_seconds": 60, "instruction": "Drop into a squat, kick feet back to plank, do a pushup, jump back to squat, then jump up explosively.", "notes": "Take your time"},
+            {"name": "Supermans", "focus_area": "Lower Back & Glutes", "sets": 3, "reps": "12", "rest_seconds": 45, "instruction": "Lie face down. Simultaneously lift arms, chest, and legs off the floor. Hold for 2 seconds.", "notes": "Strengthens posterior chain"}
+        ]
+    }
+    return exercises.get(day, [])
+
+
+def _get_fallback_yoga_for_day(day: int) -> list:
+    yoga = {
+        1: [
+            {"name": "Child's Pose", "focus_area": "Lower Back", "duration_seconds": 180, "difficulty": "beginner", "instruction": "Kneel, sit on heels, stretch arms forward and lower chest to floor.", "benefits": "Stretches lower back"}
+        ],
+        3: [
+            {"name": "Cobra Pose", "focus_area": "Spine & Chest", "duration_seconds": 120, "difficulty": "beginner", "instruction": "Lie face down. Place hands under shoulders. Press tops of feet down and lift chest.", "benefits": "Strengthens spine and opens chest"}
+        ],
+        5: [
+            {"name": "Downward-Facing Dog", "focus_area": "Hamstrings & Shoulders", "duration_seconds": 150, "difficulty": "beginner", "instruction": "Start on hands and knees. Lift hips up and back to form an inverted V shape. Keep heels pressing down.", "benefits": "Stretches hamstrings and calves, strengthens shoulders"}
+        ]
+    }
+    return yoga.get(day, [])
+
+
 async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
     """Generate a personalized fitness plan using Gemini AI."""
 
@@ -114,23 +308,42 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
         # Return a fallback minimal plan with 7 days meals and workout_days_per_week workouts
         daily_plans = []
         for d in range(1, 8):
-            is_workout_day = (d in (1, 3, 5)) if profile.workout_days_per_week >= 3 else (d == 1)
+            if profile.workout_days_per_week >= 3:
+                is_workout_day = d in (1, 3, 5)
+            elif profile.workout_days_per_week == 2:
+                is_workout_day = d in (1, 5)
+            else:
+                is_workout_day = d == 1
+            
+            focus = "Rest & Recovery"
+            exercises = []
+            yoga_routine = []
+            
+            if is_workout_day:
+                if d == 1:
+                    focus = "Full Body Conditioning"
+                elif d == 3:
+                    focus = "Lower Body & Core"
+                elif d == 5:
+                    focus = "Upper Body & HIIT Cardio"
+                else:
+                    focus = "Strength Training"
+                
+                exercises = _get_fallback_exercises_for_day(d)
+                if not exercises:
+                    exercises = _get_fallback_exercises_for_day(1)
+                
+                if profile.yoga_interest:
+                    yoga_routine = _get_fallback_yoga_for_day(d)
+                    if not yoga_routine:
+                        yoga_routine = _get_fallback_yoga_for_day(1)
+            
             daily_plans.append({
                 "day": d,
-                "focus": "Full Body Conditioning" if is_workout_day else "Rest & Recovery",
-                "exercises": [
-                    {"name": "Bodyweight Squats", "focus_area": "Quads & Glutes", "sets": 3, "reps": "15", "rest_seconds": 60, "instruction": "Stand with feet shoulder-width apart. Lower your hips back and down. Keep chest up.", "notes": "Warmup exercise"},
-                    {"name": "Pushups", "focus_area": "Chest & Triceps", "sets": 3, "reps": "10-12", "rest_seconds": 60, "instruction": "Start in a high plank. Lower body until chest is just above floor. Push back up.", "notes": "Focus on form"},
-                    {"name": "Plank", "focus_area": "Core", "sets": 3, "reps": "30 seconds", "rest_seconds": 45, "instruction": "Hold a forearm plank position. Keep body in a straight line.", "notes": "Keep core tight"}
-                ] if is_workout_day else [],
-                "yoga_routine": [
-                    {"name": "Child's Pose", "focus_area": "Lower Back", "duration_seconds": 180, "difficulty": "beginner", "instruction": "Kneel, sit on heels, stretch arms forward and lower chest to floor.", "benefits": "Stretches lower back"}
-                ] if (is_workout_day and profile.yoga_interest) else [],
-                "meals": [
-                    {"meal_type": "breakfast", "name": "Scrambled Eggs with Toast", "calories": 350, "protein_g": 20.0, "carbs_g": 25.0, "fats_g": 15.0, "ingredients": ["Eggs", "Whole wheat bread"], "instructions": "Scramble eggs and serve with toast"},
-                    {"meal_type": "lunch", "name": "Chicken Salad Wrap", "calories": 450, "protein_g": 30.0, "carbs_g": 35.0, "fats_g": 12.0, "ingredients": ["Chicken breast", "Tortilla", "Lettuce"], "instructions": "Wrap chicken and lettuce in tortilla"},
-                    {"meal_type": "dinner", "name": "Baked Salmon with Broccoli", "calories": 500, "protein_g": 35.0, "carbs_g": 15.0, "fats_g": 22.0, "ingredients": ["Salmon", "Broccoli"], "instructions": "Bake salmon and steam broccoli"}
-                ]
+                "focus": focus,
+                "exercises": exercises,
+                "yoga_routine": yoga_routine,
+                "meals": _get_fallback_meals_for_day(d, profile.diet_preference.value)
             })
         return {
             "plan_name": "Basic Fitness Plan",
