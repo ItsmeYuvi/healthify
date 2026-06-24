@@ -216,6 +216,11 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
   const totalCarbs = activeDayPlan.meals?.reduce((sum: number, m: any) => sum + (m.carbs_g || 0), 0) || 0;
   const totalFats = activeDayPlan.meals?.reduce((sum: number, m: any) => sum + (m.fats_g || 0), 0) || 0;
 
+  // Dynamic targets based on 30% protein, 45% carbs, 25% fats
+  const targetProtein = Math.max(1, Math.round((totalCalories * 0.3) / 4));
+  const targetCarbs = Math.max(1, Math.round((totalCalories * 0.45) / 4));
+  const targetFats = Math.max(1, Math.round((totalCalories * 0.25) / 9));
+
   // Check if current week is the latest week generated so far
   const isLatestWeek = !currentPlan.weeks || currentPlan.weeks.length === 0 || 
     currentPlan.week_number === Math.max(...currentPlan.weeks.map(w => w.week_number));
@@ -353,28 +358,28 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
               <div>
                 <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>Protein</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalProtein)}g</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalProtein)}g / {targetProtein}g</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full bg-orange-500 rounded-full" style={{ width: `${Math.min(100, (totalProtein / 180) * 100)}%` }} />
+                  <div className="h-full bg-orange-500 rounded-full" style={{ width: `${Math.min(100, (totalProtein / targetProtein) * 100)}%` }} />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>Carbohydrates</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalCarbs)}g</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalCarbs)}g / {targetCarbs}g</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full bg-teal-500 rounded-full" style={{ width: `${Math.min(100, (totalCarbs / 250) * 100)}%` }} />
+                  <div className="h-full bg-teal-500 rounded-full" style={{ width: `${Math.min(100, (totalCarbs / targetCarbs) * 100)}%` }} />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>Fats</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalFats)}g</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalFats)}g / {targetFats}g</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${Math.min(100, (totalFats / 80) * 100)}%` }} />
+                  <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${Math.min(100, (totalFats / targetFats) * 100)}%` }} />
                 </div>
               </div>
             </div>
@@ -423,7 +428,7 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                       </h3>
                       <div className="space-y-4">
                         {activeDayPlan.exercises.map((ex: any, idx: number) => (
-                          <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50/30 p-4 space-y-2 hover:border-gray-200 transition-colors dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-gray-700">
+                          <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50/30 p-4 space-y-3 hover:border-gray-200 transition-colors dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-gray-700">
                             <div className="flex items-center justify-between">
                               <h4 className="font-bold text-sm">{ex.name}</h4>
                               <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-800">
@@ -432,10 +437,16 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
                               <span>Rest: <strong className="text-gray-700 dark:text-gray-300">{ex.rest_seconds}s</strong></span>
+                              {ex.focus_area && <span className="bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-[10px] uppercase font-semibold text-gray-600 dark:text-gray-300">Target: {ex.focus_area}</span>}
                             </div>
+                            {ex.instruction && (
+                              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                <span className="font-semibold text-gray-800 dark:text-gray-200">How-to:</span> {ex.instruction}
+                              </p>
+                            )}
                             {ex.notes && (
-                              <p className="text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-950/60 p-2.5 rounded-xl border border-gray-200 dark:border-gray-800">
-                                <span className="font-semibold text-gray-800 dark:text-gray-300">Coach:</span> {ex.notes}
+                              <p className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 p-2.5 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
+                                <span className="font-semibold text-emerald-800 dark:text-emerald-400">Coach Note:</span> {ex.notes}
                               </p>
                             )}
                           </div>
@@ -453,19 +464,27 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                       </h3>
                       <div className="space-y-4">
                         {activeDayPlan.yoga_routine.map((y: any, idx: number) => (
-                          <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50/30 p-4 space-y-2 hover:border-gray-200 transition-colors dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-gray-700">
+                          <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50/30 p-4 space-y-3 hover:border-gray-200 transition-colors dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-gray-700">
                             <div className="flex items-center justify-between">
                               <h4 className="font-bold text-sm">{y.name}</h4>
                               <span className="text-[10px] font-bold uppercase text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-950 px-2 py-0.5 rounded border border-teal-100 dark:border-teal-800">
                                 {y.difficulty}
                               </span>
                             </div>
-                            <div className="text-xs text-gray-550 dark:text-gray-400">
-                              Duration: <strong className="text-gray-700 dark:text-gray-300">{Math.round(y.duration_seconds / 60)} mins</strong>
+                            <div className="flex justify-between items-center text-xs text-gray-550 dark:text-gray-400">
+                              <span>Duration: <strong className="text-gray-700 dark:text-gray-300">{Math.round(y.duration_seconds / 60)} mins</strong></span>
+                              {y.focus_area && <span className="bg-teal-50 dark:bg-teal-900/30 px-2 py-0.5 rounded text-[10px] uppercase font-semibold text-teal-600 dark:text-teal-400">Focus: {y.focus_area}</span>}
                             </div>
-                            <p className="text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-950/60 p-2.5 rounded-xl border border-gray-200 dark:border-gray-800">
-                              <span className="font-semibold text-gray-800 dark:text-gray-300">Benefits:</span> {y.benefits}
-                            </p>
+                            {y.instruction && (
+                              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                <span className="font-semibold text-gray-800 dark:text-gray-200">Steps:</span> {y.instruction}
+                              </p>
+                            )}
+                            {y.benefits && (
+                              <p className="text-xs text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/20 p-2.5 rounded-xl border border-teal-100 dark:border-teal-800/30">
+                                <span className="font-semibold text-teal-800 dark:text-teal-400">Benefits:</span> {y.benefits}
+                              </p>
+                            )}
                           </div>
                         ))}
                       </div>

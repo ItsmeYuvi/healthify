@@ -38,7 +38,7 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
 
     Crucial Structure Requirements:
     1. The plan must span exactly 7 days (Day 1 to Day 7).
-    2. Every single day (Day 1 to 7) MUST include a full, personalized 'meals' diet plan matching the user's diet preferences and constraints.
+    2. Every single day (Day 1 to 7) MUST include a full, personalized 'meals' diet plan matching the user's diet preferences and constraints. CRUCIAL: Provide highly diverse Indian meals. DO NOT repeat the same meals every day. Each day must have distinct, varied meal options.
     3. Exactly {profile.workout_days_per_week} days of the week should contain workout 'exercises' and 'yoga_routine' (if include yoga is true). These should be spread out logically (e.g. if 3 days, place them on Day 1, Day 3, and Day 5).
     4. The remaining {7 - profile.workout_days_per_week} days are REST days. For these rest days, the 'exercises' list and 'yoga_routine' list MUST be empty arrays `[]`, and the focus should indicate "Rest & Recovery" or "Active Recovery".
 
@@ -54,17 +54,21 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
                 "exercises": [
                     {{
                         "name": "string",
+                        "focus_area": "string (which muscle group)",
                         "sets": 3,
                         "reps": "string (e.g., '10-12' or '30 seconds')",
                         "rest_seconds": 60,
+                        "instruction": "string (detailed execution steps)",
                         "notes": "string"
                     }}
                 ],
                 "yoga_routine": [
                     {{
                         "name": "string",
+                        "focus_area": "string (targeted body part)",
                         "duration_seconds": 300,
                         "difficulty": "beginner|intermediate|advanced",
+                        "instruction": "string (detailed steps)",
                         "benefits": "string"
                     }}
                 ],
@@ -115,12 +119,12 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
                 "day": d,
                 "focus": "Full Body Conditioning" if is_workout_day else "Rest & Recovery",
                 "exercises": [
-                    {"name": "Bodyweight Squats", "sets": 3, "reps": "15", "rest_seconds": 60, "notes": "Warmup exercise"},
-                    {"name": "Pushups", "sets": 3, "reps": "10-12", "rest_seconds": 60, "notes": "Focus on form"},
-                    {"name": "Plank", "sets": 3, "reps": "30 seconds", "rest_seconds": 45, "notes": "Keep core tight"}
+                    {"name": "Bodyweight Squats", "focus_area": "Quads & Glutes", "sets": 3, "reps": "15", "rest_seconds": 60, "instruction": "Stand with feet shoulder-width apart. Lower your hips back and down. Keep chest up.", "notes": "Warmup exercise"},
+                    {"name": "Pushups", "focus_area": "Chest & Triceps", "sets": 3, "reps": "10-12", "rest_seconds": 60, "instruction": "Start in a high plank. Lower body until chest is just above floor. Push back up.", "notes": "Focus on form"},
+                    {"name": "Plank", "focus_area": "Core", "sets": 3, "reps": "30 seconds", "rest_seconds": 45, "instruction": "Hold a forearm plank position. Keep body in a straight line.", "notes": "Keep core tight"}
                 ] if is_workout_day else [],
                 "yoga_routine": [
-                    {"name": "Child's Pose", "duration_seconds": 180, "difficulty": "beginner", "benefits": "Stretches lower back"}
+                    {"name": "Child's Pose", "focus_area": "Lower Back", "duration_seconds": 180, "difficulty": "beginner", "instruction": "Kneel, sit on heels, stretch arms forward and lower chest to floor.", "benefits": "Stretches lower back"}
                 ] if (is_workout_day and profile.yoga_interest) else [],
                 "meals": [
                     {"meal_type": "breakfast", "name": "Scrambled Eggs with Toast", "calories": 350, "protein_g": 20.0, "carbs_g": 25.0, "fats_g": 15.0, "ingredients": ["Eggs", "Whole wheat bread"], "instructions": "Scramble eggs and serve with toast"},
@@ -168,7 +172,7 @@ async def generate_next_week_fitness_plan(profile: FitnessProfileCreate, prev_pl
 
     Crucial Progression & Structure Requirements:
     1. Progress the workouts logically for Week {prev_plan.get('week_number', 1) + 1} (e.g., slightly increase weights, sets, reps, or introduce evolved exercise variations, while keeping the duration safe).
-    2. Keep the diet plan consistent but introduce refreshing meal variations that match their macros and diet preferences.
+    2. Keep the diet plan consistent but introduce refreshing meal variations that match their macros and diet preferences. CRUCIAL: Provide highly diverse Indian meals. DO NOT repeat the same meals every day.
     3. The plan must span exactly 7 days (Day 1 to Day 7).
     4. Every single day (Day 1 to 7) MUST include a full, personalized 'meals' diet plan.
     5. Exactly {profile.workout_days_per_week} days of the week should contain workout 'exercises' and 'yoga_routine' (if include yoga is true). Spaced out logically.
@@ -186,17 +190,21 @@ async def generate_next_week_fitness_plan(profile: FitnessProfileCreate, prev_pl
                 "exercises": [
                     {{
                         "name": "string",
+                        "focus_area": "string",
                         "sets": 3,
                         "reps": "string",
                         "rest_seconds": 60,
+                        "instruction": "string",
                         "notes": "string"
                     }}
                 ],
                 "yoga_routine": [
                     {{
                         "name": "string",
+                        "focus_area": "string",
                         "duration_seconds": 300,
                         "difficulty": "beginner|intermediate|advanced",
+                        "instruction": "string",
                         "benefits": "string"
                     }}
                 ],
