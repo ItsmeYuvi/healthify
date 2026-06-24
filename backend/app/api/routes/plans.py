@@ -82,6 +82,7 @@ async def generate_plan(
             "plan_name": plan_data.get("plan_name", "Custom Plan"),
             "goal": plan_data.get("goal", profile_obj.goal.value),
             "duration_weeks": plan_data.get("duration_weeks", 1),
+            "week_number": 1,
             "daily_plans": plan_data.get("daily_plans", []),
             "created_at": datetime.utcnow(),
         }
@@ -113,3 +114,81 @@ async def list_plans(current_user: dict = Depends(get_current_user)):
     except Exception as e:
         logger.error(f"List plans error: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch plans: {str(e)}")
+
+
+@router.get("/{plan_id}", response_model=FitnessPlanResponse)
+async def get_plan(plan_id: str, current_user: dict = Depends(get_current_user)):
+    try:
+        plans_col = await get_fitness_plans_collection()
+        plan = await plans_col.find_one({"_id": ObjectId(plan_id), "user_id": str(current_user["_id"])})
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan not found")
+        plan["id"] = str(plan.pop("_id"))
+        return plan
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Get plan error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch plan: {str(e)}")
+
+
+@router.post("/{plan_id}/next-week", response_model=FitnessPlanResponse, status_code=status.HTTP_201_CREATED)
+async def generate_next_week(plan_id: str, current_user: dict = Depends(get_current_user)):
+    try:
+        plans_col = await get_fitness_plans_collection()
+        profiles_col = await get_fitness_profiles_collection()
+        
+        # 1. Fetch previous plan
+        prev_plan = await plans_col.find_one({"_id": ObjectId(plan_id), "user_id": str(current_user["_id"])})
+        if not prev_plan:
+            raise HTTPException(status_code=404, detail="Previous plan not found")
+            
+        # 2. Fetch profile
+        profile = await profiles_col.find_one({"_id": ObjectId(prev_plan["profile_id"]), "user_id": str(current_user["_id"])})
+        if not profile:
+            raise HTTPException(status_code=404, detail="Profile not found")
+            
+        # 3. Clean up profile data
+        profile_clean = {k: v for k, v in profile.items() if k not in ("_id", "user_id", "created_at", "updated_at")}
+        from app.models.fitness_profile import FitnessProfileCreate
+        profile_obj = FitnessProfileCreate(**profile_clean)
+        
+        # 4. Generate next week's plan content using Gemini
+        import json
+        prev_plan_clean = {
+            "plan_name": prev_plan.get("plan_name"),
+            "duration_weeks": prev_plan.get("duration_weeks", 1),
+            "week_number": prev_plan.get("week_number", 1),
+            "goal": prev_plan.get("goal"),
+            "daily_plans": prev_plan.get("daily_plans", [])
+        }
+        
+        from app.services.gemini_service import generate_next_week_fitness_plan
+        plan_data = await generate_next_week_fitness_plan(profile_obj, prev_plan_clean)
+        
+        # 5. Insert new plan
+        next_week = prev_plan.get("week_number", 1) + 1
+        plan_doc = {
+            "user_id": str(current_user["_id"]),
+            "profile_id": prev_plan["profile_id"],
+            "plan_name": plan_data.get("plan_name", f"Week {next_week} - {profile_obj.goal.value.replace('_', ' ').title()}"),
+            "goal": plan_data.get("goal", profile_obj.goal.value),
+            "duration_weeks": plan_data.get("duration_weeks", 1),
+            "week_number": next_week,
+            "daily_plans": plan_data.get("daily_plans", []),
+            "created_at": datetime.utcnow(),
+        }
+        
+        result = await plans_col.insert_one(plan_doc)
+        created = await plans_col.find_one({"_id": result.inserted_id})
+        logger.info(f"Next week plan generated for user {current_user['_id']}: {plan_doc['plan_name']}")
+        
+        return {
+            "id": str(created["_id"]),
+            **{k: v for k, v in created.items() if k != "_id"}
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Generate next week plan error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate next week plan: {str(e)}")

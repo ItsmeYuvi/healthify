@@ -47,6 +47,7 @@ class FitnessPlanInDB(FitnessPlanCreate):
     plan_name: str
     goal: str
     duration_weeks: int
+    week_number: int = Field(default=1)
     daily_plans: List[DayPlan]
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -61,5 +62,6 @@ class FitnessPlanResponse(BaseModel):
     plan_name: str
     goal: str
     duration_weeks: int
+    week_number: int = 1
     daily_plans: List[DayPlan]
     created_at: datetime = Field(default_factory=datetime.utcnow)
