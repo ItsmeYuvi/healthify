@@ -204,3 +204,25 @@ async def generate_next_week(plan_id: str, current_user: dict = Depends(get_curr
     except Exception as e:
         logger.error(f"Generate next week plan error: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to generate next week plan: {str(e)}")
+
+
+@router.delete("/{plan_id}", status_code=status.HTTP_200_OK)
+async def delete_plan(
+    plan_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    try:
+        plans_col = await get_fitness_plans_collection()
+        result = await plans_col.delete_one({
+            "_id": ObjectId(plan_id),
+            "user_id": str(current_user["_id"])
+        })
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Plan not found or not owned by this user")
+        return {"status": "success", "message": "Plan deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Delete plan error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete plan: {str(e)}")
+

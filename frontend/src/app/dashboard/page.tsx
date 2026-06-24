@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
-import { Dumbbell, Salad, User, AlertCircle, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { Dumbbell, Salad, User, AlertCircle, ArrowRight, Sparkles, TrendingUp, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 interface Plan {
@@ -16,12 +16,24 @@ interface Plan {
   daily_plans: any[];
 }
 
+const goalNames: Record<string, string> = {
+  all: "All Goals",
+  fat_loss: "Fat Loss",
+  weight_gain: "Weight Gain",
+  muscle_build: "Muscle Build",
+  endurance: "Endurance",
+  flexibility: "Flexibility",
+  general_health: "General Health"
+};
+
 export default function DashboardPage() {
   const router = useRouter();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [userName, setUserName] = useState("");
+  const [activeGoal, setActiveGoal] = useState("all");
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -59,6 +71,32 @@ export default function DashboardPage() {
       })
       .finally(() => setLoading(false));
   }, [router]);
+
+  const confirmDelete = async (id: string) => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+
+    try {
+      await axios.delete(`${API_BASE_URL}/api/v1/plans/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setPlans((prev) => prev.filter((p) => p.id !== id));
+      setDeleteConfirmId(null);
+    } catch (err: any) {
+      console.error("[Dashboard] Delete plan failed:", err);
+      setError("Failed to delete the plan. Please try again.");
+    }
+  };
+
+  const sortedPlans = [...plans].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
+  const uniqueGoals = ["all", ...Array.from(new Set(plans.map((p) => p.goal)))];
+
+  const filteredPlans = activeGoal === "all"
+    ? sortedPlans
+    : sortedPlans.filter((p) => p.goal === activeGoal);
 
   if (loading) {
     return (
@@ -109,33 +147,56 @@ export default function DashboardPage() {
 
       {/* Main Workspace Section */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4 gap-4">
           <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             Active Planning Schemes
           </h2>
-          <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold">Showing {plans.length} plan{plans.length !== 1 ? 's' : ''}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold">
+            Showing {filteredPlans.length} plan{filteredPlans.length !== 1 ? 's' : ''}
+          </span>
         </div>
 
-        {plans.length === 0 ? (
+        {/* Goal Filter Pills */}
+        {plans.length > 0 && (
+          <div className="flex flex-wrap gap-2 pb-2">
+            {uniqueGoals.map((goal) => (
+              <button
+                key={goal}
+                onClick={() => setActiveGoal(goal)}
+                className={`rounded-full px-4 py-1.5 text-xs font-semibold border transition-all ${
+                  activeGoal === goal
+                    ? "bg-emerald-600 border-emerald-600 text-white shadow-sm shadow-emerald-600/25"
+                    : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-850"
+                }`}
+              >
+                {goalNames[goal] || goal.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {filteredPlans.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-gray-300 dark:border-gray-800 bg-gray-50/30 dark:bg-gray-900/10 py-20 text-center space-y-4">
             <div className="rounded-2xl bg-gray-100 dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800">
               <Dumbbell className="h-10 w-10 text-gray-500" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg font-bold">No Schemes Drafted</h3>
+              <h3 className="text-lg font-bold">No Schemes Found</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm px-4">
-                You do not have any active health schemes. Let Gemini AI engineer a personalized program.
+                No health schemes match your active filter. Change the filter or generate a new program.
               </p>
             </div>
-            <Link href="/plan" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">
-              Engineering Board →
-            </Link>
+            {plans.length === 0 && (
+              <Link href="/plan" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">
+                Engineering Board →
+              </Link>
+            )}
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {plans.map((plan) => {
-              const workoutDaysCount = plan.daily_plans?.filter(dp => dp.exercises && dp.exercises.length > 0).length || 3;
+            {filteredPlans.map((plan) => {
+              const workoutDaysCount = plan.daily_plans?.filter((dp) => dp.exercises && dp.exercises.length > 0).length || 0;
               const weekNum = plan.week_number || 1;
 
               return (
@@ -152,9 +213,50 @@ export default function DashboardPage() {
                       <span className="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/30 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
                         Week {weekNum}
                       </span>
-                      <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400">
-                        {plan.duration_weeks} week block
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400">
+                          {plan.duration_weeks} wk
+                        </span>
+                        
+                        {/* Inline Delete Confirmation */}
+                        {deleteConfirmId === plan.id ? (
+                          <div 
+                            className="flex items-center gap-1 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900/40 px-1.5 py-0.5 rounded text-[10px]"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <span className="font-bold text-red-600 dark:text-red-400">Del?</span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                confirmDelete(plan.id);
+                              }}
+                              className="font-bold text-white bg-red-600 px-1.5 py-0.5 rounded hover:bg-red-700"
+                            >
+                              Yes
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteConfirmId(null);
+                              }}
+                              className="font-bold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded hover:bg-gray-300 dark:hover:bg-gray-700"
+                            >
+                              No
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeleteConfirmId(plan.id);
+                            }}
+                            className="rounded-lg p-1 text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors border border-transparent hover:border-red-500/20"
+                            title="Delete Plan"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Title */}
