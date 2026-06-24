@@ -20,26 +20,63 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    console.log("[Auth] Attempting", isRegister ? "register" : "login", "to", API_BASE_URL);
+
     try {
       let res;
       if (isRegister) {
-        res = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, {
-          email: form.email,
+        const payload = {
+          email: form.email.trim(),
           password: form.password,
-          full_name: form.fullName,
+          full_name: form.fullName.trim(),
+        };
+        console.log("[Auth] Register payload:", payload);
+        res = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, payload, {
+          timeout: 30000,
         });
       } else {
         const params = new URLSearchParams();
-        params.append("username", form.email);
+        params.append("username", form.email.trim());
         params.append("password", form.password);
+        console.log("[Auth] Login payload:", { username: form.email.trim() });
         res = await axios.post(`${API_BASE_URL}/api/v1/auth/login`, params, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          timeout: 30000,
         });
       }
+
+      console.log("[Auth] Success:", res.data);
       localStorage.setItem("access_token", res.data.access_token);
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.detail || "Something went wrong.");
+      console.error("[Auth] Error:", err);
+
+      let message = "Something went wrong.";
+      if (err.code === "ECONNABORTED") {
+        message = "Connection timed out. The server may be starting up (free tier). Please wait 30 seconds and try again.";
+      } else if (err.code === "ERR_NETWORK") {
+        message = "Cannot connect to server. Please check your internet connection.";
+      } else if (err.response) {
+        const status = err.response.status;
+        const detail = err.response.data?.detail;
+        console.log("[Auth] Server response:", status, detail);
+        if (status === 400) {
+          message = detail || "Invalid request.";
+        } else if (status === 401) {
+          message = detail || "Incorrect email or password.";
+        } else if (status === 422) {
+          message = detail || "Invalid input data. Please check all fields.";
+        } else if (status === 500) {
+          message = detail || "Server error. Please try again in a few moments.";
+        } else {
+          message = `Server error (${status}): ${detail || "Unknown error"}`;
+        }
+      } else if (err.message) {
+        message = err.message;
+      }
+
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -75,6 +112,7 @@ export default function LoginPage() {
           <div>
             <label className="label">Password</label>
             <input type="password" name="password" required minLength={8} value={form.password} onChange={handleChange} className="input" />
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Must be at least 8 characters</p>
           </div>
 
           <button type="submit" disabled={loading} className="btn-primary w-full">
@@ -84,7 +122,7 @@ export default function LoginPage() {
 
         <div className="mt-4 text-center text-sm">
           <button
-            onClick={() => setIsRegister(!isRegister)}
+            onClick={() => { setIsRegister(!isRegister); setError(""); }}
             className="text-primary-600 hover:underline dark:text-primary-400"
           >
             {isRegister ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
