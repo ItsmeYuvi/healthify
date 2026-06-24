@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
+import { User, Mail, Lock, ShieldAlert, Dumbbell } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,8 +22,6 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    console.log("[Auth] Attempting", isRegister ? "register" : "login", "to", API_BASE_URL);
-
     try {
       let res;
       if (isRegister) {
@@ -31,7 +30,6 @@ export default function LoginPage() {
           password: form.password,
           full_name: form.fullName.trim(),
         };
-        console.log("[Auth] Register payload:", payload);
         res = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, payload, {
           timeout: 30000,
         });
@@ -39,14 +37,12 @@ export default function LoginPage() {
         const params = new URLSearchParams();
         params.append("username", form.email.trim());
         params.append("password", form.password);
-        console.log("[Auth] Login payload:", { username: form.email.trim() });
         res = await axios.post(`${API_BASE_URL}/api/v1/auth/login`, params, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           timeout: 30000,
         });
       }
 
-      console.log("[Auth] Success:", res.data);
       localStorage.setItem("access_token", res.data.access_token);
       router.push("/dashboard");
     } catch (err: any) {
@@ -60,7 +56,6 @@ export default function LoginPage() {
       } else if (err.response) {
         const status = err.response.status;
         const detail = err.response.data?.detail;
-        console.log("[Auth] Server response:", status, detail);
         if (status === 400) {
           message = detail || "Invalid request.";
         } else if (status === 401) {
@@ -83,50 +78,125 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-md py-12">
-      <div className="card">
-        <h2 className="text-2xl font-bold text-center">
-          {isRegister ? "Create Account" : "Welcome Back"}
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          {isRegister ? "Sign up to start your fitness journey" : "Sign in to your Healthify account"}
-        </p>
+    <div className="mx-auto max-w-md py-12 px-4 text-gray-900 dark:text-gray-100">
+      <div className="card shadow-2xl relative border border-gray-250 bg-white p-8 dark:border-gray-800 dark:bg-gray-900/60 overflow-hidden">
+        {/* Glow Effects */}
+        <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -left-20 -bottom-20 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
 
-        {error && (
-          <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
-            {error}
+        <div className="relative space-y-6">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-450 mx-auto">
+              <Dumbbell className="h-6 w-6" />
+            </div>
+            <h2 className="text-2xl font-extrabold">
+              {isRegister ? "Create Account" : "Access Blueprint"}
+            </h2>
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+              {isRegister ? "Sign up to start your fitness journey" : "Sign in to manage your health schemes"}
+            </p>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          {isRegister && (
-            <div>
-              <label className="label">Full Name</label>
-              <input type="text" name="fullName" required value={form.fullName} onChange={handleChange} className="input" />
+          {error && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-3.5 text-xs text-red-650 dark:text-red-400">
+              <ShieldAlert className="h-4.5 w-4.5 shrink-0 mt-0.5" />
+              <span>{error}</span>
             </div>
           )}
-          <div>
-            <label className="label">Email</label>
-            <input type="email" name="email" required value={form.email} onChange={handleChange} className="input" />
-          </div>
-          <div>
-            <label className="label">Password</label>
-            <input type="password" name="password" required minLength={8} value={form.password} onChange={handleChange} className="input" />
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Must be at least 8 characters</p>
-          </div>
 
-          <button type="submit" disabled={loading} className="btn-primary w-full">
-            {loading ? "Please wait..." : isRegister ? "Sign Up" : "Sign In"}
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isRegister && (
+              <div className="space-y-1">
+                <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Full Name</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-450">
+                    <User className="h-4.5 w-4.5" />
+                  </div>
+                  <input
+                    type="text"
+                    name="fullName"
+                    required
+                    placeholder="Enter your full name"
+                    value={form.fullName}
+                    onChange={handleChange}
+                    className="input pl-10 bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-805 dark:text-white"
+                  />
+                </div>
+              </div>
+            )}
 
-        <div className="mt-4 text-center text-sm">
-          <button
-            onClick={() => { setIsRegister(!isRegister); setError(""); }}
-            className="text-primary-600 hover:underline dark:text-primary-400"
-          >
-            {isRegister ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
-          </button>
+            <div className="space-y-1">
+              <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Email Address</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-455">
+                  <Mail className="h-4.5 w-4.5" />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="name@domain.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="input pl-10 bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-805 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Password</label>
+                {!isRegister && (
+                  <span className="text-[11px] text-gray-400 hover:text-emerald-500 cursor-pointer">Forgot?</span>
+                )}
+              </div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-455">
+                  <Lock className="h-4.5 w-4.5" />
+                </div>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  minLength={8}
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  className="input pl-10 bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-805 dark:text-white"
+                />
+              </div>
+              {isRegister && (
+                <p className="text-[10px] text-gray-450 dark:text-gray-500">Minimum 8 characters containing letters & numbers.</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3.5 mt-6 font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99] transition-transform bg-emerald-600 hover:bg-emerald-555"
+            >
+              {loading ? (
+                <>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span>Authorizing...</span>
+                </>
+              ) : (
+                <span>{isRegister ? "Register Credentials" : "Enter Dashboard"}</span>
+              )}
+            </button>
+          </form>
+
+          <div className="text-center pt-2">
+            <button
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError("");
+              }}
+              className="text-xs font-bold text-emerald-600 dark:text-emerald-450 hover:underline hover:text-emerald-700 dark:hover:text-emerald-350"
+            >
+              {isRegister ? "Already registered? Sign In" : "New candidate? Create an Account"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

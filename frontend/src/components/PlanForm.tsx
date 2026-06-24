@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
+import { Sparkles, AlertCircle, Dumbbell, Calendar, Heart, ShieldAlert } from "lucide-react";
 
 const goals = [
   { value: "fat_loss", label: "Fat Loss" },
@@ -23,11 +24,11 @@ const activityLevels = [
 ];
 
 const dietPreferences = [
-  { value: "no_preference", label: "No Preference" },
-  { value: "vegetarian", label: "Vegetarian" },
+  { value: "no_preference", label: "No Preference (Any Indian Diet)" },
+  { value: "vegetarian", label: "Vegetarian (Pure Veg)" },
   { value: "vegan", label: "Vegan" },
-  { value: "keto", label: "Keto" },
-  { value: "paleo", label: "Paleo" },
+  { value: "keto", label: "Keto Diet" },
+  { value: "paleo", label: "Paleo Diet" },
   { value: "halal", label: "Halal" },
   { value: "gluten_free", label: "Gluten Free" },
 ];
@@ -133,104 +134,215 @@ export function PlanForm() {
     }
   };
 
-  // Show loading while checking auth
   if (!authChecked) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-600 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-555 border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6 text-gray-900 dark:text-gray-100">
       {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
-          {error}
+        <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-650 dark:text-red-400">
+          <ShieldAlert className="h-4.5 w-4.5 shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div>
-          <label className="label">Goal</label>
-          <select name="goal" value={form.goal} onChange={handleChange} className="input">
-            {goals.map((g) => (
-              <option key={g.value} value={g.value}>{g.label}</option>
-            ))}
-          </select>
+      <div className="card shadow-md border border-gray-250 bg-white p-8 dark:border-gray-800 dark:bg-gray-900/60 relative overflow-hidden space-y-6">
+        <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 relative">
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Goal Target</label>
+            <select
+              name="goal"
+              value={form.goal}
+              onChange={handleChange}
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+            >
+              {goals.map((g) => (
+                <option key={g.value} value={g.value} className="dark:bg-gray-950">{g.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Age (years)</label>
+            <input
+              type="number"
+              name="age"
+              value={form.age}
+              onChange={handleChange}
+              required
+              min={10}
+              max={100}
+              placeholder="e.g., 25"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Gender</label>
+            <select
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            >
+              <option value="male" className="dark:bg-gray-950">Male</option>
+              <option value="female" className="dark:bg-gray-950">Female</option>
+              <option value="other" className="dark:bg-gray-950">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Height (cm)</label>
+            <input
+              type="number"
+              name="height_cm"
+              value={form.height_cm}
+              onChange={handleChange}
+              required
+              min={50}
+              max={300}
+              placeholder="e.g., 175"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Weight (kg)</label>
+            <input
+              type="number"
+              name="weight_kg"
+              value={form.weight_kg}
+              onChange={handleChange}
+              required
+              min={20}
+              max={500}
+              placeholder="e.g., 70"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Activity Level</label>
+            <select
+              name="activity_level"
+              value={form.activity_level}
+              onChange={handleChange}
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            >
+              {activityLevels.map((a) => (
+                <option key={a.value} value={a.value} className="dark:bg-gray-950">{a.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Diet Preference</label>
+            <select
+              name="diet_preference"
+              value={form.diet_preference}
+              onChange={handleChange}
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            >
+              {dietPreferences.map((d) => (
+                <option key={d.value} value={d.value} className="dark:bg-gray-950">{d.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Workout Days / Week</label>
+            <input
+              type="number"
+              min={1}
+              max={7}
+              name="workout_days_per_week"
+              value={form.workout_days_per_week}
+              onChange={handleChange}
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Workout Duration (mins)</label>
+            <input
+              type="number"
+              min={10}
+              max={300}
+              name="workout_duration_minutes"
+              value={form.workout_duration_minutes}
+              onChange={handleChange}
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            />
+          </div>
         </div>
 
-        <div>
-          <label className="label">Age</label>
-          <input type="number" name="age" value={form.age} onChange={handleChange} required min={10} max={100} className="input" />
+        <div className="space-y-4 pt-2 relative">
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Allergies (comma separated)</label>
+            <input
+              type="text"
+              name="allergies"
+              value={form.allergies}
+              onChange={handleChange}
+              placeholder="e.g., peanuts, dairy, gluten (leave blank if none)"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Medical Conditions (comma separated)</label>
+            <input
+              type="text"
+              name="medical_conditions"
+              value={form.medical_conditions}
+              onChange={handleChange}
+              placeholder="e.g., asthma, diabetes, hypertension (leave blank if none)"
+              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-800 dark:text-white"
+            />
+          </div>
+
+          <div className="flex items-center gap-2.5 pt-2">
+            <input
+              type="checkbox"
+              name="yoga_interest"
+              id="yoga_interest"
+              checked={form.yoga_interest}
+              onChange={handleChange}
+              className="h-5 w-5 rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-955 text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
+            />
+            <label htmlFor="yoga_interest" className="text-sm font-semibold text-gray-750 dark:text-gray-300 cursor-pointer flex items-center gap-1.5 selection:bg-transparent">
+              <Heart className="h-4 w-4 text-rose-500 animate-pulse" />
+              Include Indian Yoga & Pranayama in my blueprint
+            </label>
+          </div>
         </div>
 
-        <div>
-          <label className="label">Gender</label>
-          <select name="gender" value={form.gender} onChange={handleChange} className="input">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="label">Height (cm)</label>
-          <input type="number" name="height_cm" value={form.height_cm} onChange={handleChange} required min={50} max={300} className="input" />
-        </div>
-
-        <div>
-          <label className="label">Weight (kg)</label>
-          <input type="number" name="weight_kg" value={form.weight_kg} onChange={handleChange} required min={20} max={500} className="input" />
-        </div>
-
-        <div>
-          <label className="label">Activity Level</label>
-          <select name="activity_level" value={form.activity_level} onChange={handleChange} className="input">
-            {activityLevels.map((a) => (
-              <option key={a.value} value={a.value}>{a.label}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="label">Diet Preference</label>
-          <select name="diet_preference" value={form.diet_preference} onChange={handleChange} className="input">
-            {dietPreferences.map((d) => (
-              <option key={d.value} value={d.value}>{d.label}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="label">Workout Days / Week</label>
-          <input type="number" min={1} max={7} name="workout_days_per_week" value={form.workout_days_per_week} onChange={handleChange} className="input" />
-        </div>
-
-        <div>
-          <label className="label">Workout Duration (min)</label>
-          <input type="number" min={10} max={300} name="workout_duration_minutes" value={form.workout_duration_minutes} onChange={handleChange} className="input" />
-        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary w-full py-3.5 mt-6 font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 active:scale-[0.99] transition-transform bg-emerald-600 hover:bg-emerald-500"
+        >
+          {loading ? (
+            <>
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              <span>Consulting Gemini AI & Drafting Blueprint...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-4.5 w-4.5 animate-pulse" />
+              <span>Draft Custom Athlete Scheme</span>
+            </>
+          )}
+        </button>
       </div>
-
-      <div>
-        <label className="label">Allergies (comma separated)</label>
-        <input type="text" name="allergies" value={form.allergies} onChange={handleChange} placeholder="e.g., peanuts, dairy, gluten" className="input" />
-      </div>
-
-      <div>
-        <label className="label">Medical Conditions (comma separated)</label>
-        <input type="text" name="medical_conditions" value={form.medical_conditions} onChange={handleChange} placeholder="e.g., asthma, diabetes" className="input" />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <input type="checkbox" name="yoga_interest" checked={form.yoga_interest} onChange={handleChange} className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
-        <label className="text-sm text-gray-700 dark:text-gray-300">Include Yoga in my plan</label>
-      </div>
-
-      <button type="submit" disabled={loading} className="btn-primary w-full">
-        {loading ? "Generating AI Plan..." : "Generate My Plan"}
-      </button>
     </form>
   );
 }

@@ -105,7 +105,7 @@ async def generate_plan(
 async def list_plans(current_user: dict = Depends(get_current_user)):
     try:
         plans_col = await get_fitness_plans_collection()
-        cursor = plans_col.find({"user_id": str(current_user["_id"])})
+        cursor = plans_col.find({"user_id": str(current_user["_id"]), "week_number": 1})
         plans = []
         async for doc in cursor:
             doc["id"] = str(doc.pop("_id"))
@@ -124,6 +124,18 @@ async def get_plan(plan_id: str, current_user: dict = Depends(get_current_user))
         if not plan:
             raise HTTPException(status_code=404, detail="Plan not found")
         plan["id"] = str(plan.pop("_id"))
+        
+        # Query all week plans in this sequence (sharing the same profile_id)
+        weeks_cursor = plans_col.find({"profile_id": plan["profile_id"], "user_id": str(current_user["_id"])})
+        weeks = []
+        async for doc in weeks_cursor:
+            weeks.append({
+                "id": str(doc["_id"]),
+                "week_number": doc.get("week_number", 1)
+            })
+        weeks.sort(key=lambda w: w["week_number"])
+        plan["weeks"] = weeks
+        
         return plan
     except HTTPException:
         raise

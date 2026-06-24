@@ -55,6 +55,11 @@ class FitnessPlanInDB(FitnessPlanCreate):
         populate_by_name = True
 
 
+class WeekInfo(BaseModel):
+    id: str
+    week_number: int
+
+
 class FitnessPlanResponse(BaseModel):
     id: str
     user_id: str
@@ -65,3 +70,4 @@ class FitnessPlanResponse(BaseModel):
     week_number: int = 1
     daily_plans: List[DayPlan]
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    weeks: Optional[List[WeekInfo]] = None

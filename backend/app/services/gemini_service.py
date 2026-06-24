@@ -30,6 +30,12 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
     - Workout Duration: {profile.workout_duration_minutes} minutes
     - Include Yoga: {profile.yoga_interest}
 
+    Indian Cuisine Diet Adaptations:
+    - Customize all diet plans to incorporate common, healthy Indian dishes and ingredients (e.g., Roti, Chapati, Paneer Bhurji, Moong Dal Chilla, Vegetable Dalia, Oats Upma, Idli with Sambar, Poha, Khichdi, Dal Tadka, Chana Masala, Rajma, Palak Paneer, Tandoori Chicken, Fish Tikka, Egg Bhurji, Chicken Curry, etc.).
+    - Ensure it is strictly tailored to Indian users' food culture and dietary habits while matching their specific diet preference (e.g., if vegetarian, do NOT include egg, chicken, meat or fish; if vegan, use plant-based alternatives like tofu, soy chunks, dal, almond milk; if keto, focus on paneer, eggs, chicken, healthy fats).
+    - Ensure macronutrient and calorie targets are precisely met.
+    - Ensure meal instructions and names reflect authentic Indian preparations (e.g., preparation steps like boiling, roasting, sautéing in minimal oil).
+
     Crucial Structure Requirements:
     1. The plan must span exactly 7 days (Day 1 to Day 7).
     2. Every single day (Day 1 to 7) MUST include a full, personalized 'meals' diet plan matching the user's diet preferences and constraints.
@@ -153,6 +159,12 @@ async def generate_next_week_fitness_plan(profile: FitnessProfileCreate, prev_pl
 
     Previous Week's Plan (Week {prev_plan.get('week_number', 1)}):
     {json.dumps(prev_plan, indent=2)}
+
+    Indian Cuisine Diet Adaptations:
+    - Customize all diet plans to incorporate common, healthy Indian dishes and ingredients (e.g., Roti, Chapati, Paneer Bhurji, Moong Dal Chilla, Vegetable Dalia, Oats Upma, Idli with Sambar, Poha, Khichdi, Dal Tadka, Chana Masala, Rajma, Palak Paneer, Tandoori Chicken, Fish Tikka, Egg Bhurji, Chicken Curry, etc.).
+    - Ensure it is strictly tailored to Indian users' food culture and dietary habits while matching their specific diet preference (e.g., if vegetarian, do NOT include egg, chicken, meat or fish; if vegan, use plant-based alternatives like tofu, soy chunks, dal, almond milk; if keto, focus on paneer, eggs, chicken, healthy fats).
+    - Ensure macronutrient and calorie targets are precisely met.
+    - Ensure meal instructions and names reflect authentic Indian preparations (e.g., preparation steps like boiling, roasting, sautéing in minimal oil).
 
     Crucial Progression & Structure Requirements:
     1. Progress the workouts logically for Week {prev_plan.get('week_number', 1) + 1} (e.g., slightly increase weights, sets, reps, or introduce evolved exercise variations, while keeping the duration safe).

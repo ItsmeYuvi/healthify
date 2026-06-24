@@ -15,6 +15,7 @@ interface Plan {
   week_number?: number;
   created_at: string;
   daily_plans: any[];
+  weeks?: { id: string; week_number: number }[];
 }
 
 export default function PlanDetailPage({ params }: { params: { id: string } }) {
@@ -181,7 +182,7 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-slate-950">
+      <div className="flex h-screen items-center justify-center">
         <div className="relative flex h-12 w-12 items-center justify-center">
           <div className="absolute h-12 w-12 animate-ping rounded-full border border-emerald-500/30 opacity-75" />
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
@@ -192,11 +193,11 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
 
   if (error && !plan) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 p-8 flex flex-col items-center justify-center space-y-4">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4 text-gray-900 dark:text-gray-100">
         <AlertCircle className="h-12 w-12 text-red-500" />
         <h2 className="text-xl font-bold">Error Loading Scheme</h2>
-        <p className="text-slate-400 text-sm max-w-md text-center">{error}</p>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-xl bg-slate-900 border border-slate-800 px-5 py-2.5 text-sm font-semibold hover:bg-slate-850">
+        <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md text-center">{error}</p>
+        <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-2.5 text-sm font-semibold hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-colors">
           <ArrowLeft className="h-4 w-4" /> Return to Dashboard
         </Link>
       </div>
@@ -215,66 +216,91 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
   const totalCarbs = activeDayPlan.meals?.reduce((sum: number, m: any) => sum + (m.carbs_g || 0), 0) || 0;
   const totalFats = activeDayPlan.meals?.reduce((sum: number, m: any) => sum + (m.fats_g || 0), 0) || 0;
 
+  // Check if current week is the latest week generated so far
+  const isLatestWeek = !currentPlan.weeks || currentPlan.weeks.length === 0 || 
+    currentPlan.week_number === Math.max(...currentPlan.weeks.map(w => w.week_number));
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 space-y-8">
+    <div className="space-y-8 pb-12 text-gray-900 dark:text-gray-100">
       {/* Top Navigation */}
       <div className="flex items-center justify-between">
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-semibold group">
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors text-sm font-semibold group">
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to Dashboard
         </Link>
-        <div className="flex items-center gap-2 text-xs text-slate-500 font-semibold border border-slate-800 bg-slate-900/30 px-3 py-1.5 rounded-full">
-          <ShieldCheck className="h-4 w-4 text-emerald-500" />
+        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 font-semibold border border-gray-250 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 px-3 py-1.5 rounded-full">
+          <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-450" />
           <span>Authentic Athlete Blueprint</span>
         </div>
       </div>
 
       {/* Hero Header Section */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 p-8 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-gradient-to-r from-gray-50 via-white to-gray-50 p-8 shadow-sm dark:border-gray-800 dark:from-gray-900/50 dark:via-gray-955 dark:to-gray-900/50 dark:shadow-md">
         <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-emerald-500/5 blur-3xl" />
         <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-teal-500/5 blur-3xl" />
 
         <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400">
+              <span className="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
                 Week {currentPlan.week_number || 1}
               </span>
-              <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
+              <span className="text-xs text-gray-500 dark:text-gray-450 font-medium flex items-center gap-1">
                 <Calendar className="h-3.5 w-3.5" />
                 7-Day Health Blueprint
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white leading-tight">
+            <h1 className="text-2xl md:text-3xl font-extrabold leading-tight">
               {currentPlan.plan_name}
             </h1>
-            <p className="text-sm text-slate-400 max-w-2xl capitalize">
+            <p className="text-sm text-gray-600 dark:text-gray-450 max-w-2xl capitalize">
               Program Goal: {currentPlan.goal.replace(/_/g, " ")} | Tailored diet and exercise regime.
             </p>
           </div>
 
-          <button
-            onClick={handleGenerateNextWeek}
-            disabled={nextWeekLoading}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] focus:outline-none"
-          >
-            {nextWeekLoading ? (
-              <>
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                <span>Engineering Week {(currentPlan.week_number || 1) + 1}...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4.5 w-4.5 animate-pulse" />
-                <span>Generate Week {(currentPlan.week_number || 1) + 1} Plan</span>
-              </>
-            )}
-          </button>
+          {isLatestWeek && (
+            <button
+              onClick={handleGenerateNextWeek}
+              disabled={nextWeekLoading}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/10 disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none"
+            >
+              {nextWeekLoading ? (
+                <>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span>Engineering Week {(currentPlan.week_number || 1) + 1}...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4.5 w-4.5" />
+                  <span>Generate Week {(currentPlan.week_number || 1) + 1} Plan</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
 
+      {/* Week Navigation Selector */}
+      {currentPlan.weeks && currentPlan.weeks.length > 1 && (
+        <div className="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-800 pb-4">
+          {currentPlan.weeks.map((w) => (
+            <Link
+              key={w.id}
+              href={`/plan/${w.id}`}
+              className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all ${
+                currentPlan.id === w.id
+                  ? "bg-emerald-605 border-emerald-605 text-white dark:bg-emerald-600 dark:border-emerald-600 shadow-md shadow-emerald-500/15"
+                  : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              Week {w.week_number}
+            </Link>
+          ))}
+        </div>
+      )}
+
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-650 dark:text-red-400">
           <AlertCircle className="h-5 w-5 shrink-0" />
           {error}
         </div>
@@ -284,8 +310,8 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
       <div className="grid gap-8 lg:grid-cols-12 items-start">
         {/* Left Day Navigation & Macro Summary */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-5 space-y-4">
-            <h3 className="text-sm font-semibold tracking-wider text-slate-400 uppercase">
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 space-y-4 dark:border-gray-800 dark:bg-gray-900/40">
+            <h3 className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
               Days Schedule
             </h3>
             <div className="grid grid-cols-4 gap-2 lg:grid-cols-1 lg:gap-3">
@@ -297,15 +323,15 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                     onClick={() => setActiveDay(dp.day)}
                     className={`flex items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all ${
                       activeDay === dp.day
-                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-950/20"
-                        : "text-slate-300 hover:bg-slate-900 border border-transparent hover:border-slate-800"
+                        ? "bg-emerald-605 dark:bg-emerald-600 text-white shadow-md shadow-emerald-500/15"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/80 border border-transparent hover:border-gray-200 dark:hover:border-gray-750"
                     }`}
                   >
                     <span>Day {dp.day}</span>
                     <span className={`hidden lg:inline-flex rounded px-1.5 py-0.5 text-[10px] font-bold ${
                       isDPWorkout 
-                        ? (activeDay === dp.day ? "bg-emerald-500 text-white" : "bg-emerald-900/30 text-emerald-400")
-                        : (activeDay === dp.day ? "bg-emerald-700 text-white" : "bg-slate-800 text-slate-400")
+                        ? (activeDay === dp.day ? "bg-emerald-500 text-white" : "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/30")
+                        : (activeDay === dp.day ? "bg-emerald-750 text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400")
                     }`}>
                       {isDPWorkout ? "Workout" : "Rest"}
                     </span>
@@ -316,38 +342,38 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
           </div>
 
           {/* Macro Target panel */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-5 space-y-4">
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 space-y-4 dark:border-gray-800 dark:bg-gray-900/40">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold tracking-wider text-slate-400 uppercase">
+              <h3 className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
                 Daily Macro Target
               </h3>
-              <span className="text-xs text-emerald-400 font-bold">{totalCalories} kcal</span>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">{totalCalories} kcal</span>
             </div>
             <div className="space-y-3">
               <div>
-                <div className="flex justify-between text-xs text-slate-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>Protein</span>
-                  <span className="font-semibold text-slate-200">{Math.round(totalProtein)}g</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalProtein)}g</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-gray-150 dark:bg-gray-800 overflow-hidden">
                   <div className="h-full bg-orange-500 rounded-full" style={{ width: `${Math.min(100, (totalProtein / 180) * 100)}%` }} />
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-slate-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>Carbohydrates</span>
-                  <span className="font-semibold text-slate-200">{Math.round(totalCarbs)}g</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalCarbs)}g</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-gray-150 dark:bg-gray-800 overflow-hidden">
                   <div className="h-full bg-teal-500 rounded-full" style={{ width: `${Math.min(100, (totalCarbs / 250) * 100)}%` }} />
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-slate-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>Fats</span>
-                  <span className="font-semibold text-slate-200">{Math.round(totalFats)}g</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalFats)}g</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-gray-150 dark:bg-gray-800 overflow-hidden">
                   <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${Math.min(100, (totalFats / 80) * 100)}%` }} />
                 </div>
               </div>
@@ -358,13 +384,13 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
         {/* Right Details Panel */}
         <div className="lg:col-span-9 space-y-8">
           {/* Day Focus Header */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/20 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 dark:border-gray-800 dark:bg-gray-900/20">
             <div className="space-y-1">
-              <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Day {activeDay} Focus</span>
-              <h2 className="text-xl font-extrabold text-white">{activeDayPlan.focus}</h2>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">Day {activeDay} Focus</span>
+              <h2 className="text-xl font-extrabold">{activeDayPlan.focus}</h2>
             </div>
-            <div className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/50 px-4 py-2 text-xs font-semibold text-slate-300">
-              <Zap className="h-4 w-4 text-emerald-400" />
+            <div className="inline-flex items-center gap-1.5 rounded-xl border border-gray-250 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/40 px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+              <Zap className="h-4 w-4 text-emerald-500" />
               <span>{isWorkoutDay ? "Active Exercise Load" : "Active Muscle Repair"}</span>
             </div>
           </div>
@@ -374,13 +400,13 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
             <div className="space-y-8">
               {!isWorkoutDay && !isYogaDay ? (
                 /* Rest Day Card */
-                <div className="rounded-2xl border border-slate-850 bg-slate-900/10 p-8 text-center flex flex-col items-center justify-center space-y-4 h-full min-h-[300px]">
-                  <div className="rounded-full bg-slate-900 p-4 border border-slate-800 text-teal-400">
+                <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center flex flex-col items-center justify-center space-y-4 h-full min-h-[300px] dark:border-gray-800 dark:bg-gray-900/10">
+                  <div className="rounded-full bg-gray-100 dark:bg-gray-900 p-4 border border-gray-250 dark:border-gray-800 text-teal-600 dark:text-teal-400">
                     <Heart className="h-10 w-10 animate-pulse" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-white">Active Recovery Day</h3>
-                    <p className="text-sm text-slate-400 max-w-xs mx-auto leading-relaxed">
+                    <h3 className="text-lg font-bold">Active Recovery Day</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mx-auto leading-relaxed">
                       No heavy workout scheduled. Focus on hydration, mobility, stretching, and letting your muscle fibers rebuild stronger.
                     </p>
                   </div>
@@ -390,26 +416,26 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                 <div className="space-y-6">
                   {/* Exercises */}
                   {isWorkoutDay && (
-                    <div className="rounded-2xl border border-slate-800 bg-slate-900/20 p-6 space-y-4">
-                      <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-slate-850 pb-2">
-                        <Dumbbell className="h-5 w-5 text-emerald-500" />
+                    <div className="rounded-3xl border border-gray-200 bg-white p-6 space-y-4 dark:border-gray-800 dark:bg-gray-900/20">
+                      <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-150 dark:border-gray-800 pb-2">
+                        <Dumbbell className="h-5 w-5 text-emerald-555 dark:text-emerald-400" />
                         Workout Routine
                       </h3>
                       <div className="space-y-4">
                         {activeDayPlan.exercises.map((ex: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border border-slate-850 bg-slate-900/40 p-4 space-y-2 hover:border-slate-800 transition-colors">
+                          <div key={idx} className="rounded-2xl border border-gray-150 bg-gray-50/30 p-4 space-y-2 hover:border-gray-200 transition-colors dark:border-gray-850 dark:bg-gray-900/40 dark:hover:border-gray-800">
                             <div className="flex items-center justify-between">
-                              <h4 className="font-bold text-white text-sm">{ex.name}</h4>
-                              <span className="text-[11px] font-bold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/30">
+                              <h4 className="font-bold text-sm">{ex.name}</h4>
+                              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-900/30">
                                 {ex.sets} x {ex.reps}
                               </span>
                             </div>
-                            <div className="flex justify-between items-center text-xs text-slate-400">
-                              <span>Rest: <strong className="text-slate-300">{ex.rest_seconds}s</strong></span>
+                            <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                              <span>Rest: <strong className="text-gray-700 dark:text-gray-300">{ex.rest_seconds}s</strong></span>
                             </div>
                             {ex.notes && (
-                              <p className="text-xs text-slate-400 bg-slate-950/40 p-2.5 rounded-lg border border-slate-900">
-                                <span className="font-semibold text-slate-300">Coach:</span> {ex.notes}
+                              <p className="text-xs text-gray-650 dark:text-gray-400 bg-gray-100/50 dark:bg-gray-955 p-2.5 rounded-xl border border-gray-200 dark:border-gray-850">
+                                <span className="font-semibold text-gray-800 dark:text-gray-350">Coach:</span> {ex.notes}
                               </p>
                             )}
                           </div>
@@ -420,25 +446,25 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
 
                   {/* Yoga */}
                   {isYogaDay && (
-                    <div className="rounded-2xl border border-slate-800 bg-slate-900/20 p-6 space-y-4">
-                      <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-slate-850 pb-2">
-                        <Heart className="h-5 w-5 text-teal-500" />
+                    <div className="rounded-3xl border border-gray-200 bg-white p-6 space-y-4 dark:border-gray-800 dark:bg-gray-900/20">
+                      <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-150 dark:border-gray-800 pb-2">
+                        <Heart className="h-5 w-5 text-teal-600 dark:text-teal-400" />
                         Yoga & Mobility Routine
                       </h3>
                       <div className="space-y-4">
                         {activeDayPlan.yoga_routine.map((y: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border border-slate-850 bg-slate-900/40 p-4 space-y-2 hover:border-slate-800 transition-colors">
+                          <div key={idx} className="rounded-2xl border border-gray-150 bg-gray-50/30 p-4 space-y-2 hover:border-gray-200 transition-colors dark:border-gray-850 dark:bg-gray-900/40 dark:hover:border-gray-800">
                             <div className="flex items-center justify-between">
-                              <h4 className="font-bold text-white text-sm">{y.name}</h4>
-                              <span className="text-[10px] font-bold uppercase text-teal-400 bg-teal-950/40 px-2 py-0.5 rounded border border-teal-900/30">
+                              <h4 className="font-bold text-sm">{y.name}</h4>
+                              <span className="text-[10px] font-bold uppercase text-teal-700 dark:text-teal-450 bg-teal-50 dark:bg-teal-950/40 px-2 py-0.5 rounded border border-teal-100 dark:border-teal-900/30">
                                 {y.difficulty}
                               </span>
                             </div>
-                            <div className="text-xs text-slate-400">
-                              Duration: <strong className="text-slate-300">{Math.round(y.duration_seconds / 60)} mins</strong>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              Duration: <strong className="text-gray-700 dark:text-gray-300">{Math.round(y.duration_seconds / 60)} mins</strong>
                             </div>
-                            <p className="text-xs text-slate-400 bg-slate-950/40 p-2.5 rounded-lg border border-slate-900">
-                              <span className="font-semibold text-slate-300">Benefits:</span> {y.benefits}
+                            <p className="text-xs text-gray-650 dark:text-gray-400 bg-gray-100/50 dark:bg-gray-955 p-2.5 rounded-xl border border-gray-200 dark:border-gray-850">
+                              <span className="font-semibold text-gray-800 dark:text-gray-355">Benefits:</span> {y.benefits}
                             </p>
                           </div>
                         ))}
@@ -450,30 +476,30 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Diet & Nutrition Panel (Right side of detail grid) */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/20 p-6 space-y-4 h-full">
-              <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-slate-850 pb-2">
+            <div className="rounded-3xl border border-gray-200 bg-white p-6 space-y-4 h-full dark:border-gray-800 dark:bg-gray-900/20">
+              <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-150 dark:border-gray-800 pb-2">
                 <Salad className="h-5 w-5 text-orange-500" />
                 Nutrition Planner
               </h3>
               <div className="space-y-4">
                 {activeDayPlan.meals?.map((m: any, idx: number) => (
-                  <div key={idx} className="rounded-xl border border-slate-850 bg-slate-900/40 p-4 space-y-2 hover:border-slate-800 transition-colors">
+                  <div key={idx} className="rounded-2xl border border-gray-150 bg-gray-50/30 p-4 space-y-2 hover:border-gray-200 transition-colors dark:border-gray-850 dark:bg-gray-900/40 dark:hover:border-gray-800">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-950/40 px-2 py-0.5 rounded border border-orange-900/30">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-955 px-2 py-0.5 rounded border border-orange-100 dark:border-orange-900/30">
                         {m.meal_type}
                       </span>
-                      <span className="text-xs font-semibold text-slate-400">{m.calories} kcal</span>
+                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-405">{m.calories} kcal</span>
                     </div>
-                    <h4 className="font-bold text-white text-sm">{m.name}</h4>
-                    <p className="text-xs text-slate-400">
-                      <strong className="text-slate-300">Macros:</strong> P: {m.protein_g}g | C: {m.carbs_g}g | F: {m.fats_g}g
+                    <h4 className="font-bold text-sm">{m.name}</h4>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <strong className="text-gray-700 dark:text-gray-300">Macros:</strong> P: {m.protein_g}g | C: {m.carbs_g}g | F: {m.fats_g}g
                     </p>
-                    <p className="text-xs text-slate-400">
-                      <strong className="text-slate-300">Ingredients:</strong> {m.ingredients?.join(", ")}
+                    <p className="text-xs text-gray-505 dark:text-gray-400">
+                      <strong className="text-gray-700 dark:text-gray-300">Ingredients:</strong> {m.ingredients?.join(", ")}
                     </p>
                     {m.instructions && (
-                      <div className="text-xs text-slate-400 bg-slate-950/40 p-2.5 rounded-lg border border-slate-900">
-                        <span className="font-semibold text-slate-300">Prep:</span> {m.instructions}
+                      <div className="text-xs text-gray-650 dark:text-gray-400 bg-gray-100/50 dark:bg-gray-955 p-2.5 rounded-xl border border-gray-200 dark:border-gray-850">
+                        <span className="font-semibold text-gray-850 dark:text-gray-350">Prep:</span> {m.instructions}
                       </div>
                     )}
                   </div>
