@@ -83,13 +83,13 @@ async def generate_fitness_plan(profile: FitnessProfileCreate) -> dict:
         text = response.text
 
         # Clean up markdown code blocks if present
+        text = text.strip()
         if text.startswith("```json"):
             text = text[7:]
-        if text.startswith("```"):
+        elif text.startswith("```"):
             text = text[3:]
         if text.endswith("```"):
             text = text[:-3]
-
         text = text.strip()
         plan_data = json.loads(text)
         logger.info("Fitness plan generated successfully.")

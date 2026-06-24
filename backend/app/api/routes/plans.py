@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from bson import ObjectId
+from datetime import datetime
 
 from app.models.fitness_profile import FitnessProfileCreate, FitnessProfileResponse
 from app.models.plan import FitnessPlanCreate, FitnessPlanInDB, FitnessPlanResponse
@@ -20,6 +21,8 @@ async def create_profile(
         profiles_col = await get_fitness_profiles_collection()
         profile_data = profile.model_dump()
         profile_data["user_id"] = str(current_user["_id"])
+        profile_data["created_at"] = datetime.utcnow()
+        profile_data["updated_at"] = datetime.utcnow()
         result = await profiles_col.insert_one(profile_data)
         
         created = await profiles_col.find_one({"_id": result.inserted_id})
@@ -80,6 +83,7 @@ async def generate_plan(
             "goal": plan_data.get("goal", profile_obj.goal.value),
             "duration_weeks": plan_data.get("duration_weeks", 1),
             "daily_plans": plan_data.get("daily_plans", []),
+            "created_at": datetime.utcnow(),
         }
         result = await plans_col.insert_one(plan_doc)
         created = await plans_col.find_one({"_id": result.inserted_id})

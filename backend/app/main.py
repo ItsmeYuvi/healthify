@@ -45,7 +45,7 @@ if settings.frontend_url and settings.frontend_url not in origins:
 
 # Also add known production domains as fallback
 known_production_domains = [
-    "https://healthify-hmlk3dmhj-team-x17.vercel.app",
+    "https://healthify-hmlk3dhmj-team-x17.vercel.app",
     "https://healthify-8nox0uj8v-team-x17.vercel.app",
     "https://healthify-team-x17.vercel.app",
 ]

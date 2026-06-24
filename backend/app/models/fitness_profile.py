@@ -59,4 +59,4 @@ class FitnessProfileInDB(FitnessProfileCreate):
 class FitnessProfileResponse(FitnessProfileCreate):
     id: str
     user_id: str
-    created_at: datetime
+    created_at: datetime = Field(default_factory=datetime.utcnow)

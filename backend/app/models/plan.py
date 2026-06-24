@@ -62,4 +62,4 @@ class FitnessPlanResponse(BaseModel):
     goal: str
     duration_weeks: int
     daily_plans: List[DayPlan]
-    created_at: datetime
+    created_at: datetime = Field(default_factory=datetime.utcnow)

@@ -30,7 +30,7 @@ class UserInDB(UserBase):
 
 class UserResponse(UserBase):
     id: str
-    created_at: datetime
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class Token(BaseModel):
