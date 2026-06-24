@@ -1,22 +1,28 @@
 from datetime import datetime, timedelta
 from typing import Optional, Union
 
+import bcrypt
 import jwt
-from passlib.context import CryptContext
 
 from app.core.config import settings
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 ALGORITHM = settings.jwt_algorithm
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    """Verify a plain password against a bcrypt hash."""
+    password_bytes = plain_password.encode("utf-8")
+    hash_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password_bytes, hash_bytes)
 
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    """Hash a password using bcrypt with proper truncation for 72-byte limit."""
+    # bcrypt has a 72-byte limit; truncate to avoid ValueError
+    password_bytes = password.encode("utf-8")[:72]
+    salt = bcrypt.gensalt(rounds=12)
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    return hashed.decode("utf-8")
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
