@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { Sparkles, AlertCircle, Dumbbell, Calendar, Heart, ShieldAlert } from "lucide-react";
+import { SpotlightCard } from "@/components/SpotlightCard";
 
 const goals = [
   { value: "fat_loss", label: "Fat Loss" },
@@ -151,7 +152,7 @@ export function PlanForm() {
         </div>
       )}
 
-      <div className="card shadow-md border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-gray-900/60 relative overflow-hidden space-y-6">
+      <SpotlightCard className="shadow-md p-8 space-y-6">
         <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
 
@@ -367,7 +368,7 @@ export function PlanForm() {
             </>
           )}
         </button>
-      </div>
+      </SpotlightCard>
     </form>
   );
 }

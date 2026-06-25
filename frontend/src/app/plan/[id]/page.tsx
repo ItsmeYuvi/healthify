@@ -6,6 +6,8 @@ import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { Dumbbell, Salad, User, AlertCircle, Sparkles, Heart, ArrowLeft, Calendar, ShieldCheck, Zap } from "lucide-react";
 import Link from "next/link";
+import { SpotlightCard } from "@/components/SpotlightCard";
+import { AuroraBackground } from "@/components/AuroraBackground";
 
 interface Plan {
   id: string;
@@ -240,10 +242,7 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Hero Header Section */}
-      <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-gradient-to-r from-gray-50 via-white to-gray-50 p-8 shadow-sm dark:border-gray-800 dark:from-gray-900/50 dark:via-gray-955 dark:to-gray-900/50 dark:shadow-md">
-        <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-emerald-500/5 blur-3xl" />
-        <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-teal-500/5 blur-3xl" />
-
+      <AuroraBackground className="p-8">
         <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
@@ -283,7 +282,7 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
             </button>
           )}
         </div>
-      </div>
+      </AuroraBackground>
 
       {/* Week Navigation Selector */}
       {currentPlan.weeks && currentPlan.weeks.length > 1 && (
@@ -315,7 +314,7 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
       <div className="grid gap-8 lg:grid-cols-12 items-start">
         {/* Left Day Navigation & Macro Summary */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 space-y-4 dark:border-gray-800 dark:bg-gray-900/40">
+          <SpotlightCard className="p-5 space-y-4">
             <h3 className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
               Days Schedule
             </h3>
@@ -344,10 +343,10 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                 );
               })}
             </div>
-          </div>
+          </SpotlightCard>
 
           {/* Macro Target panel */}
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 space-y-4 dark:border-gray-800 dark:bg-gray-900/40">
+          <SpotlightCard className="p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
                 Daily Macro Target
@@ -383,13 +382,13 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-          </div>
+          </SpotlightCard>
         </div>
 
         {/* Right Details Panel */}
         <div className="lg:col-span-9 space-y-8">
           {/* Day Focus Header */}
-          <div className="rounded-3xl border border-gray-200 bg-white p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 dark:border-gray-800 dark:bg-gray-900/20">
+          <SpotlightCard className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
               <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">Day {activeDay} Focus</span>
               <h2 className="text-xl font-extrabold">{activeDayPlan.focus}</h2>
@@ -398,14 +397,14 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
               <Zap className="h-4 w-4 text-emerald-500" />
               <span>{isWorkoutDay ? "Active Exercise Load" : "Active Muscle Repair"}</span>
             </div>
-          </div>
+          </SpotlightCard>
 
           <div className="grid gap-8 md:grid-cols-2">
             {/* Workout & Yoga Panel (Left side of detail grid) */}
             <div className="space-y-8">
               {!isWorkoutDay && !isYogaDay ? (
                 /* Rest Day Card */
-                <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center flex flex-col items-center justify-center space-y-4 h-full min-h-[300px] dark:border-gray-800 dark:bg-gray-900/10">
+                <SpotlightCard className="p-8 text-center flex flex-col items-center justify-center space-y-4 h-full min-h-[300px]">
                   <div className="rounded-full bg-gray-100 dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 text-teal-600 dark:text-teal-400">
                     <Heart className="h-10 w-10 animate-pulse" />
                   </div>
@@ -415,13 +414,13 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                       No heavy workout scheduled. Focus on hydration, mobility, stretching, and letting your muscle fibers rebuild stronger.
                     </p>
                   </div>
-                </div>
+                </SpotlightCard>
               ) : (
                 /* Exercises and/or Yoga */
                 <div className="space-y-6">
                   {/* Exercises */}
                   {isWorkoutDay && (
-                    <div className="rounded-3xl border border-gray-200 bg-white p-6 space-y-4 dark:border-gray-800 dark:bg-gray-900/20">
+                    <SpotlightCard className="p-6 space-y-4">
                       <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-2">
                         <Dumbbell className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         Workout Routine
@@ -452,12 +451,12 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </SpotlightCard>
                   )}
 
                   {/* Yoga */}
                   {isYogaDay && (
-                    <div className="rounded-3xl border border-gray-200 bg-white p-6 space-y-4 dark:border-gray-800 dark:bg-gray-900/20">
+                    <SpotlightCard className="p-6 space-y-4">
                       <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-2">
                         <Heart className="h-5 w-5 text-teal-600 dark:text-teal-400" />
                         Yoga & Mobility Routine
@@ -488,14 +487,14 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </SpotlightCard>
                   )}
                 </div>
               )}
             </div>
 
             {/* Diet & Nutrition Panel (Right side of detail grid) */}
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 space-y-4 h-full dark:border-gray-800 dark:bg-gray-900/20">
+            <SpotlightCard className="p-6 space-y-4 h-full">
               <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-2">
                 <Salad className="h-5 w-5 text-orange-500" />
                 Nutrition Planner
@@ -524,7 +523,7 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                   </div>
                 ))}
               </div>
-            </div>
+            </SpotlightCard>
           </div>
         </div>
       </div>

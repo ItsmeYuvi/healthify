@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { User, Mail, Lock, ShieldAlert, Dumbbell } from "lucide-react";
+import { SpotlightCard } from "@/components/SpotlightCard";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -79,7 +80,7 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md py-12 px-4 text-gray-900 dark:text-gray-100">
-      <div className="card shadow-2xl relative border border-gray-250 bg-white p-8 dark:border-gray-800 dark:bg-gray-900/60 overflow-hidden">
+      <SpotlightCard className="shadow-2xl p-8 relative">
         {/* Glow Effects */}
         <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
         <div className="absolute -left-20 -bottom-20 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
@@ -198,7 +199,7 @@ export default function LoginPage() {
             </button>
           </div>
         </div>
-      </div>
+      </SpotlightCard>
     </div>
   );
 }

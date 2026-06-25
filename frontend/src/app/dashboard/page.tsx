@@ -5,6 +5,8 @@ import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { Dumbbell, Salad, User, AlertCircle, ArrowRight, Sparkles, TrendingUp, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { SpotlightCard } from "@/components/SpotlightCard";
+import { AuroraBackground } from "@/components/AuroraBackground";
 
 interface Plan {
   id: string;
@@ -120,10 +122,7 @@ export default function DashboardPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-12 text-gray-900 dark:text-gray-100">
       {/* Top Header Section */}
-      <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-gradient-to-r from-gray-50 via-white to-gray-50 p-8 shadow-sm dark:border-gray-800 dark:from-gray-900/50 dark:via-gray-950 dark:to-gray-900/50 dark:shadow-md">
-        <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-emerald-500/10 blur-3xl" />
-        <div className="absolute -left-16 -bottom-16 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl" />
-
+      <AuroraBackground className="p-8">
         <div className="relative space-y-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="space-y-2">
@@ -174,7 +173,7 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-      </div>
+      </AuroraBackground>
 
       {error && (
         <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-600 dark:text-red-400">
@@ -238,14 +237,14 @@ export default function DashboardPage() {
               const weekNum = plan.week_number || 1;
 
               return (
-                <div
+                <SpotlightCard
                   key={plan.id}
                   onClick={() => router.push(`/plan/${plan.id}`)}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-emerald-500/40 hover:-translate-y-1 hover:shadow-md dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-emerald-500/40 dark:hover:shadow-lg cursor-pointer"
+                  className="hover:-translate-y-1 hover:shadow-md cursor-pointer flex flex-col justify-between"
                 >
                   {/* Sliding red overlay for deletion confirmation */}
                   <div
-                    className={`absolute inset-0 bg-red-650/95 dark:bg-red-950/95 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center text-white transition-all duration-305 ease-out ${
+                    className={`absolute -inset-6 bg-red-600/95 dark:bg-red-950/95 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-center text-white transition-all duration-300 ease-out ${
                       deleteConfirmId === plan.id
                         ? "translate-y-0 opacity-100"
                         : "-translate-y-full opacity-0"
@@ -338,7 +337,7 @@ export default function DashboardPage() {
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </span>
                   </div>
-                </div>
+                </SpotlightCard>
               );
             })}
           </div>
