@@ -6,8 +6,11 @@ import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { Dumbbell, Salad, User, AlertCircle, Sparkles, Heart, ArrowLeft, Calendar, ShieldCheck, Zap } from "lucide-react";
 import Link from "next/link";
-import { SpotlightCard } from "@/components/SpotlightCard";
-import { AuroraBackground } from "@/components/AuroraBackground";
+import { GlassCard } from "@/components/GlassCard";
+import { TiltedCard } from "@/components/TiltedCard";
+import { BlurText } from "@/components/BlurText";
+import { GradientText } from "@/components/GradientText";
+import { StarBorder } from "@/components/StarBorder";
 
 interface Plan {
   id: string;
@@ -186,8 +189,8 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="relative flex h-12 w-12 items-center justify-center">
-          <div className="absolute h-12 w-12 animate-ping rounded-full border border-emerald-500/30 opacity-75" />
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+          <div className="absolute h-12 w-12 animate-ping rounded-full border border-cyan-500/30 opacity-75" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
         </div>
       </div>
     );
@@ -195,11 +198,11 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
 
   if (error && !plan) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4 text-gray-900 dark:text-gray-100">
-        <AlertCircle className="h-12 w-12 text-red-500" />
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4 text-white">
+        <AlertCircle className="h-12 w-12 text-red-400" />
         <h2 className="text-xl font-bold">Error Loading Scheme</h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md text-center">{error}</p>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-2.5 text-sm font-semibold hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-colors">
+        <p className="text-white/40 text-sm max-w-md text-center">{error}</p>
+        <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-5 py-2.5 text-sm font-semibold hover:bg-white/[0.05] transition-colors">
           <ArrowLeft className="h-4 w-4" /> Return to Dashboard
         </Link>
       </div>
@@ -228,73 +231,73 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
     currentPlan.week_number === Math.max(...currentPlan.weeks.map(w => w.week_number));
 
   return (
-    <div className="space-y-8 pb-12 text-gray-900 dark:text-gray-100">
+    <div className="space-y-8 pb-12 text-white">
       {/* Top Navigation */}
       <div className="flex items-center justify-between">
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors text-sm font-semibold group">
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-semibold group">
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to Dashboard
         </Link>
-        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 font-semibold border border-gray-250 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 px-3 py-1.5 rounded-full">
-          <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-450" />
+        <div className="flex items-center gap-2 text-xs text-white/40 font-semibold border border-white/[0.08] bg-white/[0.02] px-3 py-1.5 rounded-full backdrop-blur-md">
+          <ShieldCheck className="h-4 w-4 text-cyan-400" />
           <span>Authentic Athlete Blueprint</span>
         </div>
       </div>
 
       {/* Hero Header Section */}
-      <AuroraBackground className="p-8">
+      <GlassCard spotlightColor="rgba(6, 182, 212, 0.08)" borderGlowColor="rgba(6, 182, 212, 0.25)" className="p-8">
         <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+              <span className="inline-flex items-center rounded-full bg-white/[0.04] border border-white/10 px-3 py-1 text-xs font-bold text-cyan-400 shadow-glass-sm">
                 Week {currentPlan.week_number || 1}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1">
+              <span className="text-xs text-white/40 font-medium flex items-center gap-1">
                 <Calendar className="h-3.5 w-3.5" />
                 7-Day Health Blueprint
               </span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold leading-tight">
-              {currentPlan.plan_name}
+            <h1 className="text-2xl md:text-3xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+              <BlurText text={currentPlan.plan_name} animateBy="words" />
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-2xl capitalize">
+            <p className="text-sm text-white/40 max-w-2xl capitalize">
               Program Goal: {currentPlan.goal.replace(/_/g, " ")} | Tailored diet and exercise regime.
             </p>
           </div>
 
           {isLatestWeek && (
-            <button
-              onClick={handleGenerateNextWeek}
-              disabled={nextWeekLoading}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/10 disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none"
-            >
-              {nextWeekLoading ? (
-                <>
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  <span>Engineering Week {(currentPlan.week_number || 1) + 1}...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4.5 w-4.5" />
-                  <span>Generate Week {(currentPlan.week_number || 1) + 1} Plan</span>
-                </>
-              )}
-            </button>
+            <div className="shrink-0 self-start md:self-center">
+              <button onClick={handleGenerateNextWeek} disabled={nextWeekLoading} className="inline-block">
+                <StarBorder color="#06b6d4" speed="3.5s">
+                  {nextWeekLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      <span>Engineering Week {(currentPlan.week_number || 1) + 1}...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center gap-2">
+                      <Sparkles className="h-4.5 w-4.5 text-cyan-400 animate-pulse" />
+                      <span>Generate Week {(currentPlan.week_number || 1) + 1} Plan</span>
+                    </div>
+                  )}
+                </StarBorder>
+              </button>
+            </div>
           )}
         </div>
-      </AuroraBackground>
+      </GlassCard>
 
       {/* Week Navigation Selector */}
       {currentPlan.weeks && currentPlan.weeks.length > 1 && (
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-800 pb-4">
+        <div className="flex flex-wrap gap-2 border-b border-white/[0.08] pb-4">
           {currentPlan.weeks.map((w) => (
             <Link
               key={w.id}
               href={`/plan/${w.id}`}
               className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all ${
                 currentPlan.id === w.id
-                  ? "bg-emerald-600 border-emerald-600 text-white dark:bg-emerald-600 dark:border-emerald-600 shadow-md shadow-emerald-500/15"
-                  : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+                  ? "bg-gradient-to-r from-cyan-500 to-violet-500 border-transparent text-white shadow-glass-glow"
+                  : "bg-white/[0.02] border-white/10 text-white/60 hover:bg-white/[0.05] hover:text-white"
               }`}
             >
               Week {w.week_number}
@@ -304,7 +307,7 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
       )}
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30 p-4 text-sm text-red-700 dark:text-red-400">
+        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-400">
           <AlertCircle className="h-5 w-5 shrink-0" />
           {error}
         </div>
@@ -314,8 +317,8 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
       <div className="grid gap-8 lg:grid-cols-12 items-start">
         {/* Left Day Navigation & Macro Summary */}
         <div className="lg:col-span-3 space-y-6">
-          <SpotlightCard className="p-5 space-y-4">
-            <h3 className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
+          <GlassCard spotlight={false} className="p-5 space-y-4">
+            <h3 className="text-xs font-bold tracking-wider text-white/40 uppercase">
               Days Schedule
             </h3>
             <div className="grid grid-cols-4 gap-2 lg:grid-cols-1 lg:gap-3">
@@ -327,15 +330,15 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                     onClick={() => setActiveDay(dp.day)}
                     className={`flex items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all ${
                       activeDay === dp.day
-                        ? "bg-emerald-600 dark:bg-emerald-600 text-white shadow-md shadow-emerald-500/15"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 dark:hover:border-gray-800"
+                        ? "bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-glass-glow"
+                        : "text-white/60 hover:bg-white/[0.03] border border-transparent hover:border-white/10"
                     }`}
                   >
                     <span>Day {dp.day}</span>
                     <span className={`hidden lg:inline-flex rounded px-1.5 py-0.5 text-[10px] font-bold ${
                       isDPWorkout 
-                        ? (activeDay === dp.day ? "bg-emerald-500 text-white" : "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800")
-                        : (activeDay === dp.day ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400")
+                        ? (activeDay === dp.day ? "bg-cyan-500/30 text-cyan-200" : "bg-cyan-950/40 text-cyan-400 border border-cyan-500/20")
+                        : (activeDay === dp.day ? "bg-white/15 text-white" : "bg-white/[0.04] text-white/40 border border-white/5")
                     }`}>
                       {isDPWorkout ? "Workout" : "Rest"}
                     </span>
@@ -343,187 +346,187 @@ export default function PlanDetailPage({ params }: { params: { id: string } }) {
                 );
               })}
             </div>
-          </SpotlightCard>
+          </GlassCard>
 
           {/* Macro Target panel */}
-          <SpotlightCard className="p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
-                Daily Macro Target
+          <GlassCard spotlight={false} className="p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
+              <h3 className="text-xs font-bold tracking-wider text-white/40 uppercase">
+                Daily Macros
               </h3>
-              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">{totalCalories} kcal</span>
+              <span className="text-xs text-cyan-400 font-bold">{totalCalories} kcal</span>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-3 pt-1">
               <div>
-                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-white/40 mb-1">
                   <span>Protein</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalProtein)}g / {targetProtein}g</span>
+                  <span className="font-semibold text-white/80">{Math.round(totalProtein)}g / {targetProtein}g</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full bg-orange-500 rounded-full" style={{ width: `${Math.min(100, (totalProtein / targetProtein) * 100)}%` }} />
+                <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                  <div className="h-full bg-orange-450 rounded-full shadow-[0_0_8px_rgba(249,115,22,0.5)]" style={{ width: `${Math.min(100, (totalProtein / targetProtein) * 100)}%` }} />
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-white/40 mb-1">
                   <span>Carbohydrates</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalCarbs)}g / {targetCarbs}g</span>
+                  <span className="font-semibold text-white/80">{Math.round(totalCarbs)}g / {targetCarbs}g</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full bg-teal-500 rounded-full" style={{ width: `${Math.min(100, (totalCarbs / targetCarbs) * 100)}%` }} />
+                <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                  <div className="h-full bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]" style={{ width: `${Math.min(100, (totalCarbs / targetCarbs) * 100)}%` }} />
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-white/40 mb-1">
                   <span>Fats</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-200">{Math.round(totalFats)}g / {targetFats}g</span>
+                  <span className="font-semibold text-white/80">{Math.round(totalFats)}g / {targetFats}g</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${Math.min(100, (totalFats / targetFats) * 100)}%` }} />
+                <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                  <div className="h-full bg-yellow-400 rounded-full shadow-[0_0_8px_rgba(250,204,21,0.5)]" style={{ width: `${Math.min(100, (totalFats / targetFats) * 100)}%` }} />
                 </div>
               </div>
             </div>
-          </SpotlightCard>
+          </GlassCard>
         </div>
 
         {/* Right Details Panel */}
         <div className="lg:col-span-9 space-y-8">
           {/* Day Focus Header */}
-          <SpotlightCard className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <GlassCard spotlightColor="rgba(6, 182, 212, 0.05)" className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">Day {activeDay} Focus</span>
-              <h2 className="text-xl font-extrabold">{activeDayPlan.focus}</h2>
+              <span className="text-xs text-cyan-400 font-bold uppercase tracking-wider">Day {activeDay} Focus</span>
+              <h2 className="text-xl font-extrabold tracking-tight text-white">{activeDayPlan.focus}</h2>
             </div>
-            <div className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/40 px-4 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-              <Zap className="h-4 w-4 text-emerald-500" />
+            <div className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-2 text-xs font-semibold text-white/70">
+              <Zap className="h-4 w-4 text-cyan-400 animate-pulse" />
               <span>{isWorkoutDay ? "Active Exercise Load" : "Active Muscle Repair"}</span>
             </div>
-          </SpotlightCard>
+          </GlassCard>
 
           <div className="grid gap-8 md:grid-cols-2">
             {/* Workout & Yoga Panel (Left side of detail grid) */}
             <div className="space-y-8">
               {!isWorkoutDay && !isYogaDay ? (
                 /* Rest Day Card */
-                <SpotlightCard className="p-8 text-center flex flex-col items-center justify-center space-y-4 h-full min-h-[300px]">
-                  <div className="rounded-full bg-gray-100 dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800 text-teal-600 dark:text-teal-400">
+                <GlassCard spotlightColor="rgba(6, 182, 212, 0.05)" className="p-8 text-center flex flex-col items-center justify-center space-y-4 h-full min-h-[300px]">
+                  <div className="rounded-full bg-white/[0.03] p-4 border border-white/10 text-cyan-400">
                     <Heart className="h-10 w-10 animate-pulse" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold">Active Recovery Day</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mx-auto leading-relaxed">
+                    <h3 className="text-lg font-bold text-white">Active Recovery Day</h3>
+                    <p className="text-sm text-white/40 max-w-xs mx-auto leading-relaxed">
                       No heavy workout scheduled. Focus on hydration, mobility, stretching, and letting your muscle fibers rebuild stronger.
                     </p>
                   </div>
-                </SpotlightCard>
+                </GlassCard>
               ) : (
                 /* Exercises and/or Yoga */
                 <div className="space-y-6">
                   {/* Exercises */}
                   {isWorkoutDay && (
-                    <SpotlightCard className="p-6 space-y-4">
-                      <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-2">
-                        <Dumbbell className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                    <GlassCard spotlightColor="rgba(6, 182, 212, 0.05)" className="p-6 space-y-4">
+                      <h3 className="text-base font-bold flex items-center gap-2 border-b border-white/[0.08] pb-2 text-white">
+                        <Dumbbell className="h-5 w-5 text-cyan-400" />
                         Workout Routine
                       </h3>
                       <div className="space-y-4">
                         {activeDayPlan.exercises.map((ex: any, idx: number) => (
-                          <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50/30 p-4 space-y-3 hover:border-gray-200 transition-colors dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-gray-700">
+                          <div key={idx} className="rounded-2xl border border-white/5 bg-white/[0.01] p-4 space-y-3 hover:border-white/10 transition-colors">
                             <div className="flex items-center justify-between">
-                              <h4 className="font-bold text-sm">{ex.name}</h4>
-                              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-800">
+                              <h4 className="font-bold text-sm text-white">{ex.name}</h4>
+                              <span className="text-[11px] font-bold text-cyan-450 bg-cyan-950/40 px-2 py-0.5 rounded-lg border border-cyan-500/20">
                                 {ex.sets} x {ex.reps}
                               </span>
                             </div>
-                            <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
-                              <span>Rest: <strong className="text-gray-700 dark:text-gray-300">{ex.rest_seconds}s</strong></span>
-                              {ex.focus_area && <span className="bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-[10px] uppercase font-semibold text-gray-600 dark:text-gray-300">Target: {ex.focus_area}</span>}
+                            <div className="flex justify-between items-center text-xs text-white/40">
+                              <span>Rest: <strong className="text-white/80">{ex.rest_seconds}s</strong></span>
+                              {ex.focus_area && <span className="bg-white/[0.04] px-2 py-0.5 rounded text-[10px] uppercase font-semibold text-white/60">Target: {ex.focus_area}</span>}
                             </div>
                             {ex.instruction && (
-                              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                                <span className="font-semibold text-gray-800 dark:text-gray-200">How-to:</span> {ex.instruction}
+                              <p className="text-xs text-white/50 mt-1">
+                                <span className="font-semibold text-white/70">How-to:</span> {ex.instruction}
                               </p>
                             )}
                             {ex.notes && (
-                              <p className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 p-2.5 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
-                                <span className="font-semibold text-emerald-800 dark:text-emerald-400">Coach Note:</span> {ex.notes}
+                              <p className="text-xs text-cyan-300 bg-cyan-950/20 p-2.5 rounded-xl border border-cyan-500/20">
+                                <span className="font-semibold text-cyan-400">Coach Note:</span> {ex.notes}
                               </p>
                             )}
                           </div>
                         ))}
                       </div>
-                    </SpotlightCard>
+                    </GlassCard>
                   )}
 
                   {/* Yoga */}
                   {isYogaDay && (
-                    <SpotlightCard className="p-6 space-y-4">
-                      <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-2">
-                        <Heart className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                    <GlassCard spotlightColor="rgba(139, 92, 246, 0.05)" className="p-6 space-y-4">
+                      <h3 className="text-base font-bold flex items-center gap-2 border-b border-white/[0.08] pb-2 text-white">
+                        <Heart className="h-5 w-5 text-violet-400" />
                         Yoga & Mobility Routine
                       </h3>
                       <div className="space-y-4">
                         {activeDayPlan.yoga_routine.map((y: any, idx: number) => (
-                          <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50/30 p-4 space-y-3 hover:border-gray-200 transition-colors dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-gray-700">
+                          <div key={idx} className="rounded-2xl border border-white/5 bg-white/[0.01] p-4 space-y-3 hover:border-white/10 transition-colors">
                             <div className="flex items-center justify-between">
-                              <h4 className="font-bold text-sm">{y.name}</h4>
-                              <span className="text-[10px] font-bold uppercase text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-950 px-2 py-0.5 rounded border border-teal-100 dark:border-teal-800">
+                              <h4 className="font-bold text-sm text-white">{y.name}</h4>
+                              <span className="text-[10px] font-bold uppercase text-violet-400 bg-violet-950/40 px-2 py-0.5 rounded-lg border border-violet-500/20">
                                 {y.difficulty}
                               </span>
                             </div>
-                            <div className="flex justify-between items-center text-xs text-gray-550 dark:text-gray-400">
-                              <span>Duration: <strong className="text-gray-700 dark:text-gray-300">{Math.round(y.duration_seconds / 60)} mins</strong></span>
-                              {y.focus_area && <span className="bg-teal-50 dark:bg-teal-900/30 px-2 py-0.5 rounded text-[10px] uppercase font-semibold text-teal-600 dark:text-teal-400">Focus: {y.focus_area}</span>}
+                            <div className="flex justify-between items-center text-xs text-white/40">
+                              <span>Duration: <strong className="text-white/80">{Math.round(y.duration_seconds / 60)} mins</strong></span>
+                              {y.focus_area && <span className="bg-violet-950/20 px-2 py-0.5 rounded text-[10px] uppercase font-semibold text-violet-400">Focus: {y.focus_area}</span>}
                             </div>
                             {y.instruction && (
-                              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                                <span className="font-semibold text-gray-800 dark:text-gray-200">Steps:</span> {y.instruction}
+                              <p className="text-xs text-white/50 mt-1">
+                                <span className="font-semibold text-white/70">Steps:</span> {y.instruction}
                               </p>
                             )}
                             {y.benefits && (
-                              <p className="text-xs text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/20 p-2.5 rounded-xl border border-teal-100 dark:border-teal-800/30">
-                                <span className="font-semibold text-teal-800 dark:text-teal-400">Benefits:</span> {y.benefits}
+                              <p className="text-xs text-violet-350 bg-violet-955/20 p-2.5 rounded-xl border border-violet-500/20">
+                                <span className="font-semibold text-violet-400">Benefits:</span> {y.benefits}
                               </p>
                             )}
                           </div>
                         ))}
                       </div>
-                    </SpotlightCard>
+                    </GlassCard>
                   )}
                 </div>
               )}
             </div>
 
             {/* Diet & Nutrition Panel (Right side of detail grid) */}
-            <SpotlightCard className="p-6 space-y-4 h-full">
-              <h3 className="text-base font-bold flex items-center gap-2 border-b border-gray-100 dark:border-gray-800 pb-2">
-                <Salad className="h-5 w-5 text-orange-500" />
+            <GlassCard spotlightColor="rgba(236, 72, 153, 0.05)" className="p-6 space-y-4 h-full">
+              <h3 className="text-base font-bold flex items-center gap-2 border-b border-white/[0.08] pb-2 text-white">
+                <Salad className="h-5 w-5 text-pink-400" />
                 Nutrition Planner
               </h3>
               <div className="space-y-4">
                 {activeDayPlan.meals?.map((m: any, idx: number) => (
-                  <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50/30 p-4 space-y-2 hover:border-gray-200 transition-colors dark:border-gray-800 dark:bg-gray-900/40 dark:hover:border-gray-700">
+                  <div key={idx} className="rounded-2xl border border-white/5 bg-white/[0.01] p-4 space-y-2 hover:border-white/10 transition-colors">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950 px-2 py-0.5 rounded border border-orange-100 dark:border-orange-900">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-pink-400 bg-pink-950/40 px-2 py-0.5 rounded-lg border border-pink-500/20">
                         {m.meal_type}
                       </span>
-                      <span className="text-xs font-semibold text-gray-550 dark:text-gray-400">{m.calories} kcal</span>
+                      <span className="text-xs font-semibold text-white/40">{m.calories} kcal</span>
                     </div>
-                    <h4 className="font-bold text-sm">{m.name}</h4>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      <strong className="text-gray-700 dark:text-gray-300">Macros:</strong> P: {m.protein_g}g | C: {m.carbs_g}g | F: {m.fats_g}g
+                    <h4 className="font-bold text-sm text-white">{m.name}</h4>
+                    <p className="text-xs text-white/40">
+                      <strong className="text-white/60">Macros:</strong> P: {m.protein_g}g | C: {m.carbs_g}g | F: {m.fats_g}g
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      <strong className="text-gray-700 dark:text-gray-300">Ingredients:</strong> {m.ingredients?.join(", ")}
+                    <p className="text-xs text-white/40">
+                      <strong className="text-white/60">Ingredients:</strong> {m.ingredients?.join(", ")}
                     </p>
                     {m.instructions && (
-                      <div className="text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-950/60 p-2.5 rounded-xl border border-gray-200 dark:border-gray-800">
-                        <span className="font-semibold text-gray-800 dark:text-gray-300">Prep:</span> {m.instructions}
+                      <div className="text-xs text-white/60 bg-[#050505]/60 p-2.5 rounded-xl border border-white/5">
+                        <span className="font-semibold text-white/70">Prep:</span> {m.instructions}
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-            </SpotlightCard>
+            </GlassCard>
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navbar } from "@/components/Navbar";
+import ClientDock from "@/components/ClientDock";
+import MeshGradient from "@/components/MeshGradient";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#22c55e",
+  themeColor: "#050505",
 };
 
 export default function RootLayout({
@@ -23,20 +25,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <body
-        className={`${inter.className} min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100`}
+        className={`${inter.className} min-h-screen bg-[#050505] text-white noise-overlay relative pb-28 selection:bg-cyan-500/30`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
+          <MeshGradient />
           <Navbar />
-          <main className="container mx-auto px-4 py-6">{children}</main>
+          <main className="container mx-auto px-4 py-6 relative z-10">{children}</main>
+          <ClientDock />
         </ThemeProvider>
       </body>
     </html>
   );
 }
+

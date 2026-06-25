@@ -5,8 +5,11 @@ import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { Dumbbell, Salad, User, AlertCircle, ArrowRight, Sparkles, TrendingUp, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { SpotlightCard } from "@/components/SpotlightCard";
-import { AuroraBackground } from "@/components/AuroraBackground";
+import { GlassCard } from "@/components/GlassCard";
+import { TiltedCard } from "@/components/TiltedCard";
+import { BlurText } from "@/components/BlurText";
+import { GradientText } from "@/components/GradientText";
+import { StarBorder } from "@/components/StarBorder";
 
 interface Plan {
   id: string;
@@ -112,55 +115,58 @@ export default function DashboardPage() {
     return (
       <div className="flex min-h-[70vh] items-center justify-center">
         <div className="relative flex h-12 w-12 items-center justify-center">
-          <div className="absolute h-12 w-12 animate-ping rounded-full border border-emerald-500/30 opacity-75" />
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+          <div className="absolute h-12 w-12 animate-ping rounded-full border border-cyan-500/30 opacity-75" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-12 text-gray-900 dark:text-gray-100">
+    <div className="max-w-5xl mx-auto space-y-8 pb-12 text-white">
       {/* Top Header Section */}
-      <AuroraBackground className="p-8">
+      <GlassCard spotlightColor="rgba(6, 182, 212, 0.08)" borderGlowColor="rgba(6, 182, 212, 0.25)" className="p-8">
         <div className="relative space-y-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/30">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.04] px-3 py-1 text-xs font-semibold text-cyan-400 border border-white/10 shadow-glass-sm">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Elite Performance Hub</span>
               </div>
-              <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl flex items-center gap-3">
-                <User className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+              <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl flex items-center gap-3 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+                <User className="h-8 w-8 text-cyan-400" />
                 My Workspace
               </h1>
               {userName && (
-                <p className="text-gray-600 dark:text-gray-400 max-w-xl text-sm md:text-base leading-relaxed">
-                  {greeting}, <span className="font-semibold text-emerald-600 dark:text-emerald-400">{userName}</span>. Track your progressions, plan diets, and monitor workouts.
+                <p className="text-white/50 max-w-xl text-sm md:text-base leading-relaxed">
+                  <BlurText text={greeting} animateBy="words" delay={0.02} />,{" "}
+                  <GradientText colors={["#06b6d4", "#8b5cf6"]} className="font-semibold">{userName}</GradientText>. Track your progressions, plan diets, and monitor workouts.
                 </p>
               )}
             </div>
-            <Link href="/plan" className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/10 hover:scale-[1.02] transition-transform active:scale-[0.99] shrink-0 self-start md:self-center">
-              + Generate Elite Plan
+            <Link href="/plan" className="shrink-0 self-start md:self-center">
+              <StarBorder color="#06b6d4" speed="3.5s">
+                + Generate Elite Plan
+              </StarBorder>
             </Link>
           </div>
 
           {/* Glassmorphic Stats Widget */}
           {plans.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-6 border-t border-gray-200 dark:border-gray-800/60">
-              <div className="rounded-2xl border border-gray-200 bg-white/40 p-4 backdrop-blur-sm dark:border-gray-800/60 dark:bg-gray-900/20">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Active Schemes</span>
-                <div className="mt-1 text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">{plans.length}</div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-6 border-t border-white/[0.08]">
+              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 backdrop-blur-md">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">Active Schemes</span>
+                <div className="mt-1 text-2xl font-extrabold text-cyan-400">{plans.length}</div>
               </div>
-              <div className="rounded-2xl border border-gray-200 bg-white/40 p-4 backdrop-blur-sm dark:border-gray-800/60 dark:bg-gray-900/20">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Weekly Workouts</span>
-                <div className="mt-1 text-2xl font-extrabold text-teal-600 dark:text-teal-400">
+              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 backdrop-blur-md">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">Weekly Workouts</span>
+                <div className="mt-1 text-2xl font-extrabold text-violet-400">
                   {plans.reduce((sum, p) => sum + (p.daily_plans?.filter(dp => dp.exercises?.length > 0).length || 0), 0)} Days
                 </div>
               </div>
-              <div className="col-span-2 md:col-span-1 rounded-2xl border border-gray-200 bg-white/40 p-4 backdrop-blur-sm dark:border-gray-800/60 dark:bg-gray-900/20">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Primary Focus</span>
-                <div className="mt-1 text-lg font-extrabold truncate text-gray-700 dark:text-gray-300">
+              <div className="col-span-2 md:col-span-1 rounded-2xl border border-white/5 bg-white/[0.02] p-4 backdrop-blur-md">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">Primary Focus</span>
+                <div className="mt-1 text-lg font-extrabold truncate text-white/80">
                   {(() => {
                     const goals = plans.map(p => p.goal);
                     const mostCommon = goals.sort((a,b) =>
@@ -173,10 +179,10 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-      </AuroraBackground>
+      </GlassCard>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-600 dark:text-red-400">
+        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-400">
           <AlertCircle className="h-5 w-5 shrink-0" />
           {error}
         </div>
@@ -184,12 +190,12 @@ export default function DashboardPage() {
 
       {/* Main Workspace Section */}
       <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4 gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-white/[0.08] pb-4 gap-4">
           <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <TrendingUp className="h-5 w-5 text-cyan-400" />
             Active Planning Schemes
           </h2>
-          <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold">
+          <span className="text-xs text-white/40 font-semibold">
             Showing {filteredPlans.length} plan{filteredPlans.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -203,8 +209,8 @@ export default function DashboardPage() {
                 onClick={() => setActiveGoal(goal)}
                 className={`rounded-full px-4 py-1.5 text-xs font-semibold border transition-all ${
                   activeGoal === goal
-                    ? "bg-emerald-600 border-emerald-600 text-white shadow-sm shadow-emerald-600/25"
-                    : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-850"
+                    ? "bg-gradient-to-r from-cyan-500 to-violet-500 border-transparent text-white shadow-glass-glow"
+                    : "bg-white/[0.02] border-white/10 text-white/60 hover:bg-white/[0.05] hover:text-white"
                 }`}
               >
                 {goalNames[goal] || goal.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
@@ -214,22 +220,24 @@ export default function DashboardPage() {
         )}
 
         {filteredPlans.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-gray-300 dark:border-gray-800 bg-gray-50/30 dark:bg-gray-900/10 py-20 text-center space-y-4">
-            <div className="rounded-2xl bg-gray-100 dark:bg-gray-900 p-4 border border-gray-200 dark:border-gray-800">
-              <Dumbbell className="h-10 w-10 text-gray-500" />
+          <GlassCard spotlight={false} className="flex flex-col items-center justify-center py-20 text-center space-y-4">
+            <div className="rounded-2xl bg-white/[0.04] p-4 border border-white/10">
+              <Dumbbell className="h-10 w-10 text-white/40" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-lg font-bold">No Schemes Found</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm px-4">
+              <h3 className="text-lg font-bold text-white">No Schemes Found</h3>
+              <p className="text-sm text-white/40 max-w-sm px-4">
                 No health schemes match your active filter. Change the filter or generate a new program.
               </p>
             </div>
             {plans.length === 0 && (
-              <Link href="/plan" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">
-                Engineering Board →
+              <Link href="/plan">
+                <StarBorder color="#06b6d4" speed="3.5s">
+                  Engineering Board →
+                </StarBorder>
               </Link>
             )}
-          </div>
+          </GlassCard>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredPlans.map((plan) => {
@@ -237,107 +245,110 @@ export default function DashboardPage() {
               const weekNum = plan.week_number || 1;
 
               return (
-                <SpotlightCard
-                  key={plan.id}
-                  onClick={() => router.push(`/plan/${plan.id}`)}
-                  className="hover:-translate-y-1 hover:shadow-md cursor-pointer flex flex-col justify-between"
-                >
-                  {/* Sliding red overlay for deletion confirmation */}
-                  <div
-                    className={`absolute -inset-6 bg-red-600/95 dark:bg-red-950/95 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-center text-white transition-all duration-300 ease-out ${
-                      deleteConfirmId === plan.id
-                        ? "translate-y-0 opacity-100"
-                        : "-translate-y-full opacity-0"
-                    }`}
-                    onClick={(e) => e.stopPropagation()}
+                <TiltedCard key={plan.id} rotateAmplitude={8} scaleOnHover={1.02} className="h-full">
+                  <GlassCard
+                    onClick={() => router.push(`/plan/${plan.id}`)}
+                    spotlightColor="rgba(6, 182, 212, 0.08)"
+                    borderGlowColor="rgba(6, 182, 212, 0.25)"
+                    className="hover:shadow-lg cursor-pointer flex flex-col justify-between h-full group"
                   >
-                    <Trash2 className="h-8 w-8 text-white mb-2 animate-bounce" />
-                    <h4 className="text-base font-bold text-white mb-1">Delete this scheme?</h4>
-                    <p className="text-xs text-red-100/80 mb-4 max-w-[200px]">
-                      This action cannot be undone.
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          confirmDelete(plan.id);
-                        }}
-                        className="rounded-lg bg-white px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors shadow-sm"
-                      >
-                        Yes, Delete
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeleteConfirmId(null);
-                        }}
-                        className="rounded-lg border border-white/40 bg-transparent px-4 py-2 text-xs font-bold text-white hover:bg-white/10 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="absolute top-0 left-0 h-[2px] w-0 bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-300 group-hover:w-full" />
-                  
-                  <div className="space-y-4">
-                    {/* Header badges */}
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/30 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-                        Week {weekNum}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400">
-                          {plan.duration_weeks} wk
-                        </span>
-                        
+                    {/* Sliding red overlay for deletion confirmation */}
+                    <div
+                      className={`absolute -inset-6 bg-red-950/95 border border-red-500/20 backdrop-blur-md z-20 flex flex-col items-center justify-center p-6 text-center text-white transition-all duration-300 ease-out ${
+                        deleteConfirmId === plan.id
+                          ? "translate-y-0 opacity-100"
+                          : "-translate-y-full opacity-0 pointer-events-none"
+                      }`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Trash2 className="h-8 w-8 text-white mb-2 animate-bounce" />
+                      <h4 className="text-base font-bold text-white mb-1">Delete this scheme?</h4>
+                      <p className="text-xs text-white/40 mb-4 max-w-[200px]">
+                        This action cannot be undone.
+                      </p>
+                      <div className="flex items-center gap-3">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            setDeleteConfirmId(plan.id);
+                            confirmDelete(plan.id);
                           }}
-                          className="rounded-lg p-1 text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors border border-transparent hover:border-red-500/20"
-                          title="Delete Plan"
+                          className="rounded-lg bg-red-500 px-4 py-2 text-xs font-bold text-white hover:bg-red-600 transition-colors shadow-sm"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          Yes, Delete
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteConfirmId(null);
+                          }}
+                          className="rounded-lg border border-white/20 bg-transparent px-4 py-2 text-xs font-bold text-white hover:bg-white/10 transition-colors"
+                        >
+                          Cancel
                         </button>
                       </div>
                     </div>
 
-                    {/* Title */}
-                    <div className="space-y-1">
-                      <h3 className="text-lg font-bold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-tight">
-                        {plan.plan_name}
-                      </h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Goal: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{goalNames[plan.goal] || plan.goal.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</span>
-                      </p>
+                    <div className="absolute top-0 left-0 h-[2px] w-0 bg-gradient-to-r from-cyan-500 to-violet-500 transition-all duration-300 group-hover:w-full" />
+                    
+                    <div className="space-y-4">
+                      {/* Header badges */}
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center rounded-full bg-white/[0.04] border border-white/10 px-2.5 py-0.5 text-[11px] font-bold text-cyan-400">
+                          Week {weekNum}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-medium text-white/40">
+                            {plan.duration_weeks} wk
+                          </span>
+                          
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeleteConfirmId(plan.id);
+                            }}
+                            className="rounded-lg p-1 text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-colors border border-transparent hover:border-white/10"
+                            title="Delete Plan"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Title */}
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-bold group-hover:text-cyan-400 transition-colors leading-tight">
+                          {plan.plan_name}
+                        </h3>
+                        <p className="text-xs text-white/40">
+                          Goal: <span className="font-semibold text-cyan-400">{goalNames[plan.goal] || plan.goal.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}</span>
+                        </p>
+                      </div>
+
+                      {/* Meta stats */}
+                      <div className="grid grid-cols-2 gap-3 border-y border-white/[0.08] py-3 text-xs text-white/60">
+                        <div className="flex items-center gap-2">
+                          <Dumbbell className="h-4 w-4 text-cyan-400" />
+                          <span>{workoutDaysCount} Workout Days</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Salad className="h-4 w-4 text-violet-400" />
+                          <span>7-Day Diet Plan</span>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Meta stats */}
-                    <div className="grid grid-cols-2 gap-3 border-y border-gray-100 dark:border-gray-800/80 py-3 text-xs text-gray-700 dark:text-gray-300">
-                      <div className="flex items-center gap-2">
-                        <Dumbbell className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                        <span>{workoutDaysCount} Workout Days</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Salad className="h-4 w-4 text-teal-600 dark:text-teal-400" />
-                        <span>7-Day Diet Plan</span>
-                      </div>
+                    {/* Card Footer */}
+                    <div className="mt-5 flex items-center justify-between text-xs">
+                      <span className="text-white/30">
+                        Created {new Date(plan.created_at).toLocaleDateString()}
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                        Enter Scheme
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                      </span>
                     </div>
-                  </div>
-
-                  {/* Card Footer */}
-                  <div className="mt-5 flex items-center justify-between text-xs">
-                    <span className="text-gray-400 dark:text-gray-500">
-                      Created {new Date(plan.created_at).toLocaleDateString()}
-                    </span>
-                    <span className="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                      Enter Scheme
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </div>
-                </SpotlightCard>
+                  </GlassCard>
+                </TiltedCard>
               );
             })}
           </div>

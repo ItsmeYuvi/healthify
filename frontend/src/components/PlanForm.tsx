@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { Sparkles, AlertCircle, Dumbbell, Calendar, Heart, ShieldAlert } from "lucide-react";
-import { SpotlightCard } from "@/components/SpotlightCard";
+import { GlassCard } from "@/components/GlassCard";
+import { StarBorder } from "@/components/StarBorder";
 
 const goals = [
   { value: "fat_loss", label: "Fat Loss" },
@@ -138,41 +139,41 @@ export function PlanForm() {
   if (!authChecked) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6 text-gray-900 dark:text-gray-100">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6 text-white pb-10">
       {error && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-600 dark:text-red-400">
+        <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400">
           <ShieldAlert className="h-4.5 w-4.5 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
-      <SpotlightCard className="shadow-md p-8 space-y-6">
-        <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+      <GlassCard spotlightColor="rgba(6, 182, 212, 0.08)" borderGlowColor="rgba(6, 182, 212, 0.25)" className="shadow-md p-8 space-y-6">
+        <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-cyan-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-violet-500/5 blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 relative">
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Goal Target</label>
+            <label className="label">Goal Target</label>
             <select
               name="goal"
               value={form.goal}
               onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input bg-[#0c0c0e]/95 border-white/10"
             >
               {goals.map((g) => (
-                <option key={g.value} value={g.value} className="dark:bg-gray-950">{g.label}</option>
+                <option key={g.value} value={g.value} className="bg-[#0c0c0e] text-white">{g.label}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Age (years)</label>
+            <label className="label">Age (years)</label>
             <input
               type="number"
               name="age"
@@ -182,26 +183,26 @@ export function PlanForm() {
               min={10}
               max={100}
               placeholder="e.g., 25"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Gender</label>
+            <label className="label">Gender</label>
             <select
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input bg-[#0c0c0e]/95 border-white/10"
             >
-              <option value="male" className="dark:bg-gray-950">Male</option>
-              <option value="female" className="dark:bg-gray-950">Female</option>
-              <option value="other" className="dark:bg-gray-950">Other</option>
+              <option value="male" className="bg-[#0c0c0e] text-white">Male</option>
+              <option value="female" className="bg-[#0c0c0e] text-white">Female</option>
+              <option value="other" className="bg-[#0c0c0e] text-white">Other</option>
             </select>
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Height (cm)</label>
+            <label className="label">Height (cm)</label>
             <input
               type="number"
               name="height_cm"
@@ -211,12 +212,12 @@ export function PlanForm() {
               min={50}
               max={300}
               placeholder="e.g., 175"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Weight (kg)</label>
+            <label className="label">Weight (kg)</label>
             <input
               type="number"
               name="weight_kg"
@@ -226,52 +227,52 @@ export function PlanForm() {
               min={20}
               max={500}
               placeholder="e.g., 70"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Activity Level</label>
+            <label className="label">Activity Level</label>
             <select
               name="activity_level"
               value={form.activity_level}
               onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input bg-[#0c0c0e]/95 border-white/10"
             >
               {activityLevels.map((a) => (
-                <option key={a.value} value={a.value} className="dark:bg-gray-950">{a.label}</option>
+                <option key={a.value} value={a.value} className="bg-[#0c0c0e] text-white">{a.label}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Diet Preference</label>
+            <label className="label">Diet Preference</label>
             <select
               name="diet_preference"
               value={form.diet_preference}
               onChange={handleChange}
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input bg-[#0c0c0e]/95 border-white/10"
             >
               {dietPreferences.map((d) => (
-                <option key={d.value} value={d.value} className="dark:bg-gray-950">{d.label}</option>
+                <option key={d.value} value={d.value} className="bg-[#0c0c0e] text-white">{d.label}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400 block mb-2">
+            <label className="label block mb-2">
               Workout Days / Week
             </label>
-            <div className="flex gap-2 mt-1">
+            <div className="flex gap-1.5 mt-1">
               {[1, 2, 3, 4, 5, 6, 7].map((day) => (
                 <button
                   key={day}
                   type="button"
                   onClick={() => setForm((prev) => ({ ...prev, workout_days_per_week: day }))}
-                  className={`flex-1 h-10 rounded-xl font-bold border transition-all text-sm flex items-center justify-center ${
+                  className={`flex-1 h-9 rounded-xl font-bold border transition-all text-xs flex items-center justify-center ${
                     form.workout_days_per_week === day
-                      ? "bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-600/25 scale-[1.05] dark:bg-emerald-500 dark:border-emerald-500"
-                      : "bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-850"
+                      ? "bg-gradient-to-r from-cyan-500 to-violet-500 border-transparent text-white shadow-glass-glow scale-[1.03]"
+                      : "bg-white/[0.02] border-white/10 text-white/60 hover:bg-white/[0.05] hover:text-white"
                   }`}
                 >
                   {day}
@@ -280,12 +281,12 @@ export function PlanForm() {
             </div>
           </div>
 
-          <div>
+          <div className="sm:col-span-2">
             <div className="flex items-center justify-between mb-2">
-              <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">
+              <label className="label">
                 Workout Duration
               </label>
-              <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded border border-emerald-100 dark:border-emerald-900/30">
+              <span className="text-[11px] font-extrabold text-cyan-400 bg-white/[0.04] px-2.5 py-0.5 rounded-lg border border-white/10">
                 {form.workout_duration_minutes} mins
               </span>
             </div>
@@ -298,9 +299,9 @@ export function PlanForm() {
                 name="workout_duration_minutes"
                 value={form.workout_duration_minutes}
                 onChange={handleChange}
-                className="w-full h-1.5 rounded-lg bg-gray-200 dark:bg-gray-800 appearance-none cursor-pointer accent-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                className="w-full h-1 rounded-lg bg-white/10 appearance-none cursor-pointer accent-cyan-400 focus:outline-none"
               />
-              <div className="flex justify-between text-[9px] text-gray-400 dark:text-gray-500 px-0.5 font-bold uppercase tracking-wider">
+              <div className="flex justify-between text-[9px] text-white/30 px-0.5 font-bold uppercase tracking-wider">
                 <span>15m Express</span>
                 <span>45m Standard</span>
                 <span>60m Intense</span>
@@ -312,26 +313,26 @@ export function PlanForm() {
 
         <div className="space-y-4 pt-2 relative">
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Allergies (comma separated)</label>
+            <label className="label">Allergies (comma separated)</label>
             <input
               type="text"
               name="allergies"
               value={form.allergies}
               onChange={handleChange}
               placeholder="e.g., peanuts, dairy, gluten (leave blank if none)"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input"
             />
           </div>
 
           <div>
-            <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Medical Conditions (comma separated)</label>
+            <label className="label">Medical Conditions (comma separated)</label>
             <input
               type="text"
               name="medical_conditions"
               value={form.medical_conditions}
               onChange={handleChange}
               placeholder="e.g., asthma, diabetes, hypertension (leave blank if none)"
-              className="input bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
+              className="input"
             />
           </div>
 
@@ -342,33 +343,29 @@ export function PlanForm() {
               id="yoga_interest"
               checked={form.yoga_interest}
               onChange={handleChange}
-              className="h-5 w-5 rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 text-emerald-600 focus:ring-emerald-500/20 cursor-pointer"
+              className="h-4.5 w-4.5 rounded border-white/10 bg-white/[0.02] text-cyan-500 focus:ring-cyan-500/20 cursor-pointer"
             />
-            <label htmlFor="yoga_interest" className="text-sm font-semibold text-gray-750 dark:text-gray-300 cursor-pointer flex items-center gap-1.5 selection:bg-transparent">
+            <label htmlFor="yoga_interest" className="text-xs font-semibold text-white/70 cursor-pointer flex items-center gap-1.5 select-none hover:text-white transition-colors">
               <Heart className="h-4 w-4 text-rose-500 animate-pulse" />
               Include Indian Yoga & Pranayama in my blueprint
             </label>
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary w-full py-3.5 mt-6 font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 active:scale-[0.99] transition-transform bg-emerald-600 hover:bg-emerald-500"
-        >
+        <StarBorder color="#06b6d4" speed="3.5s" className="w-full mt-6" type="submit" disabled={loading}>
           {loading ? (
-            <>
+            <div className="flex items-center justify-center gap-2">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
               <span>Consulting Gemini AI & Drafting Blueprint...</span>
-            </>
+            </div>
           ) : (
-            <>
-              <Sparkles className="h-4.5 w-4.5 animate-pulse" />
+            <div className="flex items-center justify-center gap-2">
+              <Sparkles className="h-4 w-4 text-cyan-400 animate-pulse" />
               <span>Draft Custom Athlete Scheme</span>
-            </>
+            </div>
           )}
-        </button>
-      </SpotlightCard>
+        </StarBorder>
+      </GlassCard>
     </form>
   );
 }

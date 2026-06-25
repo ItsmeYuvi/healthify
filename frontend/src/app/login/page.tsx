@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { User, Mail, Lock, ShieldAlert, Dumbbell } from "lucide-react";
-import { SpotlightCard } from "@/components/SpotlightCard";
+import { GlassCard } from "@/components/GlassCard";
+import { StarBorder } from "@/components/StarBorder";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -45,6 +46,8 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("access_token", res.data.access_token);
+      // Dispatch storage event so layout components (like Navbar/Dock) update state immediately
+      window.dispatchEvent(new Event("storage"));
       router.push("/dashboard");
     } catch (err: any) {
       console.error("[Auth] Error:", err);
@@ -79,27 +82,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-md py-12 px-4 text-gray-900 dark:text-gray-100">
-      <SpotlightCard className="shadow-2xl p-8 relative">
-        {/* Glow Effects */}
-        <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute -left-20 -bottom-20 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+    <div className="mx-auto max-w-md py-12 px-4 text-white">
+      <GlassCard spotlightColor="rgba(6, 182, 212, 0.08)" borderGlowColor="rgba(6, 182, 212, 0.3)" className="shadow-2xl p-8 relative">
+        {/* Ambient background glows inside the card */}
+        <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-cyan-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute -left-20 -bottom-20 h-40 w-40 rounded-full bg-violet-500/5 blur-3xl pointer-events-none" />
 
         <div className="relative space-y-6">
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-450 mx-auto">
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-white/[0.04] border border-white/10 text-cyan-400 mx-auto shadow-glass-sm">
               <Dumbbell className="h-6 w-6" />
             </div>
-            <h2 className="text-2xl font-extrabold">
+            <h2 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
               {isRegister ? "Create Account" : "Access Blueprint"}
             </h2>
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+            <p className="text-xs font-semibold text-white/40">
               {isRegister ? "Sign up to start your fitness journey" : "Sign in to manage your health schemes"}
             </p>
           </div>
 
           {error && (
-            <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-3.5 text-xs text-red-650 dark:text-red-400">
+            <div className="flex items-start gap-2.5 rounded-xl border border-red-500/20 bg-red-500/5 p-3.5 text-xs text-red-400">
               <ShieldAlert className="h-4.5 w-4.5 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
@@ -108,9 +111,9 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {isRegister && (
               <div className="space-y-1">
-                <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Full Name</label>
+                <label className="label">Full Name</label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-450">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/30">
                     <User className="h-4.5 w-4.5" />
                   </div>
                   <input
@@ -120,16 +123,16 @@ export default function LoginPage() {
                     placeholder="Enter your full name"
                     value={form.fullName}
                     onChange={handleChange}
-                    className="input pl-10 bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-805 dark:text-white"
+                    className="input pl-10"
                   />
                 </div>
               </div>
             )}
 
             <div className="space-y-1">
-              <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Email Address</label>
+              <label className="label">Email Address</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-455">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/30">
                   <Mail className="h-4.5 w-4.5" />
                 </div>
                 <input
@@ -139,20 +142,20 @@ export default function LoginPage() {
                   placeholder="name@domain.com"
                   value={form.email}
                   onChange={handleChange}
-                  className="input pl-10 bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-805 dark:text-white"
+                  className="input pl-10"
                 />
               </div>
             </div>
 
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <label className="label text-xs uppercase font-bold tracking-wider text-gray-500 dark:text-gray-400">Password</label>
+                <label className="label">Password</label>
                 {!isRegister && (
-                  <span className="text-[11px] text-gray-400 hover:text-emerald-500 cursor-pointer">Forgot?</span>
+                  <span className="text-[11px] text-cyan-400 hover:underline cursor-pointer">Forgot?</span>
                 )}
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-455">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/30">
                   <Lock className="h-4.5 w-4.5" />
                 </div>
                 <input
@@ -163,28 +166,24 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={form.password}
                   onChange={handleChange}
-                  className="input pl-10 bg-gray-50 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:bg-gray-955 dark:border-gray-805 dark:text-white"
+                  className="input pl-10"
                 />
               </div>
               {isRegister && (
-                <p className="text-[10px] text-gray-450 dark:text-gray-500">Minimum 8 characters containing letters & numbers.</p>
+                <p className="text-[10px] text-white/40">Minimum 8 characters containing letters & numbers.</p>
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full py-3.5 mt-6 font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99] transition-transform bg-emerald-600 hover:bg-emerald-555"
-            >
+            <StarBorder color="#06b6d4" speed="3.5s" className="w-full mt-6" type="submit" disabled={loading}>
               {loading ? (
-                <>
+                <div className="flex items-center justify-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                   <span>Authorizing...</span>
-                </>
+                </div>
               ) : (
                 <span>{isRegister ? "Register Credentials" : "Enter Dashboard"}</span>
               )}
-            </button>
+            </StarBorder>
           </form>
 
           <div className="text-center pt-2">
@@ -193,13 +192,13 @@ export default function LoginPage() {
                 setIsRegister(!isRegister);
                 setError("");
               }}
-              className="text-xs font-bold text-emerald-600 dark:text-emerald-450 hover:underline hover:text-emerald-700 dark:hover:text-emerald-350"
+              className="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
             >
               {isRegister ? "Already registered? Sign In" : "New candidate? Create an Account"}
             </button>
           </div>
         </div>
-      </SpotlightCard>
+      </GlassCard>
     </div>
   );
 }
