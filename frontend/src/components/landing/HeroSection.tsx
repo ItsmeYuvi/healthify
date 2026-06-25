@@ -6,6 +6,7 @@ import { ScrollReveal } from "../reactbits/text-animations/ScrollReveal";
 import { StarBorder } from "../reactbits/animations/StarBorder";
 import { GlassButton } from "../ui/GlassButton";
 import { SoftAurora } from "../reactbits/backgrounds/SoftAurora";
+import { DotField } from "../reactbits/backgrounds/DotField";
 import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
@@ -13,6 +14,30 @@ export function HeroSection() {
     <section className="relative z-10 min-h-[90vh] flex items-center justify-center overflow-hidden py-20 px-6">
       {/* Aurora Background Layer */}
       <SoftAurora color1="#8B5CF6" color2="#14B8A6" speed={0.3} scale={1.3} brightness={0.65} mouseInfluence={0.08} />
+      
+      {/* Decorative interactive Dot Field with bottom fade mask */}
+      <div 
+        className="absolute inset-0 opacity-60 pointer-events-none z-0"
+        style={{
+          maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
+        }}
+      >
+        <DotField
+          dotRadius={1.5}
+          dotSpacing={14}
+          bulgeStrength={67}
+          glowRadius={160}
+          sparkle={false}
+          waveAmplitude={0}
+          cursorRadius={500}
+          cursorForce={0.1}
+          bulgeOnly
+          gradientFrom="#A855F7"
+          gradientTo="#B497CF"
+          glowColor="#120F17"
+        />
+      </div>
 
       <div className="relative z-10 text-center max-w-4xl mx-auto space-y-8 flex flex-col items-center">
         {/* Brand Logo & Headline */}
