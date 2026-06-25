@@ -5,7 +5,12 @@ import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 
 export function GreetingBanner() {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("healthify_user_fullname") || "";
+    }
+    return "";
+  });
   const [greeting, setGreeting] = useState("Hello");
 
   useEffect(() => {
@@ -20,7 +25,10 @@ export function GreetingBanner() {
         .get(`${API_BASE_URL}/api/v1/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then((res) => setUserName(res.data.full_name))
+        .then((res) => {
+          setUserName(res.data.full_name);
+          localStorage.setItem("healthify_user_fullname", res.data.full_name);
+        })
         .catch(() => {});
     }
   }, []);
@@ -34,11 +42,11 @@ export function GreetingBanner() {
 
   return (
     <div className="space-y-1.5">
-      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
         {greeting},{" "}
         <ShinyText text={userName || "Athlete"} className="font-extrabold" />
       </h1>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs text-white/40">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs text-zinc-500 dark:text-white/40">
         <span className="font-semibold">{formattedDate}</span>
         <span className="hidden sm:inline">•</span>
         <span>Let's lock in your metrics and progress today.</span>

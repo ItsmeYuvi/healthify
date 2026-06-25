@@ -42,7 +42,6 @@ export function RecentPlans() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        // Sort by date, slice to top 3
         const sorted = (res.data || []).sort(
           (a: Plan, b: Plan) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
@@ -54,22 +53,22 @@ export function RecentPlans() {
 
   if (loading) {
     return (
-      <GlassCard className="p-6 bg-white/[0.01] border-white/5 flex flex-col justify-center items-center h-[260px]">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+      <GlassCard className="p-6 bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200 dark:border-white/5 flex flex-col justify-center items-center h-[260px]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-violet-500/20 border-t-violet-500" />
       </GlassCard>
     );
   }
 
   return (
-    <GlassCard className="p-6 bg-white/[0.01] border-white/5 flex flex-col h-full justify-between">
+    <GlassCard className="p-6 bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200 dark:border-white/5 flex flex-col h-full justify-between">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-white/40 flex items-center gap-2">
-            <ClipboardList className="h-4 w-4 text-violet-400" />
+          <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-white/40 flex items-center gap-2">
+            <ClipboardList className="h-4 w-4 text-violet-500 dark:text-violet-400" />
             Recent Blueprints
           </h3>
           {plans.length > 0 && (
-            <Link href="/plans" className="text-xs font-bold text-violet-400 hover:text-violet-300 flex items-center gap-1">
+            <Link href="/plans" className="text-xs font-bold text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 flex items-center gap-1">
               View All <ArrowRight className="h-3 w-3" />
             </Link>
           )}
@@ -77,12 +76,12 @@ export function RecentPlans() {
 
         {plans.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
-            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-              <ClipboardList className="h-6 w-6 text-white/20" />
+            <div className="p-3 rounded-xl bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/5">
+              <ClipboardList className="h-6 w-6 text-zinc-400 dark:text-white/20" />
             </div>
-            <p className="text-xs text-white/40 max-w-[200px]">No fitness plans found. Let's create your first one.</p>
+            <p className="text-xs text-zinc-500 dark:text-white/40 max-w-[200px]">No fitness plans found. Let's create your first one.</p>
             <Link href="/plans/create">
-              <span className="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/30 hover:bg-violet-500/30 transition-colors">
+              <span className="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-600 dark:text-violet-300 border border-violet-500/30 hover:bg-violet-500/30 transition-colors">
                 Generate Plan
               </span>
             </Link>
@@ -100,13 +99,13 @@ export function RecentPlans() {
                 <div
                   key={plan.id}
                   onClick={() => router.push(`/plans/${plan.id}`)}
-                  className="group flex items-center justify-between p-3.5 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all cursor-pointer"
+                  className="group flex items-center justify-between p-3.5 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.01] hover:bg-zinc-100 dark:hover:bg-white/[0.03] transition-all cursor-pointer"
                 >
                   <div className="space-y-1">
-                    <h4 className="font-extrabold text-sm text-white group-hover:text-violet-400 transition-colors">
+                    <h4 className="font-extrabold text-sm text-zinc-800 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
                       {plan.plan_name}
                     </h4>
-                    <div className="flex items-center gap-2 text-[10px] text-white/40">
+                    <div className="flex items-center gap-2 text-[10px] text-zinc-500 dark:text-white/40">
                       <span>{GOAL_LABELS[plan.goal] || plan.goal}</span>
                       <span>•</span>
                       <span className="flex items-center gap-0.5">

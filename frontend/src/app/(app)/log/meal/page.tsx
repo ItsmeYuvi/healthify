@@ -6,8 +6,18 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassInput } from "@/components/ui/GlassInput";
 import { GlassSelect } from "@/components/ui/GlassSelect";
-import { Utensils, ArrowLeft, ShieldCheck, CheckCircle2, ShieldAlert, Heart } from "lucide-react";
+import { Utensils, ArrowLeft, CheckCircle2, ShieldAlert } from "lucide-react";
 import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
+
+const PRESET_MEALS = [
+  { name: "Protein Oatmeal", type: "breakfast", calories: "420", protein: "25", carbs: "50", fats: "10" },
+  { name: "Paneer Roti Roll", type: "lunch", calories: "480", protein: "22", carbs: "45", fats: "18" },
+  { name: "Chicken Rice Salad", type: "lunch", calories: "510", protein: "38", carbs: "40", fats: "12" },
+  { name: "Dal Rice & Curd", type: "dinner", calories: "440", protein: "16", carbs: "65", fats: "10" },
+  { name: "Whey Protein Shake", type: "snack", calories: "210", protein: "26", carbs: "5", fats: "3" },
+  { name: "Boiled Eggs (3)", type: "breakfast", calories: "230", protein: "18", carbs: "2", fats: "15" },
+  { name: "Almonds & Walnut Mix", type: "snack", calories: "180", protein: "5", carbs: "6", fats: "15" },
+];
 
 export default function LogMealPage() {
   const router = useRouter();
@@ -33,6 +43,15 @@ export default function LogMealPage() {
       if (payload && payload.sub) setUsername(payload.sub);
     } catch (e) {}
   }, [router]);
+
+  const handleSelectPreset = (preset: typeof PRESET_MEALS[0]) => {
+    setMealName(preset.name);
+    setMealType(preset.type);
+    setCalories(preset.calories);
+    setProtein(preset.protein);
+    setCarbs(preset.carbs);
+    setFats(preset.fats);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,8 +91,8 @@ export default function LogMealPage() {
         <div className="h-14 w-14 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
           <CheckCircle2 className="h-8 w-8 animate-bounce" />
         </div>
-        <h2 className="text-lg font-extrabold text-white">Meal Logged!</h2>
-        <p className="text-xs text-white/40">Your nutritional metrics have been recorded. Returning to dashboard...</p>
+        <h2 className="text-lg font-extrabold text-zinc-800 dark:text-white">Meal Logged!</h2>
+        <p className="text-xs text-zinc-450 dark:text-white/40">Your nutritional metrics have been recorded. Returning to dashboard...</p>
       </div>
     );
   }
@@ -82,17 +101,17 @@ export default function LogMealPage() {
     <div className="max-w-xl mx-auto space-y-6 pb-12">
       {/* Header link */}
       <div>
-        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs font-bold group">
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-white/50 hover:text-zinc-800 dark:hover:text-white transition-colors text-xs font-bold group">
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
           Back to Dashboard
         </Link>
       </div>
 
       <div className="space-y-1">
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-850 dark:text-white">
           Log <ShinyText text="Nutrition Meal" />
         </h1>
-        <p className="text-xs text-white/40">Record food portions, calories, and macronutrient balances.</p>
+        <p className="text-xs text-zinc-500 dark:text-white/40">Record food portions, calories, and macronutrient balances.</p>
       </div>
 
       {error && (
@@ -103,7 +122,24 @@ export default function LogMealPage() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <GlassCard className="p-6 md:p-8 space-y-6 bg-white/[0.01] border-white/5">
+        <GlassCard className="p-6 md:p-8 space-y-6 bg-white/[0.01] border-zinc-200 dark:border-white/5">
+          {/* Quick Presets Panel */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-white/40">Quick Presets</label>
+            <div className="flex flex-wrap gap-2">
+              {PRESET_MEALS.map((preset) => (
+                <button
+                  key={preset.name}
+                  type="button"
+                  onClick={() => handleSelectPreset(preset)}
+                  className="text-[10px] font-bold px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-100 dark:bg-white/[0.01] hover:bg-teal-500/10 dark:hover:bg-teal-500/10 text-zinc-700 dark:text-white/60 hover:text-teal-650 dark:hover:text-teal-400 transition-all cursor-pointer"
+                >
+                  + {preset.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="sm:col-span-2">
               <GlassInput
@@ -142,8 +178,8 @@ export default function LogMealPage() {
           />
 
           <div className="space-y-4">
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-white/40 flex items-center gap-1">
-              <Utensils className="h-3.5 w-3.5 text-teal-400" /> Macronutrient Split (Optional)
+            <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-450 dark:text-white/40 flex items-center gap-1">
+              <Utensils className="h-3.5 w-3.5 text-teal-500 dark:text-teal-400" /> Macronutrient Split (Optional)
             </h3>
             <div className="grid gap-4 grid-cols-3">
               <GlassInput
@@ -175,17 +211,17 @@ export default function LogMealPage() {
 
           {/* Quick macro visualizer */}
           {(protein || carbs || fats) && (
-            <div className="p-4 rounded-xl border border-white/5 bg-[#09090f]/20 space-y-2">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-white/30">Macro Preview</span>
-              <div className="flex gap-4 text-xs font-bold text-white/60">
-                {protein && <div>P: <span className="text-orange-400">{protein}g</span></div>}
-                {carbs && <div>C: <span className="text-teal-400">{carbs}g</span></div>}
-                {fats && <div>F: <span className="text-amber-400">{fats}g</span></div>}
+            <div className="p-4 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#09090f]/20 space-y-2">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:text-white/30">Macro Preview</span>
+              <div className="flex gap-4 text-xs font-bold text-zinc-700 dark:text-white/60">
+                {protein && <div>P: <span className="text-orange-500">{protein}g</span></div>}
+                {carbs && <div>C: <span className="text-teal-500">{carbs}g</span></div>}
+                {fats && <div>F: <span className="text-amber-500">{fats}g</span></div>}
               </div>
             </div>
           )}
 
-          <div className="flex justify-end pt-4 border-t border-white/[0.06] gap-3">
+          <div className="flex justify-end pt-4 border-t border-zinc-200 dark:border-white/[0.06] gap-3">
             <Link href="/dashboard">
               <GlassButton variant="outline" className="text-xs font-bold">
                 Cancel

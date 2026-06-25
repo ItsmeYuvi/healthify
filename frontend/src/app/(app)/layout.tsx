@@ -6,7 +6,7 @@ import { ClickSpark } from "@/components/reactbits/animations/ClickSpark";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen relative bg-[#0a0a0f] overflow-x-hidden">
+    <div className="min-h-screen relative bg-[var(--bg-canvas)] text-[var(--text-primary)] overflow-x-hidden">
       {/* Subtle silk background animation */}
       <Silk />
 

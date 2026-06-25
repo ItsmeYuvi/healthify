@@ -52,6 +52,8 @@ export default function RegisterPage() {
 
       const token = loginRes.data.access_token;
       localStorage.setItem("access_token", token);
+      localStorage.setItem("healthify_user_fullname", form.fullName.trim());
+      localStorage.setItem("healthify_user_email", form.email.trim());
       window.dispatchEvent(new Event("storage"));
 
       // For new registrations, we know profile is empty, so redirect directly to onboarding profile

@@ -23,14 +23,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   if (!authChecked) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex items-center justify-center p-6">
         <LoadingGlass />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white relative">
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] relative">
       {/* Sidebar - Collapsible left drawer */}
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       

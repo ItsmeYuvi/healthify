@@ -5,7 +5,7 @@ import Link from "next/link";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassInput } from "@/components/ui/GlassInput";
-import { Plus, Trash2, Dumbbell, ArrowLeft, ShieldCheck, CheckCircle2, ShieldAlert } from "lucide-react";
+import { Plus, Trash2, Dumbbell, ArrowLeft, CheckCircle2, ShieldAlert } from "lucide-react";
 import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
 
 interface ExerciseLog {
@@ -14,6 +14,17 @@ interface ExerciseLog {
   reps: string;
   weight?: number;
 }
+
+const PRESET_EXERCISES = [
+  { name: "Bench Press", sets: 3, reps: "10" },
+  { name: "Goblet Squats", sets: 3, reps: "12" },
+  { name: "Deadlift", sets: 3, reps: "8" },
+  { name: "Bicep Curls", sets: 3, reps: "12" },
+  { name: "Pushups", sets: 3, reps: "15" },
+  { name: "Pullups", sets: 3, reps: "8" },
+  { name: "Plank Hold", sets: 3, reps: "60s" },
+  { name: "Running", sets: 1, reps: "20 mins" },
+];
 
 export default function LogWorkoutPage() {
   const router = useRouter();
@@ -57,6 +68,15 @@ export default function LogWorkoutPage() {
     });
   };
 
+  const handleAddPreset = (preset: typeof PRESET_EXERCISES[0]) => {
+    setExercises((prev) => {
+      if (prev.length === 1 && prev[0].name === "") {
+        return [{ name: preset.name, sets: preset.sets, reps: preset.reps, weight: 0 }];
+      }
+      return [...prev, { name: preset.name, sets: preset.sets, reps: preset.reps, weight: 0 }];
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -86,16 +106,14 @@ export default function LogWorkoutPage() {
     const currentStreak = Number(localStorage.getItem(streakKey) || "0");
     const today = new Date().toDateString();
     
-    // Check last logged workout date
     let lastLoggedDate = "";
     if (logs.length > 1) {
-      // Get the second to last log
       const secondLast = logs[logs.length - 2];
       lastLoggedDate = new Date(secondLast.date).toDateString();
     }
 
     if (lastLoggedDate === today) {
-      // Already logged today, keep streak
+      // Already logged today
     } else {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
@@ -120,8 +138,8 @@ export default function LogWorkoutPage() {
         <div className="h-14 w-14 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
           <CheckCircle2 className="h-8 w-8 animate-bounce" />
         </div>
-        <h2 className="text-lg font-extrabold text-white">Workout Logged!</h2>
-        <p className="text-xs text-white/40">Your daily progression is locked in. Returning to dashboard...</p>
+        <h2 className="text-lg font-extrabold text-zinc-800 dark:text-white">Workout Logged!</h2>
+        <p className="text-xs text-zinc-450 dark:text-white/40">Your daily progression is locked in. Returning to dashboard...</p>
       </div>
     );
   }
@@ -130,17 +148,17 @@ export default function LogWorkoutPage() {
     <div className="max-w-2xl mx-auto space-y-6 pb-12">
       {/* Header link */}
       <div>
-        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs font-bold group">
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-white/50 hover:text-zinc-800 dark:hover:text-white transition-colors text-xs font-bold group">
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
           Back to Dashboard
         </Link>
       </div>
 
       <div className="space-y-1">
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-850 dark:text-white">
           Log <ShinyText text="Workout Session" />
         </h1>
-        <p className="text-xs text-white/40">Record the specific sets and reps completed during your session.</p>
+        <p className="text-xs text-zinc-500 dark:text-white/40">Record the specific sets and reps completed during your session.</p>
       </div>
 
       {error && (
@@ -151,7 +169,7 @@ export default function LogWorkoutPage() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <GlassCard className="p-6 md:p-8 space-y-6 bg-white/[0.01] border-white/5">
+        <GlassCard className="p-6 md:p-8 space-y-6 bg-white/[0.01] border-zinc-200 dark:border-white/5">
           <GlassInput
             label="Workout Session Name"
             name="workoutName"
@@ -161,16 +179,33 @@ export default function LogWorkoutPage() {
             required
           />
 
+          {/* Quick Presets Panel */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-white/40">Quick Presets</label>
+            <div className="flex flex-wrap gap-2">
+              {PRESET_EXERCISES.map((preset) => (
+                <button
+                  key={preset.name}
+                  type="button"
+                  onClick={() => handleAddPreset(preset)}
+                  className="text-[10px] font-bold px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-100 dark:bg-white/[0.01] hover:bg-violet-500/10 dark:hover:bg-violet-500/10 text-zinc-700 dark:text-white/60 hover:text-violet-650 dark:hover:text-violet-400 transition-all cursor-pointer"
+                >
+                  + {preset.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-white/40 flex items-center gap-1.5">
-                <Dumbbell className="h-4 w-4 text-violet-400" />
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/[0.06] pb-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-white/40 flex items-center gap-1.5">
+                <Dumbbell className="h-4 w-4 text-violet-550 dark:text-violet-400" />
                 Exercise List
               </h3>
               <button
                 type="button"
                 onClick={addExercise}
-                className="text-[10px] font-bold text-violet-400 hover:text-violet-300 flex items-center gap-1 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1.5 rounded-lg transition-all"
+                className="text-[10px] font-bold text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 flex items-center gap-1 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1.5 rounded-lg transition-all"
               >
                 <Plus className="h-3.5 w-3.5" /> Add Exercise
               </button>
@@ -180,20 +215,20 @@ export default function LogWorkoutPage() {
               {exercises.map((ex, index) => (
                 <div
                   key={index}
-                  className="p-4 rounded-xl border border-white/5 bg-[#09090f]/30 space-y-3 relative group"
+                  className="p-4 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#09090f]/30 space-y-3 relative group"
                 >
                   {exercises.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeExercise(index)}
-                      className="absolute top-3 right-3 text-white/30 hover:text-red-400 p-1 rounded hover:bg-red-500/10 transition-colors"
+                      className="absolute top-3 right-3 text-zinc-400 dark:text-white/30 hover:text-red-500 p-1 rounded hover:bg-red-500/10 transition-colors"
                       title="Remove Exercise"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   )}
 
-                  <div className="text-[10px] font-bold text-white/30">EXERCISE 0{index + 1}</div>
+                  <div className="text-[10px] font-bold text-zinc-400 dark:text-white/30">EXERCISE 0{index + 1}</div>
 
                   <div className="grid gap-3 sm:grid-cols-4">
                     <div className="sm:col-span-2">
@@ -202,7 +237,7 @@ export default function LogWorkoutPage() {
                         placeholder="Exercise Name (e.g. Bench Press)"
                         value={ex.name}
                         onChange={(e) => handleExerciseChange(index, "name", e.target.value)}
-                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-white/10 bg-[#09090e]/50 text-white placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
                         required
                       />
                     </div>
@@ -213,7 +248,7 @@ export default function LogWorkoutPage() {
                         value={ex.sets || ""}
                         min={1}
                         onChange={(e) => handleExerciseChange(index, "sets", e.target.value)}
-                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-white/10 bg-[#09090e]/50 text-white placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
                         required
                       />
                     </div>
@@ -223,7 +258,7 @@ export default function LogWorkoutPage() {
                         placeholder="Reps (e.g. 10, 8-12)"
                         value={ex.reps}
                         onChange={(e) => handleExerciseChange(index, "reps", e.target.value)}
-                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-white/10 bg-[#09090e]/50 text-white placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
                         required
                       />
                     </div>
@@ -234,7 +269,7 @@ export default function LogWorkoutPage() {
                       placeholder="Load / Weight in kg (optional)"
                       value={ex.weight || ""}
                       onChange={(e) => handleExerciseChange(index, "weight", e.target.value)}
-                      className="w-full sm:w-1/2 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-white/10 bg-[#09090e]/50 text-white placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                      className="w-full sm:w-1/2 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
                     />
                   </div>
                 </div>
@@ -242,7 +277,7 @@ export default function LogWorkoutPage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-white/[0.06] gap-3">
+          <div className="flex justify-end pt-4 border-t border-zinc-200 dark:border-white/[0.06] gap-3">
             <Link href="/dashboard">
               <GlassButton variant="outline" className="text-xs font-bold">
                 Cancel

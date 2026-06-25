@@ -38,6 +38,15 @@ export default function LoginPage() {
 
       const token = res.data.access_token;
       localStorage.setItem("access_token", token);
+      
+      try {
+        const meRes = await axios.get(`${API_BASE_URL}/api/v1/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        localStorage.setItem("healthify_user_fullname", meRes.data.full_name);
+        localStorage.setItem("healthify_user_email", meRes.data.email);
+      } catch (e) {}
+
       window.dispatchEvent(new Event("storage"));
 
       // Check onboarding profile exists
