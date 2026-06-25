@@ -10,36 +10,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        glass: {
-          DEFAULT: "rgba(255, 255, 255, 0.03)",
-          hover: "rgba(255, 255, 255, 0.06)",
-          border: "rgba(255, 255, 255, 0.08)",
-          "border-hover": "rgba(255, 255, 255, 0.14)",
-        },
+        darkBase: "#0a0a0f",
+        lightBase: "#f4f4f5",
         accent: {
-          cyan: "#06b6d4",
-          violet: "#8b5cf6",
+          DEFAULT: "#8B5CF6", // violet-500
+          secondary: "#14B8A6", // teal-500
         },
-        primary: {
-          50: "#f0fdf4",
-          100: "#dcfce7",
-          200: "#bbf7d0",
-          300: "#86efac",
-          400: "#4ade80",
-          500: "#22c55e",
-          600: "#16a34a",
-          700: "#15803d",
-          800: "#166534",
-          900: "#14532d",
+        warning: "#F59E0B", // amber-500
+        danger: "#EF4444", // red-500
+        glass: {
+          dark: "rgba(255, 255, 255, 0.10)",
+          light: "rgba(255, 255, 255, 0.65)",
+          borderDark: "rgba(255, 255, 255, 0.15)",
+          borderLight: "rgba(0, 0, 0, 0.08)",
         },
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)", "sans-serif"],
+      },
+      letterSpacing: {
+        tightest: "-0.04em",
+        tighter: "-0.02em",
       },
       backdropBlur: {
-        "3xl": "64px",
+        "2xl": "40px",
+      },
+      borderRadius: {
+        "3xl": "24px",
       },
       boxShadow: {
-        "glass-sm": "inset 0 1px 0 0 rgba(255, 255, 255, 0.04), 0 2px 12px -2px rgba(0, 0, 0, 0.3)",
-        "glass-md": "inset 0 1px 0 0 rgba(255, 255, 255, 0.04), 0 4px 24px -4px rgba(0, 0, 0, 0.3)",
-        "glass-glow": "0 0 24px -4px rgba(6, 182, 212, 0.15)",
+        "glass-dark": "0 8px 32px 0 rgba(0, 0, 0, 0.25)",
+        "glass-light": "0 8px 32px 0 rgba(0, 0, 0, 0.05)",
+        "accent-glow": "0 0 15px rgba(139, 92, 246, 0.25)",
+        "success-glow": "0 0 15px rgba(20, 184, 166, 0.25)",
       },
     },
   },

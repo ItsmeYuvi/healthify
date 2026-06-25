@@ -2,11 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { Navbar } from "@/components/Navbar";
-import ClientDock from "@/components/ClientDock";
-import MeshGradient from "@/components/MeshGradient";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "Healthify — AI Fitness & Nutrition Planner",
@@ -16,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050505",
+  themeColor: "#0a0a0f",
 };
 
 export default function RootLayout({
@@ -26,22 +23,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-      <body
-        className={`${inter.className} min-h-screen bg-[#050505] text-white noise-overlay relative pb-28 selection:bg-cyan-500/30`}
-      >
+      <body className={`${inter.variable} font-sans min-h-screen bg-[#0a0a0f] text-white overflow-x-hidden relative`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
         >
-          <MeshGradient />
-          <Navbar />
-          <main className="container mx-auto px-4 py-6 relative z-10">{children}</main>
-          <ClientDock />
+          {children}
         </ThemeProvider>
       </body>
     </html>
   );
 }
-
