@@ -3,7 +3,6 @@ import React from "react";
 import Link from "next/link";
 import { GlassCard } from "../ui/GlassCard";
 import { ShinyText } from "../reactbits/text-animations/ShinyText";
-import { StarBorder } from "../reactbits/animations/StarBorder";
 import { GlassButton } from "../ui/GlassButton";
 import { ScrollReveal } from "../reactbits/text-animations/ScrollReveal";
 
@@ -24,14 +23,14 @@ export function CTASection() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto z-10">
-            <Link href="/register" className="w-full sm:w-auto">
-              <StarBorder color="#8B5CF6" speed="3.5s" className="w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto z-10">
+            <Link href="/register" className="w-full sm:w-auto flex justify-center">
+              <GlassButton variant="primary" className="w-full sm:w-auto min-w-[200px] h-[48px] px-8">
                 Begin Onboarding
-              </StarBorder>
+              </GlassButton>
             </Link>
-            <Link href="/login" className="w-full sm:w-auto">
-              <GlassButton className="w-full sm:w-auto px-8">
+            <Link href="/login" className="w-full sm:w-auto flex justify-center">
+              <GlassButton variant="secondary" className="w-full sm:w-auto min-w-[200px] h-[48px] px-8">
                 Access Dashboard
               </GlassButton>
             </Link>

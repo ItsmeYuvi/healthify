@@ -20,7 +20,7 @@ export function ShinyText({
 
   return (
     <span
-      className={`inline-block text-transparent bg-clip-text ${className}`}
+      className={`inline text-transparent bg-clip-text ${className}`}
       style={{
         backgroundImage: `linear-gradient(120deg, var(--text-primary) 40%, ${shineColor} 50%, var(--text-primary) 60%)`,
         backgroundSize: "200% auto",

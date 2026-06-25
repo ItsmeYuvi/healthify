@@ -6,6 +6,7 @@ import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { ClickSpark } from "@/components/reactbits/animations/ClickSpark";
 import { SplashCursor } from "@/components/reactbits/animations/SplashCursor";
+import { DotField } from "@/components/reactbits/backgrounds/DotField";
 
 export default function HomePage() {
   return (
@@ -13,6 +14,24 @@ export default function HomePage() {
       {/* Interactive visual cursors */}
       <SplashCursor color="#8B5CF6" />
       <ClickSpark sparkColor="#8B5CF6" />
+      
+      {/* Page-wide interactive Dot Field backdrop */}
+      <div className="fixed inset-0 opacity-60 pointer-events-none z-0">
+        <DotField
+          dotRadius={1.5}
+          dotSpacing={14}
+          bulgeStrength={67}
+          glowRadius={160}
+          sparkle={false}
+          waveAmplitude={0}
+          cursorRadius={500}
+          cursorForce={0.1}
+          bulgeOnly
+          gradientFrom="#A855F7"
+          gradientTo="#B497CF"
+          glowColor="#120F17"
+        />
+      </div>
       
       {/* Core landing flow segments */}
       <HeroSection />
