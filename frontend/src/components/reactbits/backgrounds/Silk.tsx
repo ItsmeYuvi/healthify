@@ -32,10 +32,10 @@ export function Silk() {
     }
 
     const draw = () => {
-      ctx.fillStyle = "rgba(10, 10, 15, 0.05)";
+      ctx.fillStyle = "rgba(12, 12, 12, 0.05)";
       ctx.fillRect(0, 0, width, height);
 
-      ctx.strokeStyle = "rgba(139, 92, 246, 0.012)"; // Subtle violet silk line
+      ctx.strokeStyle = "rgba(197, 168, 128, 0.012)"; // Subtle gold silk line
       ctx.lineWidth = 1.5;
 
       waves.forEach((wave) => {

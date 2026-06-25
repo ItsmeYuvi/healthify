@@ -2,11 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassButton } from "@/components/ui/GlassButton";
-import { GlassInput } from "@/components/ui/GlassInput";
 import { Plus, Trash2, Dumbbell, ArrowLeft, CheckCircle2, ShieldAlert } from "lucide-react";
-import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
 
 interface ExerciseLog {
   name: string;
@@ -15,15 +12,13 @@ interface ExerciseLog {
   weight?: number;
 }
 
-const PRESET_EXERCISES = [
-  { name: "Bench Press", sets: 3, reps: "10" },
-  { name: "Goblet Squats", sets: 3, reps: "12" },
-  { name: "Deadlift", sets: 3, reps: "8" },
-  { name: "Bicep Curls", sets: 3, reps: "12" },
-  { name: "Pushups", sets: 3, reps: "15" },
-  { name: "Pullups", sets: 3, reps: "8" },
-  { name: "Plank Hold", sets: 3, reps: "60s" },
-  { name: "Running", sets: 1, reps: "20 mins" },
+const PRESET_GROUPS = [
+  { name: "Bench Press", sets: 3, reps: "10", category: "Strength", image: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=300&q=80" },
+  { name: "Deadlift", sets: 3, reps: "8", category: "Conditioning", image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=300&q=80" },
+  { name: "Goblet Squats", sets: 3, reps: "12", category: "Lower Body", image: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=300&q=80" },
+  { name: "Plank Hold", sets: 3, reps: "60s", category: "Core", image: "https://images.unsplash.com/photo-1507398941214-572c25f4b1dc?auto=format&fit=crop&w=300&q=80" },
+  { name: "Sun Salutation", sets: 3, reps: "5 flows", category: "Restorative", image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=300&q=80" },
+  { name: "Interval Running", sets: 1, reps: "20 mins", category: "Cardio", image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=300&q=80" },
 ];
 
 export default function LogWorkoutPage() {
@@ -68,7 +63,7 @@ export default function LogWorkoutPage() {
     });
   };
 
-  const handleAddPreset = (preset: typeof PRESET_EXERCISES[0]) => {
+  const handleAddPreset = (preset: typeof PRESET_GROUPS[0]) => {
     setExercises((prev) => {
       if (prev.length === 1 && prev[0].name === "") {
         return [{ name: preset.name, sets: preset.sets, reps: preset.reps, weight: 0 }];
@@ -135,11 +130,11 @@ export default function LogWorkoutPage() {
   if (success) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-        <div className="h-14 w-14 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
+        <div className="h-14 w-14 rounded-full bg-luxury-gold/10 border border-luxury-gold/30 flex items-center justify-center text-luxury-gold">
           <CheckCircle2 className="h-8 w-8 animate-bounce" />
         </div>
-        <h2 className="text-lg font-extrabold text-zinc-800 dark:text-white">Workout Logged!</h2>
-        <p className="text-xs text-zinc-450 dark:text-white/40">Your daily progression is locked in. Returning to dashboard...</p>
+        <h2 className="text-xl font-serif text-white">Workout Logged</h2>
+        <p className="text-xs text-white/40">Your physical culture logs are locked in. Returning to dashboard...</p>
       </div>
     );
   }
@@ -148,128 +143,148 @@ export default function LogWorkoutPage() {
     <div className="max-w-2xl mx-auto space-y-6 pb-12">
       {/* Header link */}
       <div>
-        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-white/50 hover:text-zinc-800 dark:hover:text-white transition-colors text-xs font-bold group">
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-white/50 hover:text-luxury-gold transition-colors text-xs font-semibold group uppercase tracking-widest">
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-          Back to Dashboard
+          Audit Dashboard
         </Link>
       </div>
 
-      <div className="space-y-1">
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-850 dark:text-white">
-          Log <ShinyText text="Workout Session" />
+      <div className="space-y-1.5 text-left">
+        <span className="text-[10px] uppercase tracking-widest text-luxury-gold font-medium">Bespoke Session Logger</span>
+        <h1 className="text-3xl md:text-4xl font-serif text-white font-light">
+          Log <span className="italic text-luxury-gold">Movement Session</span>
         </h1>
-        <p className="text-xs text-zinc-500 dark:text-white/40">Record the specific sets and reps completed during your session.</p>
+        <p className="text-xs text-white/40 font-light">Record the specific conditioning parameters and sets executed today.</p>
       </div>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400 text-left">
           <ShieldAlert className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        <GlassCard className="p-6 md:p-8 space-y-6 bg-white/[0.01] border-zinc-200 dark:border-white/5">
-          <GlassInput
-            label="Workout Session Name"
-            name="workoutName"
-            value={workoutName}
-            onChange={(e) => setWorkoutName(e.target.value)}
-            placeholder="e.g., Pull Hypertrophy, Chest focus"
-            required
-          />
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-8 rounded-3xl text-left">
+          
+          {/* Form Input for Name */}
+          <div className="space-y-2">
+            <label className="glass-label">Workout Name</label>
+            <input
+              type="text"
+              value={workoutName}
+              onChange={(e) => setWorkoutName(e.target.value)}
+              placeholder="e.g., Upper Body Strength"
+              className="glass-input"
+              required
+            />
+          </div>
 
           {/* Quick Presets Panel */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-white/40">Quick Presets</label>
-            <div className="flex flex-wrap gap-2">
-              {PRESET_EXERCISES.map((preset) => (
+          <div className="space-y-3">
+            <label className="glass-label">Quick Presets</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {PRESET_GROUPS.map((preset) => (
                 <button
                   key={preset.name}
                   type="button"
                   onClick={() => handleAddPreset(preset)}
-                  className="text-[10px] font-bold px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-100 dark:bg-white/[0.01] hover:bg-violet-500/10 dark:hover:bg-violet-500/10 text-zinc-700 dark:text-white/60 hover:text-violet-650 dark:hover:text-violet-400 transition-all cursor-pointer"
+                  className="relative overflow-hidden rounded-2xl h-16 border border-white/[0.04] bg-[#1a1a1a] p-3 text-left group transition-all duration-350 hover:border-luxury-gold/30 hover:-translate-y-0.5"
                 >
-                  + {preset.name}
+                  <img
+                    src={preset.image}
+                    alt={preset.name}
+                    className="absolute inset-0 object-cover w-full h-full opacity-10 group-hover:scale-105 transition-transform duration-500 pointer-events-none"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/80 to-transparent pointer-events-none" />
+                  <div className="relative z-10 flex flex-col justify-between h-full">
+                    <span className="text-[9px] uppercase tracking-widest text-luxury-gold font-medium">{preset.category}</span>
+                    <span className="text-xs font-semibold text-white truncate">{preset.name}</span>
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
+          {/* Exercise items */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/[0.06] pb-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-white/40 flex items-center gap-1.5">
-                <Dumbbell className="h-4 w-4 text-violet-550 dark:text-violet-400" />
+            <div className="flex items-center justify-between border-b border-white/[0.04] pb-3">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
+                <Dumbbell className="h-4 w-4 text-luxury-gold" />
                 Exercise List
               </h3>
               <button
                 type="button"
                 onClick={addExercise}
-                className="text-[10px] font-bold text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 flex items-center gap-1 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1.5 rounded-lg transition-all"
+                className="text-[10px] font-semibold text-luxury-gold hover:text-luxury-goldHover flex items-center gap-1 bg-luxury-gold/10 border border-luxury-gold/25 px-3 py-1.5 rounded-xl transition-all"
               >
                 <Plus className="h-3.5 w-3.5" /> Add Exercise
               </button>
             </div>
 
-            <div className="space-y-3.5">
+            <div className="space-y-4">
               {exercises.map((ex, index) => (
                 <div
                   key={index}
-                  className="p-4 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#09090f]/30 space-y-3 relative group"
+                  className="p-5 rounded-2xl border border-white/[0.03] bg-white/[0.01] space-y-4 relative group"
                 >
                   {exercises.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeExercise(index)}
-                      className="absolute top-3 right-3 text-zinc-400 dark:text-white/30 hover:text-red-500 p-1 rounded hover:bg-red-500/10 transition-colors"
+                      className="absolute top-4 right-4 text-white/30 hover:text-red-400 p-1.5 rounded-xl hover:bg-red-500/10 transition-colors"
                       title="Remove Exercise"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   )}
 
-                  <div className="text-[10px] font-bold text-zinc-400 dark:text-white/30">EXERCISE 0{index + 1}</div>
+                  <div className="text-[9px] uppercase tracking-widest text-white/30 font-medium">Exercise 0{index + 1}</div>
 
-                  <div className="grid gap-3 sm:grid-cols-4">
-                    <div className="sm:col-span-2">
+                  <div className="grid gap-4 sm:grid-cols-4">
+                    <div className="sm:col-span-2 space-y-1">
+                      <label className="text-[9px] uppercase tracking-widest text-white/40 block">Exercise Name</label>
                       <input
                         type="text"
-                        placeholder="Exercise Name (e.g. Bench Press)"
+                        placeholder="e.g. Bench Press"
                         value={ex.name}
                         onChange={(e) => handleExerciseChange(index, "name", e.target.value)}
-                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                        className="glass-input"
                         required
                       />
                     </div>
-                    <div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] uppercase tracking-widest text-white/40 block">Sets</label>
                       <input
                         type="number"
                         placeholder="Sets"
                         value={ex.sets || ""}
                         min={1}
                         onChange={(e) => handleExerciseChange(index, "sets", e.target.value)}
-                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                        className="glass-input"
                         required
                       />
                     </div>
-                    <div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] uppercase tracking-widest text-white/40 block">Reps</label>
                       <input
                         type="text"
-                        placeholder="Reps (e.g. 10, 8-12)"
+                        placeholder="e.g. 10"
                         value={ex.reps}
                         onChange={(e) => handleExerciseChange(index, "reps", e.target.value)}
-                        className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                        className="glass-input"
                         required
                       />
                     </div>
                   </div>
-                  <div>
+                  <div className="space-y-1 sm:w-1/2">
+                    <label className="text-[9px] uppercase tracking-widest text-white/40 block">Load (optional)</label>
                     <input
                       type="number"
-                      placeholder="Load / Weight in kg (optional)"
+                      placeholder="Weight in kg"
                       value={ex.weight || ""}
                       onChange={(e) => handleExerciseChange(index, "weight", e.target.value)}
-                      className="w-full sm:w-1/2 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#09090e]/50 text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-violet-500/50 transition-all"
+                      className="glass-input"
                     />
                   </div>
                 </div>
@@ -277,17 +292,18 @@ export default function LogWorkoutPage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-zinc-200 dark:border-white/[0.06] gap-3">
+          {/* Form Actions */}
+          <div className="flex justify-end pt-4 border-t border-white/[0.04] gap-3">
             <Link href="/dashboard">
-              <GlassButton variant="outline" className="text-xs font-bold">
+              <GlassButton variant="outline" className="text-xs px-6 py-2.5">
                 Cancel
               </GlassButton>
             </Link>
-            <GlassButton variant="violet" type="submit" className="text-xs font-bold">
+            <GlassButton variant="primary" type="submit" className="text-xs px-6 py-2.5">
               Save Log
             </GlassButton>
           </div>
-        </GlassCard>
+        </div>
       </form>
     </div>
   );

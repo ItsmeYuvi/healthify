@@ -1,10 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassButton } from "@/components/ui/GlassButton";
-import { GlassInput } from "@/components/ui/GlassInput";
-import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
-import { GlassBadge } from "@/components/ui/GlassBadge";
 import { Scale, Flame, Calendar, Trash2, LineChart, ShieldAlert, ArrowLeft, Droplet, Plus, Heart, UserCheck } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
@@ -132,8 +128,6 @@ export default function ProgressTrackerPage() {
   // BMI calculations
   let bmi = 0;
   let bmiCategory = "Unknown";
-  let bmiColor = "text-zinc-500";
-  let bmiBadge = "secondary" as any;
   let idealWeightMin = 0;
   let idealWeightMax = 0;
 
@@ -148,20 +142,12 @@ export default function ProgressTrackerPage() {
 
     if (bmi < 18.5) {
       bmiCategory = "Underweight";
-      bmiColor = "text-amber-500";
-      bmiBadge = "warning";
     } else if (bmi < 25) {
-      bmiCategory = "Normal Weight";
-      bmiColor = "text-teal-500";
-      bmiBadge = "teal";
+      bmiCategory = "Optimal";
     } else if (bmi < 30) {
       bmiCategory = "Overweight";
-      bmiColor = "text-orange-500";
-      bmiBadge = "warning";
     } else {
       bmiCategory = "Obese";
-      bmiColor = "text-red-500";
-      bmiBadge = "danger";
     }
   }
 
@@ -209,19 +195,20 @@ export default function ProgressTrackerPage() {
   return (
     <div className="space-y-8 pb-12">
       {/* Header */}
-      <div>
-        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-white/50 hover:text-zinc-800 dark:hover:text-white transition-colors text-xs font-bold group mb-2">
+      <div className="text-left">
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-white/50 hover:text-luxury-gold transition-colors text-xs font-semibold group mb-2 uppercase tracking-widest">
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-          Back to Dashboard
+          Audit Dashboard
         </Link>
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-          Progress & <ShinyText text="Biometrics" />
+        <span className="text-xs uppercase tracking-[0.25em] text-luxury-gold font-medium block mt-2">Longevity Audits</span>
+        <h1 className="text-3xl md:text-5xl font-serif text-white font-light tracking-tight mt-1">
+          Diagnostics & <span className="italic text-luxury-gold">Biometrics</span>
         </h1>
-        <p className="text-xs text-zinc-500 dark:text-white/40">Enhanced tracking for weight logs, calorie targets, BMI, and hydration.</p>
+        <p className="text-xs text-white/40 font-light mt-1">Audit metabolic deficits, weight timelines, and real-time hydration curves.</p>
       </div>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400 text-left">
           <ShieldAlert className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -230,305 +217,294 @@ export default function ProgressTrackerPage() {
       {/* Main Grid Widgets */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {/* Weight Card */}
-        <GlassCard spotlightColor="rgba(236, 72, 153, 0.12)" className="p-5 bg-white/[0.01] border-zinc-200 dark:border-white/5 space-y-4">
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40">Latest Weight</h3>
-            <div className="p-2.5 rounded-xl border border-pink-500/20 bg-pink-500/10 text-pink-500">
-              <Scale className="h-4 w-4" />
-            </div>
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Current Weight</h3>
+            <Scale className="h-4 w-4 text-white/30" />
           </div>
           <div>
-            <div className="text-2xl font-extrabold text-zinc-800 dark:text-white flex items-baseline gap-0.5">
+            <div className="text-2xl font-serif text-white flex items-baseline gap-0.5 font-light">
               <span>{currentWeight || "--"}</span>
-              <span className="text-xs font-bold text-zinc-500 dark:text-white/55">kg</span>
+              <span className="text-xs font-sans text-white/40 ml-1">kg</span>
             </div>
-            <p className="text-[9px] text-zinc-450 dark:text-white/30 font-semibold mt-1">
+            <p className="text-[9px] text-white/30 font-medium mt-1">
               {logs.length > 0
-                ? `Updated ${new Date(logs[logs.length - 1].date).toLocaleDateString()}`
-                : "Profile baseline metric"}
+                ? `Logged ${new Date(logs[logs.length - 1].date).toLocaleDateString()}`
+                : "Baseline target"}
             </p>
           </div>
-        </GlassCard>
+        </div>
 
         {/* Streak Card */}
-        <GlassCard spotlightColor="rgba(249, 115, 22, 0.12)" className="p-5 bg-white/[0.01] border-zinc-200 dark:border-white/5 space-y-4">
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40">Current Streak</h3>
-            <div className="p-2.5 rounded-xl border border-orange-500/20 bg-orange-500/10 text-orange-500">
-              <Flame className="h-4 w-4" />
-            </div>
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Active Streak</h3>
+            <Flame className="h-4 w-4 text-white/30" />
           </div>
           <div>
-            <div className="text-2xl font-extrabold text-zinc-800 dark:text-white flex items-baseline gap-0.5">
+            <div className="text-2xl font-serif text-white flex items-baseline gap-0.5 font-light">
               <span>{streak}</span>
-              <span className="text-xs font-bold text-zinc-500 dark:text-white/55">days</span>
+              <span className="text-xs font-sans text-white/40 ml-1">days</span>
             </div>
-            <p className="text-[9px] text-zinc-450 dark:text-white/30 font-semibold mt-1">Keep logging daily to lock in streak</p>
+            <p className="text-[9px] text-white/30 font-medium mt-1">Consecutive activity target</p>
           </div>
-        </GlassCard>
+        </div>
 
         {/* BMI Card */}
-        <GlassCard spotlightColor="rgba(20, 184, 166, 0.12)" className="p-5 bg-white/[0.01] border-zinc-200 dark:border-white/5 space-y-4">
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40">Active BMI</h3>
-            <div className="p-2.5 rounded-xl border border-teal-500/20 bg-teal-500/10 text-teal-500">
-              <UserCheck className="h-4 w-4" />
-            </div>
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Active BMI</h3>
+            <UserCheck className="h-4 w-4 text-white/30" />
           </div>
           <div>
-            <div className="text-2xl font-extrabold text-zinc-800 dark:text-white flex items-baseline gap-1">
+            <div className="text-2xl font-serif text-white flex items-baseline gap-1 font-light">
               <span>{bmi > 0 ? bmi.toFixed(1) : "--"}</span>
               {bmi > 0 && (
-                <GlassBadge variant={bmiBadge} className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ml-1">
+                <span className="px-1.5 py-0.5 rounded text-[8px] bg-luxury-gold/10 text-luxury-gold border border-luxury-gold/15 font-sans font-bold uppercase tracking-wider ml-1.5">
                   {bmiCategory}
-                </GlassBadge>
+                </span>
               )}
             </div>
-            <p className="text-[9px] text-zinc-450 dark:text-white/30 font-semibold mt-1">
-              {idealWeightMin > 0 ? `Ideal: ${idealWeightMin.toFixed(0)}-${idealWeightMax.toFixed(0)} kg` : "Enter height in Profile"}
+            <p className="text-[9px] text-white/30 font-medium mt-1">
+              {idealWeightMin > 0 ? `Ideal: ${idealWeightMin.toFixed(0)}-${idealWeightMax.toFixed(0)} kg` : "Baseline missing"}
             </p>
           </div>
-        </GlassCard>
+        </div>
 
-        {/* Target weight Delta */}
-        <GlassCard spotlightColor="rgba(139, 92, 246, 0.12)" className="p-5 bg-white/[0.01] border-zinc-200 dark:border-white/5 space-y-4">
+        {/* Weight Delta */}
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40">Weight Delta</h3>
-            <div className="p-2.5 rounded-xl border border-violet-500/20 bg-violet-500/10 text-violet-550 dark:text-violet-400">
-              <LineChart className="h-4 w-4" />
-            </div>
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Weight Delta</h3>
+            <LineChart className="h-4 w-4 text-white/30" />
           </div>
           <div>
-            <div className="text-2xl font-extrabold text-zinc-800 dark:text-white flex items-baseline gap-0.5">
+            <div className="text-2xl font-serif text-white flex items-baseline gap-0.5 font-light">
               <span>
                 {logs.length > 1
                   ? (logs[logs.length - 1].weight - logs[0].weight).toFixed(1)
                   : "0.0"}
               </span>
-              <span className="text-xs font-bold text-zinc-500 dark:text-white/55">kg</span>
+              <span className="text-xs font-sans text-white/40 ml-1">kg</span>
             </div>
-            <p className="text-[9px] text-zinc-450 dark:text-white/30 font-semibold mt-1">Difference since first registered log</p>
+            <p className="text-[9px] text-white/30 font-medium mt-1">Net shift from first baseline audit</p>
           </div>
-        </GlassCard>
+        </div>
       </div>
 
       {/* Expanded Progress Features Grid */}
-      <div className="grid gap-6 md:grid-cols-12">
+      <div className="grid gap-6 md:grid-cols-2">
         {/* Calorie Budget Tracker */}
-        <div className="md:col-span-6">
-          <GlassCard spotlightColor="rgba(20, 184, 166, 0.1)" className="p-6 bg-white/[0.01] border-zinc-200 dark:border-white/5 h-full space-y-5 flex flex-col justify-between">
-            <div className="space-y-1">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-white/40 flex items-center gap-1.5">
-                <Heart className="h-4 w-4 text-teal-500" /> Calorie Balance (Today)
-              </h3>
-              <p className="text-[10px] text-zinc-400 dark:text-white/40">Calculated dynamic metabolic budget based on goal: <span className="font-bold text-teal-500 dark:text-teal-400">{profile?.goal ? profile.goal.replace("_", " ") : "general health"}</span></p>
-            </div>
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-6 text-left flex flex-col justify-between">
+          <div className="space-y-1">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
+              <Heart className="h-4 w-4 text-luxury-gold" /> Metabolic Calorie Balance
+            </h3>
+            <p className="text-[10px] text-white/40">Dynamic metabolic deficit calculated for: <span className="text-luxury-gold font-semibold uppercase tracking-wider">{profile?.goal ? profile.goal.replace("_", " ") : "general health"}</span></p>
+          </div>
 
-            <div className="grid grid-cols-2 gap-6 items-center">
-              {/* Circular tracking visual */}
-              <div className="relative flex items-center justify-center">
-                <div className="w-28 h-28 rounded-full border-[10px] border-zinc-100 dark:border-white/5 flex flex-col justify-center items-center">
-                  <span className="text-xs text-zinc-400 dark:text-white/35 font-bold uppercase tracking-wide">Remaining</span>
-                  <span className="text-lg font-extrabold text-zinc-800 dark:text-white">
-                    {Math.max(0, targetCalories - todayCalories)}
-                  </span>
-                  <span className="text-[9px] text-teal-550 dark:text-teal-400 font-bold">kcal</span>
-                </div>
-              </div>
-              
-              <div className="space-y-3.5 text-xs">
-                <div className="flex justify-between border-b border-zinc-150 dark:border-white/5 pb-1">
-                  <span className="text-zinc-500 dark:text-white/45">Target Budget:</span>
-                  <span className="font-extrabold text-zinc-800 dark:text-white">{targetCalories} kcal</span>
-                </div>
-                <div className="flex justify-between border-b border-zinc-150 dark:border-white/5 pb-1">
-                  <span className="text-zinc-500 dark:text-white/45">Meals Logged:</span>
-                  <span className="font-extrabold text-zinc-800 dark:text-white">{todayCalories} kcal</span>
-                </div>
-                <div className="flex justify-between border-b border-zinc-150 dark:border-white/5 pb-1">
-                  <span className="text-zinc-500 dark:text-white/45">Calculated BMR:</span>
-                  <span className="font-extrabold text-zinc-650 dark:text-white/70">{bmr ? bmr.toFixed(0) : "--"} kcal</span>
-                </div>
+          <div className="grid grid-cols-2 gap-6 items-center">
+            {/* Circular tracking visual */}
+            <div className="relative flex items-center justify-center">
+              <div className="w-28 h-28 rounded-full border-[6px] border-white/[0.02] flex flex-col justify-center items-center">
+                <span className="text-[9px] text-white/30 font-semibold uppercase tracking-widest">Remaining</span>
+                <span className="text-2xl font-serif text-white font-light mt-0.5">
+                  {Math.max(0, targetCalories - todayCalories)}
+                </span>
+                <span className="text-[9px] text-luxury-gold font-semibold uppercase tracking-widest mt-0.5">kcal</span>
               </div>
             </div>
+            
+            <div className="space-y-3 text-xs">
+              <div className="flex justify-between border-b border-white/[0.03] pb-1.5">
+                <span className="text-white/45">Target Budget:</span>
+                <span className="font-semibold text-white">{targetCalories} kcal</span>
+              </div>
+              <div className="flex justify-between border-b border-white/[0.03] pb-1.5">
+                <span className="text-white/45">Diet Logged:</span>
+                <span className="font-semibold text-white">{todayCalories} kcal</span>
+              </div>
+              <div className="flex justify-between border-b border-white/[0.03] pb-1.5">
+                <span className="text-white/45">Calculated BMR:</span>
+                <span className="font-semibold text-white/70">{bmr ? bmr.toFixed(0) : "--"} kcal</span>
+              </div>
+            </div>
+          </div>
 
-            <div className="space-y-1">
-              <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-teal-500 to-violet-500 rounded-full" 
-                  style={{ width: `${Math.min(100, (todayCalories / targetCalories) * 100)}%` }} 
-                />
-              </div>
-              <div className="flex justify-between text-[9px] text-zinc-400 dark:text-white/30 font-bold uppercase">
-                <span>0% Consumed</span>
-                <span>{todayCalories >= targetCalories ? "Goal Reached!" : `${Math.round((todayCalories / targetCalories) * 100)}%`}</span>
-              </div>
+          <div className="space-y-1">
+            <div className="h-2 w-full rounded-lg bg-white/[0.02] overflow-hidden">
+              <div 
+                className="h-full bg-luxury-gold rounded-lg transition-all duration-500" 
+                style={{ width: `${Math.min(100, (todayCalories / targetCalories) * 100)}%` }} 
+              />
             </div>
-          </GlassCard>
+            <div className="flex justify-between text-[9px] text-white/30 font-bold uppercase tracking-wider">
+              <span>0% Consumed</span>
+              <span>{todayCalories >= targetCalories ? "Limit Reached" : `${Math.round((todayCalories / targetCalories) * 100)}%`}</span>
+            </div>
+          </div>
         </div>
 
         {/* Water Intake Tracker */}
-        <div className="md:col-span-6">
-          <GlassCard spotlightColor="rgba(59, 130, 246, 0.1)" className="p-6 bg-white/[0.01] border-zinc-200 dark:border-white/5 h-full space-y-5 flex flex-col justify-between">
-            <div className="space-y-1">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40 flex items-center gap-1.5">
-                <Droplet className="h-4 w-4 text-blue-500" /> Hydration Tracker (Daily Goal)
-              </h3>
-              <p className="text-[10px] text-zinc-400 dark:text-white/40">Track your daily water consumption to support metabolic rate.</p>
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-6 text-left flex flex-col justify-between">
+          <div className="space-y-1">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
+              <Droplet className="h-4 w-4 text-luxury-gold" /> Daily Hydration Audit
+            </h3>
+            <p className="text-[10px] text-white/40 font-light">Track daily fluid metrics to support energy levels and cellular clear rate.</p>
+          </div>
+
+          <div className="flex items-center justify-between gap-6 py-2">
+            <div className="flex flex-col items-start gap-1">
+              <div className="text-3xl font-serif text-white flex items-baseline gap-0.5 font-light">
+                <span>{(waterIntake / 1000).toFixed(2)}</span>
+                <span className="text-xs font-sans text-white/40 ml-1">L</span>
+              </div>
+              <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest">Target: 3.00 L</span>
             </div>
 
-            <div className="flex items-center justify-between gap-6 py-1">
-              <div className="flex flex-col items-center gap-1">
-                <div className="text-3xl font-extrabold text-zinc-800 dark:text-white flex items-baseline gap-0.5">
-                  <span>{(waterIntake / 1000).toFixed(2)}</span>
-                  <span className="text-sm font-bold text-zinc-450 dark:text-white/50">L</span>
-                </div>
-                <span className="text-[9px] font-bold text-zinc-400 dark:text-white/30 uppercase">Target: 3.00L</span>
-              </div>
-
-              {/* Water logging actions */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleWaterUpdate(250)}
-                  className="p-3 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.02] hover:bg-blue-500/10 dark:hover:bg-blue-500/20 text-zinc-800 dark:text-white flex flex-col items-center gap-1 cursor-pointer transition-all active:scale-95"
-                >
-                  <Plus className="h-4 w-4 text-blue-500" />
-                  <span className="text-[9px] font-bold">+250ml</span>
-                </button>
-                <button
-                  onClick={() => handleWaterUpdate(500)}
-                  className="p-3 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.02] hover:bg-blue-500/10 dark:hover:bg-blue-500/20 text-zinc-800 dark:text-white flex flex-col items-center gap-1 cursor-pointer transition-all active:scale-95"
-                >
-                  <Plus className="h-4 w-4 text-blue-500" />
-                  <span className="text-[9px] font-bold">+500ml</span>
-                </button>
-                <button
-                  onClick={() => handleWaterUpdate(-250)}
-                  className="px-2.5 py-3 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.02] hover:bg-red-500/10 text-zinc-450 hover:text-red-500 cursor-pointer transition-all active:scale-95"
-                  title="Remove 250ml"
-                >
-                  <span className="text-[10px] font-extrabold">-250</span>
-                </button>
-              </div>
+            {/* Water logging actions */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleWaterUpdate(250)}
+                className="p-3 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-luxury-gold/10 hover:border-luxury-gold/30 text-white flex flex-col items-center gap-1 cursor-pointer transition-all duration-300 active:scale-95"
+              >
+                <Plus className="h-4 w-4 text-luxury-gold" />
+                <span className="text-[9px] font-semibold text-luxury-gold uppercase tracking-wider">+250ml</span>
+              </button>
+              <button
+                onClick={() => handleWaterUpdate(500)}
+                className="p-3 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-luxury-gold/10 hover:border-luxury-gold/30 text-white flex flex-col items-center gap-1 cursor-pointer transition-all duration-300 active:scale-95"
+              >
+                <Plus className="h-4 w-4 text-luxury-gold" />
+                <span className="text-[9px] font-semibold text-luxury-gold uppercase tracking-wider">+500ml</span>
+              </button>
+              <button
+                onClick={() => handleWaterUpdate(-250)}
+                className="px-3 py-3 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-red-500/10 text-white/40 hover:text-red-400 cursor-pointer transition-all active:scale-95"
+                title="Remove 250ml"
+              >
+                <span className="text-[10px] font-bold">-250</span>
+              </button>
             </div>
+          </div>
 
-            <div className="space-y-1">
-              <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-white/10 overflow-hidden relative">
-                <div 
-                  className="h-full bg-blue-500 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" 
-                  style={{ width: `${Math.min(100, (waterIntake / 3000) * 100)}%` }} 
-                />
-              </div>
-              <div className="flex justify-between text-[9px] text-zinc-400 dark:text-white/30 font-bold uppercase">
-                <span>0L</span>
-                <span>{waterIntake >= 3000 ? "Fully Hydrated! 💧" : `${Math.round((waterIntake / 3000) * 100)}%`}</span>
-              </div>
+          <div className="space-y-1">
+            <div className="h-2 w-full rounded-lg bg-white/[0.02] overflow-hidden relative">
+              <div 
+                className="h-full bg-luxury-gold rounded-lg transition-all duration-500 shadow-[0_0_8px_rgba(197,168,128,0.2)]" 
+                style={{ width: `${Math.min(100, (waterIntake / 3000) * 100)}%` }} 
+              />
             </div>
-          </GlassCard>
+            <div className="flex justify-between text-[9px] text-white/30 font-bold uppercase tracking-wider">
+              <span>0 L</span>
+              <span>{waterIntake >= 3000 ? "Fully Hydrated!" : `${Math.round((waterIntake / 3000) * 100)}%`}</span>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Weight History Charts & Checkin */}
       <div className="grid gap-6 md:grid-cols-12 items-start">
         {/* Weight timeline graph */}
-        <div className="md:col-span-8">
-          <GlassCard className="p-6 bg-white/[0.01] border-zinc-200 dark:border-white/5 space-y-6">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40 flex items-center gap-1.5">
-              <LineChart className="h-4 w-4 text-violet-550 dark:text-violet-400" /> Weight Timeline
-            </h3>
+        <div className="md:col-span-8 glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-6 text-left">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
+            <LineChart className="h-4 w-4 text-luxury-gold" /> Weight Timeline
+          </h3>
 
-            {logs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center space-y-2.5">
-                <div className="p-3 rounded-full bg-zinc-100 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 text-zinc-450 dark:text-white/20">
-                  <LineChart className="h-6 w-6" />
-                </div>
-                <p className="text-xs text-zinc-500 dark:text-white/40 max-w-[200px]">Log your weight to see progress curves.</p>
+          {logs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center space-y-2.5">
+              <div className="p-3 rounded-full bg-white/[0.01] border border-white/[0.04] text-white/20">
+                <LineChart className="h-6 w-6" />
               </div>
-            ) : (
-              <div className="space-y-4 pt-2">
-                {/* CSS Line graph bar segments */}
-                <div className="relative h-48 border-b border-zinc-200 dark:border-white/[0.08] flex items-end justify-between px-4 pb-2 gap-4">
-                  {logs.map((log) => {
-                    const scaledHeight = ((log.weight - minWeight) / weightRange) * 80 + 10;
-                    return (
-                      <div key={log.id} className="flex-1 flex flex-col items-center group relative h-full justify-end">
-                        {/* Tooltip */}
-                        <div className="absolute bottom-[105%] bg-white dark:bg-[#12121a] border border-zinc-200 dark:border-white/10 text-zinc-800 dark:text-white text-[9px] font-bold py-1 px-1.5 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-lg">
-                          {log.weight} kg
-                        </div>
-                        {/* Dot indicator */}
-                        <div
-                          style={{ bottom: `${scaledHeight}%` }}
-                          className="absolute w-2.5 h-2.5 rounded-full bg-pink-500 border border-white dark:border-zinc-950 transition-all group-hover:scale-125 shadow-[0_0_8px_rgba(236,72,153,0.8)]"
-                        />
-                        <div className="w-full h-full hover:bg-zinc-50 dark:hover:bg-white/[0.02] rounded-t-lg transition-colors cursor-pointer" />
-                        <span className="text-[9px] text-zinc-400 dark:text-white/30 font-bold mt-2.5">
-                          {new Date(log.date).toLocaleDateString("en-US", {
-                            month: "narrow",
-                            day: "numeric",
-                          })}
-                        </span>
+              <p className="text-xs text-white/40 max-w-[200px]">Log your weight to see progress curves.</p>
+            </div>
+          ) : (
+            <div className="space-y-4 pt-2">
+              <div className="relative h-48 border-b border-white/[0.06] flex items-end justify-between px-4 pb-2 gap-4">
+                {logs.map((log) => {
+                  const scaledHeight = ((log.weight - minWeight) / weightRange) * 80 + 10;
+                  return (
+                    <div key={log.id} className="flex-1 flex flex-col items-center group relative h-full justify-end">
+                      {/* Tooltip */}
+                      <div className="absolute bottom-[105%] bg-[#121212] border border-white/10 text-white text-[9px] font-semibold py-1 px-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-lg">
+                        {log.weight} kg
                       </div>
-                    );
-                  })}
-                </div>
+                      {/* Dot indicator */}
+                      <div
+                        style={{ bottom: `${scaledHeight}%` }}
+                        className="absolute w-2.5 h-2.5 rounded-full bg-luxury-gold border border-[#0c0c0c] transition-all group-hover:scale-125 shadow-[0_0_8px_rgba(197,168,128,0.6)]"
+                      />
+                      <div className="w-full h-full hover:bg-white/[0.01] rounded-t-lg transition-colors cursor-pointer" />
+                      <span className="text-[9px] text-white/30 font-semibold mt-2.5">
+                        {new Date(log.date).toLocaleDateString("en-US", {
+                          month: "narrow",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
-            )}
-          </GlassCard>
+            </div>
+          )}
         </div>
 
         {/* Logger checkin */}
-        <div className="md:col-span-4">
-          <GlassCard className="p-6 bg-white/[0.01] border-zinc-200 dark:border-white/5 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40 flex items-center gap-1.5">
-              <Scale className="h-4 w-4 text-pink-550 dark:text-pink-400" /> Log Weight Check-in
-            </h3>
-            <form onSubmit={handleLogWeight} className="space-y-4">
-              <GlassInput
-                label="Weight (kg)"
+        <div className="md:col-span-4 glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-4 text-left">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
+            <Scale className="h-4 w-4 text-luxury-gold" /> Check-in Baseline
+          </h3>
+          <form onSubmit={handleLogWeight} className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-[9px] uppercase tracking-widest text-white/40 block">Weight (kg)</label>
+              <input
                 type="number"
                 step="0.1"
                 name="weight"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 placeholder="e.g. 71.5"
+                className="glass-input"
                 required
               />
-              <GlassInput
-                label="Check-in Date"
+            </div>
+            <div className="space-y-1">
+              <label className="text-[9px] uppercase tracking-widest text-white/40 block">Check-in Date</label>
+              <input
                 type="date"
                 name="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+                className="glass-input"
                 required
               />
-              <GlassButton variant="violet" type="submit" className="w-full text-xs font-bold">
-                Log Weight
-              </GlassButton>
-            </form>
-          </GlassCard>
+            </div>
+            <GlassButton variant="primary" type="submit" className="w-full text-xs font-semibold mt-2">
+              Log Weight
+            </GlassButton>
+          </form>
         </div>
       </div>
 
       {/* Historical weight logs */}
       {logs.length > 0 && (
-        <GlassCard className="p-6 bg-white/[0.01] border-zinc-200 dark:border-white/5 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-550 dark:text-white/40 flex items-center gap-1.5">
-            <Calendar className="h-4 w-4 text-zinc-400 dark:text-white/30" /> Historical Weights
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-4 text-left">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
+            <Calendar className="h-4 w-4 text-luxury-gold" /> Historical Weights
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-zinc-200 dark:border-white/[0.06] text-zinc-400 dark:text-white/30 font-bold">
-                  <th className="py-2">Date Logged</th>
-                  <th className="py-2">Weight Value</th>
-                  <th className="py-2 text-right">Actions</th>
+                <tr className="border-b border-white/[0.04] text-white/30 font-bold">
+                  <th className="py-2.5">Date Logged</th>
+                  <th className="py-2.5">Weight Value</th>
+                  <th className="py-2.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-150 dark:divide-white/[0.04]">
+              <tbody className="divide-y divide-white/[0.03]">
                 {logs.slice().reverse().map((log) => (
-                  <tr key={log.id} className="text-zinc-650 dark:text-white/70">
-                    <td className="py-2.5 font-semibold">
+                  <tr key={log.id} className="text-white/70">
+                    <td className="py-3 font-semibold">
                       {new Date(log.date).toLocaleDateString("en-US", {
                         weekday: "short",
                         month: "short",
@@ -536,11 +512,11 @@ export default function ProgressTrackerPage() {
                         year: "numeric",
                       })}
                     </td>
-                    <td className="py-2.5 font-extrabold text-zinc-800 dark:text-white">{log.weight} kg</td>
-                    <td className="py-2.5 text-right">
+                    <td className="py-3 font-serif font-medium text-white">{log.weight} kg</td>
+                    <td className="py-3 text-right">
                       <button
                         onClick={() => handleDeleteLog(log.id)}
-                        className="p-1 rounded text-zinc-400 dark:text-white/30 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                        className="p-1 rounded text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                         title="Delete log"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -551,7 +527,7 @@ export default function ProgressTrackerPage() {
               </tbody>
             </table>
           </div>
-        </GlassCard>
+        </div>
       )}
     </div>
   );

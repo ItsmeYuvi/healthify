@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ShinyText } from "../reactbits/text-animations/ShinyText";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 
@@ -15,9 +14,9 @@ export function GreetingBanner() {
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good morning 🌅");
-    else if (hour < 17) setGreeting("Good afternoon 🌤️");
-    else setGreeting("Good evening 🌙");
+    if (hour < 12) setGreeting("Good morning");
+    else if (hour < 17) setGreeting("Good afternoon");
+    else setGreeting("Good evening");
 
     const token = localStorage.getItem("access_token");
     if (token) {
@@ -41,15 +40,16 @@ export function GreetingBanner() {
   });
 
   return (
-    <div className="space-y-1.5">
-      <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-        {greeting},{" "}
-        <ShinyText text={userName || "Athlete"} className="font-extrabold" />
-      </h1>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs text-zinc-500 dark:text-white/40">
-        <span className="font-semibold">{formattedDate}</span>
-        <span className="hidden sm:inline">•</span>
-        <span>Let's lock in your metrics and progress today.</span>
+    <div className="border-b border-white/[0.04] pb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+      <div className="space-y-1.5">
+        <span className="text-xs uppercase tracking-widest text-luxury-gold font-medium">Bespoke Wellness Dashboard</span>
+        <h1 className="text-3xl md:text-5xl font-serif text-white tracking-tight">
+          {greeting}, <span className="italic text-luxury-gold font-light">{userName || "Member"}</span>
+        </h1>
+      </div>
+      <div className="md:text-right">
+        <p className="text-sm font-semibold text-white/80">{formattedDate}</p>
+        <p className="text-[10px] text-white/40 mt-1 uppercase tracking-widest">Executive Wellness Portfolio</p>
       </div>
     </div>
   );

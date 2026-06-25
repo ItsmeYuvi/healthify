@@ -4,17 +4,18 @@ import { cn } from "@/lib/utils";
 
 interface GlassIconProps {
   name: keyof typeof Icons;
-  color?: "violet" | "teal" | "pink" | "amber" | "rose";
+  color?: "gold" | "violet" | "teal" | "pink" | "amber" | "rose";
   className?: string;
 }
 
-export function GlassIcon({ name, color = "violet", className = "" }: GlassIconProps) {
+export function GlassIcon({ name, color = "gold", className = "" }: GlassIconProps) {
   const IconComponent = Icons[name] as React.ComponentType<any>;
 
   return (
     <div
       className={cn(
         "flex h-12 w-12 items-center justify-center rounded-2xl border backdrop-blur-md shadow-sm",
+        color === "gold" && "bg-luxury-gold/10 border-luxury-gold/25 text-luxury-gold shadow-luxury-gold/5",
         color === "violet" && "bg-violet-500/10 border-violet-500/25 text-violet-400 shadow-violet-500/5",
         color === "teal" && "bg-teal-500/10 border-teal-500/25 text-teal-400 shadow-teal-500/5",
         color === "pink" && "bg-pink-500/10 border-pink-500/25 text-pink-400 shadow-pink-500/5",

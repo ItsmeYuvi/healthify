@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { GlassCard } from "../ui/GlassCard";
 import { BarChart3 } from "lucide-react";
 
 interface ChartDataPoint {
@@ -72,38 +71,38 @@ export function WeeklyChart() {
 
   if (loading) {
     return (
-      <GlassCard className="p-6 bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200 dark:border-white/5 flex flex-col justify-center items-center h-[260px]">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-violet-500/20 border-t-violet-500" />
-      </GlassCard>
+      <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-center items-center h-[280px]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-luxury-gold/20 border-t-luxury-gold" />
+      </div>
     );
   }
 
   return (
-    <GlassCard className="p-6 bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200 dark:border-white/5 flex flex-col h-full justify-between">
+    <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-between h-full space-y-6">
       <div className="space-y-6">
         {/* Header and Toggles */}
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-white/40 flex items-center gap-2">
-            <BarChart3 className="h-4 w-4 text-teal-500 dark:text-teal-400" />
-            Weekly Progress
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-luxury-gold" />
+            Weekly Activity
           </h3>
-          <div className="flex bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/10 rounded-lg p-0.5">
+          <div className="flex bg-white/[0.02] border border-white/[0.05] rounded-xl p-0.5">
             <button
               onClick={() => setActiveTab("calories")}
-              className={`text-[10px] font-bold px-2.5 py-1 rounded-md transition-colors ${
+              className={`text-[10px] font-semibold px-3 py-1 rounded-lg transition-colors ${
                 activeTab === "calories"
-                  ? "bg-teal-650 dark:bg-teal-500 text-white shadow-sm"
-                  : "text-zinc-500 dark:text-white/60 hover:text-zinc-800 dark:hover:text-white"
+                  ? "bg-luxury-gold text-[#0c0c0c] shadow-sm"
+                  : "text-white/60 hover:text-white"
               }`}
             >
               Calories
             </button>
             <button
               onClick={() => setActiveTab("workouts")}
-              className={`text-[10px] font-bold px-2.5 py-1 rounded-md transition-colors ${
+              className={`text-[10px] font-semibold px-3 py-1 rounded-lg transition-colors ${
                 activeTab === "workouts"
-                  ? "bg-violet-650 dark:bg-violet-500 text-white shadow-sm"
-                  : "text-zinc-500 dark:text-white/60 hover:text-zinc-800 dark:hover:text-white"
+                  ? "bg-luxury-gold text-[#0c0c0c] shadow-sm"
+                  : "text-white/60 hover:text-white"
               }`}
             >
               Workouts
@@ -117,13 +116,15 @@ export function WeeklyChart() {
             {data.map((day, idx) => {
               const activeVal = activeTab === "calories" ? day.calories : day.workouts;
               const activeHeight = activeTab === "calories" ? day.calorieHeight : day.workoutHeight;
-              const barColor = activeTab === "calories" ? "bg-teal-500/30 border-teal-500/50 hover:bg-teal-500/50" : "bg-violet-500/30 border-violet-500/50 hover:bg-violet-500/50";
-              const glowColor = activeTab === "calories" ? "rgba(20, 184, 166, 0.2)" : "rgba(139, 92, 246, 0.2)";
+              
+              // Soft gold bars
+              const barColor = "bg-luxury-gold/15 border-luxury-gold/30 hover:bg-luxury-gold/30 hover:border-luxury-gold/50";
+              const glowColor = "rgba(197, 168, 128, 0.15)";
 
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center group relative h-full justify-end">
                   {/* Tooltip on hover */}
-                  <div className="absolute bottom-[105%] bg-white dark:bg-[#12121a] border border-zinc-200 dark:border-white/10 text-zinc-800 dark:text-white text-[9px] font-bold py-1 px-2 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-xl">
+                  <div className="absolute bottom-[105%] bg-[#121212] border border-white/10 text-white text-[9px] font-semibold py-1 px-2 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-xl">
                     {activeVal} {activeTab === "calories" ? "kcal" : "workout(s)"}
                   </div>
 
@@ -138,14 +139,14 @@ export function WeeklyChart() {
                       style={{ boxShadow: `0 0 12px ${glowColor}` }}
                     />
                   </div>
-                  <span className="text-[10px] text-zinc-405 dark:text-white/30 font-bold mt-2">{day.label}</span>
+                  <span className="text-[10px] text-white/30 font-semibold mt-2">{day.label}</span>
                 </div>
               );
             })}
           </div>
         </div>
       </div>
-    </GlassCard>
+    </div>
   );
 }
 

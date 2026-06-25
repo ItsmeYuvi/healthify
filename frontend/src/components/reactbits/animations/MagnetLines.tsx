@@ -31,7 +31,7 @@ export function MagnetLines() {
 
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
-      ctx.strokeStyle = "rgba(139, 92, 246, 0.03)"; // very subtle accent line grid
+      ctx.strokeStyle = "rgba(197, 168, 128, 0.03)"; // very subtle accent line grid
       ctx.lineWidth = 1;
 
       const cols = Math.floor(width / spacing) + 1;

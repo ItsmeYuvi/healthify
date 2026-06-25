@@ -22,7 +22,7 @@ export function GlassButton({
       disabled={disabled || loading}
       className={cn(
         "rounded-2xl px-6 py-3 text-sm font-semibold transition-all duration-300 active:scale-98 flex items-center justify-center gap-2 select-none disabled:opacity-40 disabled:pointer-events-none cursor-pointer",
-        variant === "primary" && "bg-gradient-to-r from-accent to-[#7c3aed] text-white shadow-accent-glow hover:scale-[1.01] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] border border-transparent",
+        variant === "primary" && "bg-gradient-to-r from-accent to-[#a3865e] text-[#0c0c0c] font-semibold hover:scale-[1.01] hover:shadow-[0_0_25px_rgba(197,168,128,0.35)] border border-transparent",
         variant === "secondary" && "bg-white/[0.04] border border-white/10 text-white/95 hover:bg-white/[0.08] hover:border-white/20",
         variant === "ghost" && "bg-transparent text-white/70 hover:bg-white/[0.05] hover:text-white border border-transparent",
         variant === "outline" && "bg-transparent border border-white/10 text-white hover:bg-white/[0.04] hover:border-white/20",

@@ -9,10 +9,10 @@ import { SplashCursor } from "@/components/reactbits/animations/SplashCursor";
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen bg-[#0a0a0f] text-white">
+    <div className="relative min-h-screen bg-[#0c0c0c] text-white">
       {/* Interactive visual cursors */}
-      <SplashCursor color="#8B5CF6" />
-      <ClickSpark sparkColor="#8B5CF6" />
+      <SplashCursor color="#c5a880" />
+      <ClickSpark sparkColor="#c5a880" />
       
       {/* Core landing flow segments */}
       <HeroSection />
@@ -21,7 +21,7 @@ export default function HomePage() {
       <CTASection />
       
       {/* Footer */}
-      <footer className="py-12 border-t border-white/[0.08] text-center text-xs text-white/30 relative z-10 bg-[#0a0a0f]/40 backdrop-blur-sm">
+      <footer className="py-12 border-t border-white/[0.04] text-center text-xs text-white/30 relative z-10 bg-[#0c0c0c]/40 backdrop-blur-sm">
         <p>© {new Date().getFullYear()} Healthify. AI Powered Wellness. All rights reserved.</p>
       </footer>
     </div>

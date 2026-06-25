@@ -4,12 +4,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassBadge } from "@/components/ui/GlassBadge";
+import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassModal } from "@/components/ui/GlassModal";
 import { Dumbbell, Salad, Plus, Search, Trash2, ArrowRight, ClipboardList, ShieldAlert } from "lucide-react";
-import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
 
 interface Plan {
   id: string;
@@ -107,22 +105,23 @@ export default function PlansHubPage() {
   return (
     <div className="space-y-8 pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            Plans <ShinyText text="Blueprints" />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-left">
+        <div className="space-y-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-luxury-gold font-medium">Bespoke Routines</span>
+          <h1 className="text-3xl md:text-5xl font-serif text-white font-light tracking-tight">
+            Fitness & Diet <span className="italic text-luxury-gold">Blueprints</span>
           </h1>
-          <p className="text-xs text-white/40">Manage your active AI generated training blueprints.</p>
+          <p className="text-xs text-white/40 font-light">Manage and launch your active AI-generated training blueprints.</p>
         </div>
         <Link href="/plans/create">
-          <GlassButton variant="violet" className="gap-2 text-xs font-bold py-2.5">
+          <GlassButton variant="primary" className="gap-2 text-xs font-bold py-2.5">
             <Plus className="h-4 w-4" /> New Blueprint
           </GlassButton>
         </Link>
       </div>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400 text-left">
           <ShieldAlert className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -140,7 +139,7 @@ export default function PlansHubPage() {
             placeholder="Search blueprints..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-xl border border-white/10 bg-[#0c0c12]/50 text-white placeholder-white/30 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-all"
+            className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-2xl border border-white/[0.04] bg-[#141414] text-white placeholder-white/30 focus:outline-none focus:border-luxury-gold/50 focus:ring-1 focus:ring-luxury-gold/20 transition-all"
           />
         </div>
 
@@ -151,10 +150,10 @@ export default function PlansHubPage() {
               <button
                 key={goal}
                 onClick={() => setActiveFilter(goal)}
-                className={`rounded-xl px-4 py-2 text-xs font-bold border transition-all ${
+                className={`rounded-xl px-4 py-2 text-xs font-semibold border transition-all ${
                   activeFilter === goal
-                    ? "bg-violet-500 text-white border-transparent shadow-md"
-                    : "bg-white/[0.02] border-white/5 text-white/60 hover:bg-white/[0.04] hover:text-white"
+                    ? "bg-luxury-gold text-obsidian-base border-transparent shadow-md"
+                    : "bg-[#141414] border-white/[0.04] text-white/60 hover:bg-[#1e1e1e] hover:text-white"
                 }`}
               >
                 {GOAL_LABELS[goal] || goal.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
@@ -166,12 +165,12 @@ export default function PlansHubPage() {
 
       {/* Grid of Plans */}
       {filteredPlans.length === 0 ? (
-        <GlassCard className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-white/[0.01] border-white/5">
-          <div className="rounded-2xl bg-white/[0.03] p-4 border border-white/5">
+        <div className="glass-surface bg-[#141414] border-white/[0.04] flex flex-col items-center justify-center py-20 text-center space-y-4 rounded-3xl">
+          <div className="rounded-2xl bg-white/[0.02] p-4 border border-white/[0.04]">
             <ClipboardList className="h-10 w-10 text-white/20" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-lg font-bold text-white">No Blueprints Found</h3>
+            <h3 className="text-base font-serif text-white">No Blueprints Found</h3>
             <p className="text-xs text-white/40 max-w-sm px-4">
               {plans.length === 0
                 ? "You haven't generated any customized blueprints yet."
@@ -180,12 +179,12 @@ export default function PlansHubPage() {
           </div>
           {plans.length === 0 && (
             <Link href="/plans/create">
-              <GlassButton variant="violet" className="text-xs font-bold px-5 py-2.5">
+              <GlassButton variant="primary" className="text-xs font-bold px-5 py-2.5">
                 Create First Plan
               </GlassButton>
             </Link>
           )}
-        </GlassCard>
+        </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredPlans.map((plan) => {
@@ -193,16 +192,15 @@ export default function PlansHubPage() {
             const weekNum = plan.week_number || 1;
 
             return (
-              <GlassCard
+              <div
                 key={plan.id}
                 onClick={() => router.push(`/plans/${plan.id}`)}
-                spotlightColor="rgba(139, 92, 246, 0.15)"
-                className="hover:shadow-lg cursor-pointer flex flex-col justify-between h-full bg-white/[0.01] border-white/5 p-5 group"
+                className="glass-surface bg-[#141414] border-white/[0.04] hover:border-luxury-gold/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex flex-col justify-between h-full p-6 rounded-3xl group text-left"
               >
                 <div className="space-y-4">
                   {/* Badge Row */}
                   <div className="flex items-center justify-between">
-                    <GlassBadge variant="violet" className="text-[10px] font-bold">
+                    <GlassBadge variant="primary" className="text-[10px] font-bold">
                       Week {weekNum}
                     </GlassBadge>
                     <div className="flex items-center gap-3">
@@ -212,7 +210,7 @@ export default function PlansHubPage() {
                           e.stopPropagation();
                           setDeletePlanId(plan.id);
                         }}
-                        className="rounded-lg p-1.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-colors border border-transparent hover:border-white/5"
+                        className="rounded-lg p-1.5 text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-colors border border-transparent"
                         title="Delete Blueprint"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -222,22 +220,22 @@ export default function PlansHubPage() {
 
                   {/* Title & Goal */}
                   <div className="space-y-1">
-                    <h3 className="text-base font-extrabold group-hover:text-violet-400 transition-colors leading-tight">
+                    <h3 className="text-lg font-serif font-medium text-white group-hover:text-luxury-gold transition-colors leading-tight">
                       {plan.plan_name}
                     </h3>
-                    <p className="text-xs text-white/40">
-                      Goal: <span className="font-bold text-white/60">{GOAL_LABELS[plan.goal] || plan.goal}</span>
+                    <p className="text-xs text-white/40 font-light">
+                      Goal: <span className="font-semibold text-white/60">{GOAL_LABELS[plan.goal] || plan.goal}</span>
                     </p>
                   </div>
 
                   {/* Indicators */}
-                  <div className="grid grid-cols-2 gap-3 border-y border-white/[0.06] py-3 text-xs text-white/60">
+                  <div className="grid grid-cols-2 gap-3 border-y border-white/[0.04] py-3 text-xs text-white/60">
                     <div className="flex items-center gap-2">
-                      <Dumbbell className="h-4 w-4 text-violet-400" />
+                      <Dumbbell className="h-4 w-4 text-luxury-gold" />
                       <span>{workoutDaysCount} workouts</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Salad className="h-4 w-4 text-teal-400" />
+                      <Salad className="h-4 w-4 text-luxury-gold" />
                       <span>7-day diet</span>
                     </div>
                   </div>
@@ -248,12 +246,12 @@ export default function PlansHubPage() {
                   <span className="text-white/30">
                     Created {new Date(plan.created_at).toLocaleDateString()}
                   </span>
-                  <span className="inline-flex items-center gap-1 font-bold text-violet-400 group-hover:text-violet-300 transition-colors">
+                  <span className="inline-flex items-center gap-1 font-semibold text-luxury-gold group-hover:text-luxury-gold/80 transition-colors">
                     Enter Blueprint
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </div>
-              </GlassCard>
+              </div>
             );
           })}
         </div>
@@ -265,8 +263,8 @@ export default function PlansHubPage() {
         onClose={() => setDeletePlanId(null)}
         title="Delete Blueprint?"
       >
-        <div className="space-y-4">
-          <p className="text-xs text-white/60 leading-relaxed">
+        <div className="space-y-4 text-left">
+          <p className="text-xs text-white/60 leading-relaxed font-light">
             Are you sure you want to permanently delete this fitness and nutrition blueprint? This action is irreversible.
           </p>
           <div className="flex items-center justify-end gap-3 pt-2">

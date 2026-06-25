@@ -2,21 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassButton } from "@/components/ui/GlassButton";
-import { GlassInput } from "@/components/ui/GlassInput";
-import { GlassSelect } from "@/components/ui/GlassSelect";
 import { Utensils, ArrowLeft, CheckCircle2, ShieldAlert } from "lucide-react";
-import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
 
-const PRESET_MEALS = [
-  { name: "Protein Oatmeal", type: "breakfast", calories: "420", protein: "25", carbs: "50", fats: "10" },
-  { name: "Paneer Roti Roll", type: "lunch", calories: "480", protein: "22", carbs: "45", fats: "18" },
-  { name: "Chicken Rice Salad", type: "lunch", calories: "510", protein: "38", carbs: "40", fats: "12" },
-  { name: "Dal Rice & Curd", type: "dinner", calories: "440", protein: "16", carbs: "65", fats: "10" },
-  { name: "Whey Protein Shake", type: "snack", calories: "210", protein: "26", carbs: "5", fats: "3" },
-  { name: "Boiled Eggs (3)", type: "breakfast", calories: "230", protein: "18", carbs: "2", fats: "15" },
-  { name: "Almonds & Walnut Mix", type: "snack", calories: "180", protein: "5", carbs: "6", fats: "15" },
+const PRESET_GROUPS = [
+  { name: "Protein Oatmeal", type: "breakfast", calories: "420", protein: "25", carbs: "50", fats: "10", category: "Breakfast", image: "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?auto=format&fit=crop&w=300&q=80" },
+  { name: "Avocado Salmon Bowl", type: "lunch", calories: "580", protein: "35", carbs: "40", fats: "22", category: "Executive Lunch", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80" },
+  { name: "Paneer Quinoa Salad", type: "lunch", calories: "480", protein: "22", carbs: "45", fats: "18", category: "Gourmet Vegetarian", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=80" },
+  { name: "Dal Rice & Curd", type: "dinner", calories: "440", protein: "16", carbs: "65", fats: "10", category: "Authentic Comfort", image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=300&q=80" },
+  { name: "Boiled Eggs (3)", type: "breakfast", calories: "230", protein: "18", carbs: "2", fats: "15", category: "Protein Kick", image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=300&q=80" },
+  { name: "Almond & Walnut Mix", type: "snack", calories: "180", protein: "5", carbs: "6", fats: "15", category: "Snacks", image: "https://images.unsplash.com/photo-1596721526436-1c25143a5323?auto=format&fit=crop&w=300&q=80" },
 ];
 
 export default function LogMealPage() {
@@ -44,7 +39,7 @@ export default function LogMealPage() {
     } catch (e) {}
   }, [router]);
 
-  const handleSelectPreset = (preset: typeof PRESET_MEALS[0]) => {
+  const handleSelectPreset = (preset: typeof PRESET_GROUPS[0]) => {
     setMealName(preset.name);
     setMealType(preset.type);
     setCalories(preset.calories);
@@ -88,11 +83,11 @@ export default function LogMealPage() {
   if (success) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-        <div className="h-14 w-14 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
+        <div className="h-14 w-14 rounded-full bg-luxury-gold/10 border border-luxury-gold/30 flex items-center justify-center text-luxury-gold">
           <CheckCircle2 className="h-8 w-8 animate-bounce" />
         </div>
-        <h2 className="text-lg font-extrabold text-zinc-800 dark:text-white">Meal Logged!</h2>
-        <p className="text-xs text-zinc-450 dark:text-white/40">Your nutritional metrics have been recorded. Returning to dashboard...</p>
+        <h2 className="text-xl font-serif text-white">Meal Logged</h2>
+        <p className="text-xs text-white/40">Your nutritional metrics have been recorded. Returning to dashboard...</p>
       </div>
     );
   }
@@ -101,137 +96,163 @@ export default function LogMealPage() {
     <div className="max-w-xl mx-auto space-y-6 pb-12">
       {/* Header link */}
       <div>
-        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-white/50 hover:text-zinc-800 dark:hover:text-white transition-colors text-xs font-bold group">
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-white/50 hover:text-luxury-gold transition-colors text-xs font-semibold group uppercase tracking-widest">
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-          Back to Dashboard
+          Audit Dashboard
         </Link>
       </div>
 
-      <div className="space-y-1">
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-850 dark:text-white">
-          Log <ShinyText text="Nutrition Meal" />
+      <div className="space-y-1.5 text-left">
+        <span className="text-[10px] uppercase tracking-widest text-luxury-gold font-medium">Bespoke Diet Audits</span>
+        <h1 className="text-3xl md:text-4xl font-serif text-white font-light">
+          Log <span className="italic text-luxury-gold">Nutritional Meal</span>
         </h1>
-        <p className="text-xs text-zinc-500 dark:text-white/40">Record food portions, calories, and macronutrient balances.</p>
+        <p className="text-xs text-white/40 font-light">Record energy intake details, macro properties, and portion checks.</p>
       </div>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400 text-left">
           <ShieldAlert className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        <GlassCard className="p-6 md:p-8 space-y-6 bg-white/[0.01] border-zinc-200 dark:border-white/5">
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-6 rounded-3xl text-left">
+          
           {/* Quick Presets Panel */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-white/40">Quick Presets</label>
-            <div className="flex flex-wrap gap-2">
-              {PRESET_MEALS.map((preset) => (
+          <div className="space-y-3">
+            <label className="glass-label">Curated Presets</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {PRESET_GROUPS.map((preset) => (
                 <button
                   key={preset.name}
                   type="button"
                   onClick={() => handleSelectPreset(preset)}
-                  className="text-[10px] font-bold px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-100 dark:bg-white/[0.01] hover:bg-teal-500/10 dark:hover:bg-teal-500/10 text-zinc-700 dark:text-white/60 hover:text-teal-650 dark:hover:text-teal-400 transition-all cursor-pointer"
+                  className="relative overflow-hidden rounded-2xl h-16 border border-white/[0.04] bg-[#1a1a1a] p-3 text-left group transition-all duration-350 hover:border-luxury-gold/30 hover:-translate-y-0.5"
                 >
-                  + {preset.name}
+                  <img
+                    src={preset.image}
+                    alt={preset.name}
+                    className="absolute inset-0 object-cover w-full h-full opacity-10 group-hover:scale-105 transition-transform duration-500 pointer-events-none"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/80 to-transparent pointer-events-none" />
+                  <div className="relative z-10 flex flex-col justify-between h-full">
+                    <span className="text-[9px] uppercase tracking-widest text-luxury-gold font-medium">{preset.category}</span>
+                    <span className="text-xs font-semibold text-white truncate">{preset.name}</span>
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="sm:col-span-2">
-              <GlassInput
-                label="Meal Name"
+            <div className="sm:col-span-2 space-y-1">
+              <label className="glass-label">Meal Title</label>
+              <input
+                type="text"
                 name="mealName"
                 value={mealName}
                 onChange={(e) => setMealName(e.target.value)}
-                placeholder="e.g. Scrambled eggs & Toast"
+                placeholder="e.g. Avocado Toast & Poached Eggs"
+                className="glass-input"
                 required
               />
             </div>
-            <div>
-              <GlassSelect
-                label="Meal Type"
+            <div className="space-y-1">
+              <label className="glass-label">Meal Phase</label>
+              <select
                 name="mealType"
                 value={mealType}
                 onChange={(e) => setMealType(e.target.value)}
-                options={[
-                  { value: "breakfast", label: "Breakfast" },
-                  { value: "lunch", label: "Lunch" },
-                  { value: "dinner", label: "Dinner" },
-                  { value: "snack", label: "Snack" },
-                ]}
-              />
+                className="glass-select"
+              >
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
             </div>
           </div>
 
-          <GlassInput
-            label="Calories (kcal)"
-            type="number"
-            name="calories"
-            value={calories}
-            onChange={(e) => setCalories(e.target.value)}
-            placeholder="e.g., 450"
-            required
-          />
+          <div className="space-y-1">
+            <label className="glass-label">Energy Level (Calories in kcal)</label>
+            <input
+              type="number"
+              name="calories"
+              value={calories}
+              onChange={(e) => setCalories(e.target.value)}
+              placeholder="e.g. 450"
+              className="glass-input"
+              required
+            />
+          </div>
 
           <div className="space-y-4">
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-450 dark:text-white/40 flex items-center gap-1">
-              <Utensils className="h-3.5 w-3.5 text-teal-500 dark:text-teal-400" /> Macronutrient Split (Optional)
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-white/[0.04] pb-2">
+              <Utensils className="h-4 w-4 text-luxury-gold" /> Macro Splits
             </h3>
             <div className="grid gap-4 grid-cols-3">
-              <GlassInput
-                label="Protein (g)"
-                type="number"
-                name="protein"
-                value={protein}
-                onChange={(e) => setProtein(e.target.value)}
-                placeholder="e.g. 25"
-              />
-              <GlassInput
-                label="Carbs (g)"
-                type="number"
-                name="carbs"
-                value={carbs}
-                onChange={(e) => setCarbs(e.target.value)}
-                placeholder="e.g. 40"
-              />
-              <GlassInput
-                label="Fats (g)"
-                type="number"
-                name="fats"
-                value={fats}
-                onChange={(e) => setFats(e.target.value)}
-                placeholder="e.g. 12"
-              />
+              <div className="space-y-1">
+                <label className="text-[9px] uppercase tracking-widest text-white/40 block">Protein (g)</label>
+                <input
+                  type="number"
+                  name="protein"
+                  value={protein}
+                  onChange={(e) => setProtein(e.target.value)}
+                  placeholder="e.g. 25"
+                  className="glass-input"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[9px] uppercase tracking-widest text-white/40 block">Carbs (g)</label>
+                <input
+                  type="number"
+                  name="carbs"
+                  value={carbs}
+                  onChange={(e) => setCarbs(e.target.value)}
+                  placeholder="e.g. 40"
+                  className="glass-input"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[9px] uppercase tracking-widest text-white/40 block">Fats (g)</label>
+                <input
+                  type="number"
+                  name="fats"
+                  value={fats}
+                  onChange={(e) => setFats(e.target.value)}
+                  placeholder="e.g. 12"
+                  className="glass-input"
+                />
+              </div>
             </div>
           </div>
 
           {/* Quick macro visualizer */}
           {(protein || carbs || fats) && (
-            <div className="p-4 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#09090f]/20 space-y-2">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:text-white/30">Macro Preview</span>
-              <div className="flex gap-4 text-xs font-bold text-zinc-700 dark:text-white/60">
-                {protein && <div>P: <span className="text-orange-500">{protein}g</span></div>}
-                {carbs && <div>C: <span className="text-teal-500">{carbs}g</span></div>}
-                {fats && <div>F: <span className="text-amber-500">{fats}g</span></div>}
+            <div className="p-4 rounded-2xl border border-white/[0.03] bg-white/[0.01] space-y-1">
+              <span className="text-[9px] font-semibold uppercase tracking-widest text-white/30">Macro Preview</span>
+              <div className="flex gap-4 text-xs font-semibold text-white/60">
+                {protein && <div>Protein: <span className="text-luxury-gold">{protein}g</span></div>}
+                {carbs && <div>Carbs: <span className="text-white/80">{carbs}g</span></div>}
+                {fats && <div>Fats: <span className="text-white/40">{fats}g</span></div>}
               </div>
             </div>
           )}
 
-          <div className="flex justify-end pt-4 border-t border-zinc-200 dark:border-white/[0.06] gap-3">
+          {/* Actions */}
+          <div className="flex justify-end pt-4 border-t border-white/[0.04] gap-3">
             <Link href="/dashboard">
-              <GlassButton variant="outline" className="text-xs font-bold">
+              <GlassButton variant="outline" className="text-xs px-6 py-2.5">
                 Cancel
               </GlassButton>
             </Link>
-            <GlassButton variant="teal" type="submit" className="text-xs font-bold">
+            <GlassButton variant="primary" type="submit" className="text-xs px-6 py-2.5">
               Save Log
             </GlassButton>
           </div>
-        </GlassCard>
+        </div>
       </form>
     </div>
   );

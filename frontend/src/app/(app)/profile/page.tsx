@@ -3,11 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassInput } from "@/components/ui/GlassInput";
 import { GlassSelect } from "@/components/ui/GlassSelect";
-import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
 import { User, ShieldAlert, CheckCircle2, Key, Trash2, ArrowLeft, Settings, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -105,7 +103,6 @@ export default function ProfileSettingsPage() {
       }
     } catch (err: any) {
       console.warn("[ProfileSettings] failed to load profile data (might be empty/404):", err.message);
-      // If 404 and not already showing onboarding parameter, we can toggle onboarding messages
     } finally {
       setLoading(false);
     }
@@ -173,47 +170,48 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 pb-12">
+    <div className="max-w-2xl mx-auto space-y-6 pb-12 text-left">
       {/* Header link (hide in onboarding step to force completion) */}
       {!isOnboarding && (
         <div>
-          <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs font-bold group">
+          <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-white/50 hover:text-luxury-gold transition-colors text-xs font-semibold uppercase tracking-widest group">
             <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-            Back to Dashboard
+            Audit Dashboard
           </Link>
         </div>
       )}
 
       {isOnboarding ? (
-        <GlassCard className="p-5 border-violet-500/30 bg-violet-500/5 flex items-start gap-4">
-          <div className="p-3 rounded-xl bg-violet-500/10 text-violet-400 border border-violet-500/20 shrink-0">
+        <div className="p-5 border border-luxury-gold/20 bg-luxury-gold/5 flex items-start gap-4 rounded-3xl">
+          <div className="p-3 rounded-2xl bg-luxury-gold/10 text-luxury-gold border border-luxury-gold/20 shrink-0">
             <Sparkles className="h-5 w-5 animate-pulse" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-extrabold text-sm text-white">Complete Onboarding Profile</h3>
-            <p className="text-xs text-white/50 leading-relaxed">
+            <h3 className="font-serif font-semibold text-white text-base">Complete Onboarding Profile</h3>
+            <p className="text-xs text-white/40 leading-relaxed font-light">
               We couldn't find a health profile for you. Please enter your physical metrics below to finalize your account and access the workspace.
             </p>
           </div>
-        </GlassCard>
+        </div>
       ) : (
-        <div className="space-y-1">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            Athlete <ShinyText text="Profile" />
+        <div className="space-y-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-luxury-gold font-medium">Executive Suite</span>
+          <h1 className="text-3xl md:text-5xl font-serif text-white font-light tracking-tight">
+            Athlete <span className="italic text-luxury-gold">Profile</span>
           </h1>
-          <p className="text-xs text-white/40">Adjust your training baseline and account parameters.</p>
+          <p className="text-xs text-white/40 font-light">Adjust your training baseline and account parameters.</p>
         </div>
       )}
 
       {error && (
-        <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400">
+        <div className="flex items-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 p-4 text-xs text-red-400">
           <ShieldAlert className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="flex items-center gap-3 rounded-xl border border-teal-500/20 bg-teal-500/5 p-4 text-xs text-teal-400">
+        <div className="flex items-center gap-3 rounded-2xl border border-luxury-gold/20 bg-luxury-gold/5 p-4 text-xs text-luxury-gold">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           <span>Profile metrics saved successfully! {isOnboarding && "Redirecting..."}</span>
         </div>
@@ -221,28 +219,28 @@ export default function ProfileSettingsPage() {
 
       {/* Account Info Details (from /auth/me) */}
       {!isOnboarding && (
-        <GlassCard className="p-6 bg-white/[0.01] border-white/5 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-white/40 flex items-center gap-1.5 border-b border-white/[0.06] pb-2">
-            <Settings className="h-4 w-4 text-violet-400" /> Account Settings
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-4">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-white/[0.04] pb-2">
+            <Settings className="h-4 w-4 text-luxury-gold" /> Account Settings
           </h3>
           <div className="grid gap-4 sm:grid-cols-2 text-xs">
             <div>
-              <span className="text-white/40 block mb-0.5">Full Name</span>
-              <span className="font-extrabold text-white">{userMe.full_name || "Athlete"}</span>
+              <span className="text-white/40 block mb-0.5 uppercase tracking-wider text-[9px] font-bold">Full Name</span>
+              <span className="font-semibold text-white text-sm">{userMe.full_name || "Athlete"}</span>
             </div>
             <div>
-              <span className="text-white/40 block mb-0.5">Email Address</span>
-              <span className="font-extrabold text-white">{userMe.email || "No Email"}</span>
+              <span className="text-white/40 block mb-0.5 uppercase tracking-wider text-[9px] font-bold">Email Address</span>
+              <span className="font-semibold text-white text-sm">{userMe.email || "No Email"}</span>
             </div>
           </div>
-        </GlassCard>
+        </div>
       )}
 
       {/* Profile Metrics Form */}
       <form onSubmit={handleSave}>
-        <GlassCard className="p-6 md:p-8 space-y-6 bg-white/[0.01] border-white/5">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-white/40 flex items-center gap-1.5 border-b border-white/[0.06] pb-2">
-            <User className="h-4 w-4 text-violet-400" /> Physical Metrics
+        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-6 rounded-3xl">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-white/[0.04] pb-2">
+            <User className="h-4 w-4 text-luxury-gold" /> Physical Metrics
           </h3>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -335,45 +333,45 @@ export default function ProfileSettingsPage() {
           </div>
 
           {/* Yoga Interest Toggle */}
-          <div className="flex items-start gap-3 p-3.5 rounded-xl border border-white/5 bg-[#09090f]/30">
+          <div className="flex items-start gap-3 p-4 rounded-2xl border border-white/[0.04] bg-[#0c0c0c]/40">
             <input
               type="checkbox"
               name="yoga_interest"
               id="yoga_interest"
               checked={form.yoga_interest}
               onChange={handleChange}
-              className="h-4.5 w-4.5 rounded border-white/10 bg-white/[0.01] text-violet-500 focus:ring-violet-500/25 cursor-pointer mt-0.5"
+              className="h-4.5 w-4.5 rounded border-white/[0.04] bg-[#141414] text-luxury-gold accent-luxury-gold focus:ring-0 cursor-pointer mt-0.5"
             />
             <div>
               <label htmlFor="yoga_interest" className="text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer select-none">
                 Include Traditional Yoga & Pranayama
               </label>
-              <p className="text-[10px] text-white/40 mt-1 leading-snug">
+              <p className="text-[10px] text-white/40 mt-1 leading-snug font-light">
                 Integrate Indian yoga/mobility routines inside generated blueprints.
               </p>
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-white/[0.06] gap-3">
+          <div className="flex justify-end pt-4 border-t border-white/[0.04] gap-3">
             {!isOnboarding && (
               <GlassButton type="button" variant="outline" onClick={handleLogout} className="text-xs font-bold text-red-400 border-red-500/10 hover:bg-red-500/5">
                 Sign Out
               </GlassButton>
             )}
-            <GlassButton variant="violet" type="submit" disabled={saveLoading} className="text-xs font-bold">
+            <GlassButton variant="primary" type="submit" disabled={saveLoading} className="text-xs font-semibold px-6 py-2.5 shadow-[0_0_15px_rgba(197,168,128,0.15)]">
               {saveLoading ? "Saving..." : isOnboarding ? "Complete Profile" : "Save Changes"}
             </GlassButton>
           </div>
-        </GlassCard>
+        </div>
       </form>
 
       {/* Danger Zone */}
       {!isOnboarding && (
-        <GlassCard className="p-6 bg-red-950/[0.03] border-red-500/10 space-y-4">
+        <div className="glass-surface bg-red-950/[0.02] border-red-500/10 p-6 rounded-3xl space-y-4">
           <h3 className="text-xs font-bold uppercase tracking-wider text-red-400 flex items-center gap-1.5">
             <Trash2 className="h-4 w-4" /> Danger Zone
           </h3>
-          <p className="text-[10px] text-white/40 leading-relaxed">
+          <p className="text-[10px] text-white/40 leading-relaxed font-light">
             Logging out clears your session but keeps weight and workout logs stored in your browser. Clearing browser local storage will delete your historical workouts.
           </p>
           <div>
@@ -393,6 +391,7 @@ export default function ProfileSettingsPage() {
                   localStorage.removeItem(`healthify_workout_logs_${localUsername}`);
                   localStorage.removeItem(`healthify_meal_logs_${localUsername}`);
                   localStorage.removeItem(`healthify_weight_logs_${localUsername}`);
+                  localStorage.removeItem(`healthify_water_logs_${localUsername}`);
                   localStorage.removeItem(`healthify_streaks_${localUsername}`);
                   alert("Local health logs deleted.");
                   window.location.reload();
@@ -403,7 +402,7 @@ export default function ProfileSettingsPage() {
               Clear Local History logs
             </GlassButton>
           </div>
-        </GlassCard>
+        </div>
       )}
     </div>
   );

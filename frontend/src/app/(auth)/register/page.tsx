@@ -5,8 +5,6 @@ import Link from "next/link";
 import axios from "axios";
 import { API_BASE_URL } from "@/lib/api";
 import { User, Mail, Lock, Eye, EyeOff, ShieldAlert } from "lucide-react";
-import { ShinyText } from "@/components/reactbits/text-animations/ShinyText";
-import { DecryptedText } from "@/components/reactbits/text-animations/DecryptedText";
 import { GlassInput } from "@/components/ui/GlassInput";
 import { GlassButton } from "@/components/ui/GlassButton";
 
@@ -73,18 +71,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-left">
       <div className="text-center space-y-1.5">
-        <h2 className="text-2xl font-bold tracking-tight">
-          <ShinyText text="Create Account" />
+        <h2 className="text-3xl font-serif text-white font-light tracking-tight">
+          Create <span className="italic text-luxury-gold">Account</span>
         </h2>
-        <p className="text-xs text-white/50">
-          Sign up to start your fitness journey
+        <p className="text-xs text-white/40 font-light">
+          Sign up to begin your bespoke wellness transformation
         </p>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-danger/20 bg-danger/5 p-3 text-xs text-danger">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-red-500/20 bg-red-500/5 p-3 text-xs text-red-400">
           <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
@@ -144,20 +142,20 @@ export default function RegisterPage() {
           icon={<Lock className="h-4 w-4" />}
         />
 
-        <GlassButton variant="primary" type="submit" loading={loading} className="w-full mt-6">
+        <GlassButton variant="primary" type="submit" loading={loading} className="w-full mt-6 shadow-[0_0_15px_rgba(197,168,128,0.15)]">
           Create Account
         </GlassButton>
       </form>
 
-      <div className="text-center pt-2 border-t border-white/[0.08] space-y-4">
-        <p className="text-xs text-white/50">
+      <div className="text-center pt-4 border-t border-white/[0.04] space-y-3">
+        <p className="text-xs text-white/40 font-light">
           Already registered?{" "}
-          <Link href="/login" className="text-accent hover:underline font-semibold">
+          <Link href="/login" className="text-luxury-gold hover:text-luxury-gold/80 hover:underline font-semibold">
             Sign In
           </Link>
         </p>
-        <div className="text-[10px] text-white/20 select-none">
-          <DecryptedText text="secure connection protocol..." speed={50} />
+        <div className="text-[10px] text-white/20 select-none font-medium uppercase tracking-widest">
+          Secure Connection Protocol Enabled
         </div>
       </div>
     </div>

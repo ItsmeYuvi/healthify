@@ -16,9 +16,9 @@ export function GlassCard({
   children,
   className = "",
   spotlight = true,
-  spotlightColor = "rgba(139, 92, 246, 0.08)",
+  spotlightColor = "rgba(197, 168, 128, 0.06)",
   gloss = true,
-  borderGlowColor = "rgba(139, 92, 246, 0.25)",
+  borderGlowColor = "rgba(197, 168, 128, 0.2)",
   hoverable = false,
   ...props
 }: GlassCardProps) {

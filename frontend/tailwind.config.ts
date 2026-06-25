@@ -10,27 +10,40 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        darkBase: "#0a0a0f",
-        lightBase: "#f4f4f5",
+        darkBase: "#0c0c0c",
+        lightBase: "#fbfbfb",
+        obsidian: {
+          base: "#0c0c0c",
+          card: "#141414",
+          border: "rgba(255, 255, 255, 0.05)",
+          borderLight: "rgba(0, 0, 0, 0.06)",
+        },
+        luxury: {
+          gold: "#c5a880",
+          goldHover: "#d8b990",
+          cream: "#faf6f0",
+        },
         accent: {
-          DEFAULT: "#8B5CF6", // violet-500
+          DEFAULT: "#c5a880", // quiet luxury default gold
           secondary: "#14B8A6", // teal-500
         },
         warning: "#F59E0B", // amber-500
         danger: "#EF4444", // red-500
         glass: {
-          dark: "rgba(255, 255, 255, 0.10)",
-          light: "rgba(255, 255, 255, 0.65)",
-          borderDark: "rgba(255, 255, 255, 0.15)",
-          borderLight: "rgba(0, 0, 0, 0.08)",
+          dark: "rgba(20, 20, 20, 0.6)",
+          light: "rgba(255, 255, 255, 0.75)",
+          borderDark: "rgba(255, 255, 255, 0.05)",
+          borderLight: "rgba(0, 0, 0, 0.06)",
         },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
+        serif: ["var(--font-serif)", "serif"],
       },
       letterSpacing: {
         tightest: "-0.04em",
         tighter: "-0.02em",
+        widest: "0.15em",
       },
       backdropBlur: {
         "2xl": "40px",
