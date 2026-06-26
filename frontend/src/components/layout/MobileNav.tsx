@@ -17,7 +17,7 @@ export function MobileNav() {
   ];
 
   return (
-    <nav className="fixed bottom-4 left-4 right-4 z-40 h-14 md:hidden rounded-2xl border border-white/[0.04] bg-[#141414]/90 backdrop-blur-2xl px-6 py-2 shadow-2xl flex items-center justify-between">
+    <nav className="fixed bottom-4 left-4 right-4 z-40 h-14 md:hidden rounded-2xl border border-[#00D4FF]/12 bg-[#0C1A26]/85 backdrop-blur-2xl px-6 py-2 shadow-2xl flex items-center justify-between">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -28,7 +28,7 @@ export function MobileNav() {
             href={item.href}
             className={cn(
               "flex flex-col items-center justify-center p-1 rounded-xl transition-all duration-300",
-              isActive ? "text-luxury-gold scale-105" : "text-white/50 hover:text-white"
+              isActive ? "text-accent scale-105" : "text-white/50 hover:text-white"
             )}
           >
             <Icon className="h-5 w-5" />

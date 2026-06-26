@@ -64,15 +64,15 @@ export function FeaturesSection() {
               baseRotation={1}
               className={`h-full ${f.colSpan}`}
             >
-              <div className="h-full flex flex-col justify-between items-start p-8 bg-[#141414] border border-white/[0.04] rounded-3xl relative overflow-hidden transition-all duration-300 hover:border-luxury-gold/30 hover:shadow-[0_12px_30px_rgba(197,168,128,0.03)] group">
-                <div className="space-y-4">
-                  <div className="p-3.5 rounded-2xl bg-luxury-gold/10 border border-luxury-gold/20 text-luxury-gold w-fit">
-                    <Icon className="h-5 w-5" />
+              <div className="h-full flex flex-col justify-between items-start p-8 bg-[#0C1A26]/70 border border-[#00D4FF]/10 rounded-2xl relative overflow-hidden backdrop-blur-md transition-all duration-300 hover:border-[#00D4FF]/35 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,212,255,0.05)] group">
+                <div className="space-y-4 text-left">
+                  <div className="p-3 bg-[#00D4FF]/10 border border-[#00D4FF]/25 text-[#00D4FF] w-fit rounded-full flex items-center justify-center">
+                    <span className="w-2 h-2 rounded-full bg-[#00D4FF] block" />
                   </div>
-                  <h3 className="font-serif text-xl text-white font-medium group-hover:text-luxury-gold transition-colors duration-300">
+                  <h3 className="font-serif text-xl text-white font-medium group-hover:text-[#00D4FF] transition-colors duration-300">
                     {f.title}
                   </h3>
-                  <p className="text-sm text-white/50 leading-relaxed font-light">{f.description}</p>
+                  <p className="text-sm text-[#7A9BB5] leading-relaxed font-light">{f.description}</p>
                 </div>
               </div>
             </ScrollReveal>

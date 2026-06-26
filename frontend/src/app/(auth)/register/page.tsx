@@ -76,13 +76,13 @@ export default function RegisterPage() {
         <h2 className="text-3xl font-serif text-white font-light tracking-tight">
           Create <span className="italic text-luxury-gold">Account</span>
         </h2>
-        <p className="text-xs text-white/40 font-light">
+        <p className="text-xs text-[#7A9BB5] font-light">
           Sign up to begin your bespoke wellness transformation
         </p>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2.5 rounded-2xl border border-red-500/20 bg-red-500/5 p-3 text-xs text-red-400">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-danger/20 bg-danger/5 p-3 text-xs text-danger">
           <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
@@ -142,19 +142,19 @@ export default function RegisterPage() {
           icon={<Lock className="h-4 w-4" />}
         />
 
-        <GlassButton variant="primary" type="submit" loading={loading} className="w-full mt-6 shadow-[0_0_15px_rgba(197,168,128,0.15)]">
+        <GlassButton variant="primary" type="submit" loading={loading} className="w-full mt-6 hover:shadow-[0_0_20px_rgba(0,212,255,0.4)]">
           Create Account
         </GlassButton>
       </form>
 
-      <div className="text-center pt-4 border-t border-white/[0.04] space-y-3">
-        <p className="text-xs text-white/40 font-light">
+      <div className="text-center pt-4 border-t border-[#00D4FF]/12 space-y-3">
+        <p className="text-xs text-[#7A9BB5] font-light">
           Already registered?{" "}
-          <Link href="/login" className="text-luxury-gold hover:text-luxury-gold/80 hover:underline font-semibold">
+          <Link href="/login" className="text-[#00D4FF] hover:text-[#00D4FF]/80 hover:underline font-semibold">
             Sign In
           </Link>
         </p>
-        <div className="text-[10px] text-white/20 select-none font-medium uppercase tracking-widest">
+        <div className="text-[10px] text-[#00D4FF] select-none font-mono uppercase tracking-widest">
           Secure Connection Protocol Enabled
         </div>
       </div>

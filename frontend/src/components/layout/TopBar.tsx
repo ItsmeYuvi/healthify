@@ -110,9 +110,10 @@ export function TopBar({ collapsed }: TopBarProps) {
   return (
     <header
       className={cn(
-        "fixed top-0 right-0 z-30 h-16 border-b border-white/[0.04] bg-[#0c0c0c]/80 backdrop-blur-md flex items-center justify-between px-6 transition-all duration-300 left-0",
+        "fixed top-0 right-0 z-30 h-16 border-b border-[#00D4FF]/12 backdrop-blur-[16px] flex items-center justify-between px-6 transition-all duration-300 left-0",
         collapsed ? "md:left-20" : "md:left-64"
       )}
+      style={{ background: "rgba(5, 10, 15, 0.85)" }}
     >
       {/* Search Input */}
       <div className="relative max-w-xs w-full hidden sm:block">
@@ -120,7 +121,7 @@ export function TopBar({ collapsed }: TopBarProps) {
         <input
           type="text"
           placeholder="Search metrics or recipes..."
-          className="w-full rounded-2xl bg-[#141414] border border-white/[0.04] pl-9 pr-4 py-2 text-xs outline-none focus:border-luxury-gold/45 focus:ring-1 focus:ring-luxury-gold/20 transition-all text-white placeholder-white/30"
+          className="w-full rounded-2xl bg-[#0C1A26]/80 border border-[#00D4FF]/12 pl-9 pr-4 py-2 text-xs outline-none focus:border-luxury-gold/45 focus:ring-1 focus:ring-luxury-gold/20 transition-all text-white placeholder-white/30"
         />
       </div>
       <div className="sm:hidden" />
@@ -148,8 +149,8 @@ export function TopBar({ collapsed }: TopBarProps) {
           </button>
 
           {bellOpen && (
-            <div className="absolute right-0 mt-3 w-80 rounded-2xl border border-white/[0.04] bg-[#141414] p-4 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150 z-50">
-              <div className="flex items-center justify-between pb-3 border-b border-white/[0.04] mb-3">
+            <div className="absolute right-0 mt-3 w-80 rounded-2xl border  p-4 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150 z-50">
+              <div className="flex items-center justify-between pb-3 border-b border-[#00D4FF]/12 mb-3">
                 <span className="text-xs font-semibold text-white">Notifications</span>
                 {hasUnread && (
                   <button
@@ -200,8 +201,8 @@ export function TopBar({ collapsed }: TopBarProps) {
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/[0.04] bg-[#141414] p-3.5 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150 z-50 text-left">
-              <div className="space-y-1 pb-3 border-b border-white/[0.04]">
+            <div className="absolute right-0 mt-3 w-56 rounded-2xl border  p-3.5 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-150 z-50 text-left">
+              <div className="space-y-1 pb-3 border-b border-[#00D4FF]/12">
                 <p className="text-sm font-semibold text-white truncate">{userName}</p>
                 <p className="text-[10px] text-white/40 truncate">{userEmail}</p>
               </div>

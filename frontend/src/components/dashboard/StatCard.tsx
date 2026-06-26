@@ -23,7 +23,7 @@ export function StatCard({
   color = "violet",
 }: StatCardProps) {
   return (
-    <GlassCard spotlightColor="rgba(139, 92, 246, 0.15)" className="p-5 flex flex-col justify-between h-full bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200 dark:border-white/5">
+    <GlassCard spotlightColor="rgba(139, 92, 246, 0.15)" className="p-5 flex flex-col justify-between h-full bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200 dark:border-[#00D4FF]/10">
       <div className="flex items-center justify-between gap-4">
         <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-white/40">{title}</span>
         <GlassIcon name={iconName} color={color} className="h-10 w-10 rounded-xl" />

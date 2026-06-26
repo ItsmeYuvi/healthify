@@ -139,7 +139,7 @@ export default function PlansHubPage() {
             placeholder="Search blueprints..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-2xl border border-white/[0.04] bg-[#141414] text-white placeholder-white/30 focus:outline-none focus:border-luxury-gold/50 focus:ring-1 focus:ring-luxury-gold/20 transition-all"
+            className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-2xl border  text-white placeholder-white/30 focus:outline-none focus:border-luxury-gold/50 focus:ring-1 focus:ring-luxury-gold/20 transition-all"
           />
         </div>
 
@@ -153,7 +153,7 @@ export default function PlansHubPage() {
                 className={`rounded-xl px-4 py-2 text-xs font-semibold border transition-all ${
                   activeFilter === goal
                     ? "bg-luxury-gold text-obsidian-base border-transparent shadow-md"
-                    : "bg-[#141414] border-white/[0.04] text-white/60 hover:bg-[#1e1e1e] hover:text-white"
+                    : " text-white/60 hover:bg-[#0C1A26]/80 hover:text-white"
                 }`}
               >
                 {GOAL_LABELS[goal] || goal.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
@@ -165,8 +165,8 @@ export default function PlansHubPage() {
 
       {/* Grid of Plans */}
       {filteredPlans.length === 0 ? (
-        <div className="glass-surface bg-[#141414] border-white/[0.04] flex flex-col items-center justify-center py-20 text-center space-y-4 rounded-3xl">
-          <div className="rounded-2xl bg-white/[0.02] p-4 border border-white/[0.04]">
+        <div className="glass-surface flex flex-col items-center justify-center py-20 text-center space-y-4 rounded-3xl">
+          <div className="rounded-2xl bg-white/[0.02] p-4 border border-[#00D4FF]/12">
             <ClipboardList className="h-10 w-10 text-white/20" />
           </div>
           <div className="space-y-1">
@@ -195,7 +195,7 @@ export default function PlansHubPage() {
               <div
                 key={plan.id}
                 onClick={() => router.push(`/plans/${plan.id}`)}
-                className="glass-surface bg-[#141414] border-white/[0.04] hover:border-luxury-gold/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex flex-col justify-between h-full p-6 rounded-3xl group text-left"
+                className="glass-surface hover:border-accent/35 hover:shadow-[0_0_15px_rgba(0,212,255,0.1)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex flex-col justify-between h-full p-6 rounded-3xl group text-left"
               >
                 <div className="space-y-4">
                   {/* Badge Row */}
@@ -229,7 +229,7 @@ export default function PlansHubPage() {
                   </div>
 
                   {/* Indicators */}
-                  <div className="grid grid-cols-2 gap-3 border-y border-white/[0.04] py-3 text-xs text-white/60">
+                  <div className="grid grid-cols-2 gap-3 border-y border-[#00D4FF]/12 py-3 text-xs text-white/60">
                     <div className="flex items-center gap-2">
                       <Dumbbell className="h-4 w-4 text-luxury-gold" />
                       <span>{workoutDaysCount} workouts</span>

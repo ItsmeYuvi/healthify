@@ -23,7 +23,7 @@ export function EmptyState({
 
   return (
     <GlassCard className="flex flex-col items-center justify-center py-16 text-center max-w-lg mx-auto bg-white/[0.01]">
-      <div className="rounded-2xl bg-white/[0.04] p-4 border border-white/10 mb-4 text-white/40">
+      <div className="rounded-2xl bg-white/[0.04] p-4 border border-[#00D4FF]/15 mb-4 text-white/40">
         {IconComponent && <IconComponent className="h-10 w-10" />}
       </div>
       <h3 className="text-lg font-bold text-white mb-2">{title}</h3>

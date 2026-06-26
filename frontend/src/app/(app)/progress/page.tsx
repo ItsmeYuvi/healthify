@@ -217,7 +217,7 @@ export default function ProgressTrackerPage() {
       {/* Main Grid Widgets */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {/* Weight Card */}
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
+        <div className="glass-surface p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Current Weight</h3>
             <Scale className="h-4 w-4 text-white/30" />
@@ -236,7 +236,7 @@ export default function ProgressTrackerPage() {
         </div>
 
         {/* Streak Card */}
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
+        <div className="glass-surface p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Active Streak</h3>
             <Flame className="h-4 w-4 text-white/30" />
@@ -251,7 +251,7 @@ export default function ProgressTrackerPage() {
         </div>
 
         {/* BMI Card */}
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
+        <div className="glass-surface p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Active BMI</h3>
             <UserCheck className="h-4 w-4 text-white/30" />
@@ -272,7 +272,7 @@ export default function ProgressTrackerPage() {
         </div>
 
         {/* Weight Delta */}
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
+        <div className="glass-surface p-6 rounded-3xl flex flex-col justify-between h-32 text-left relative overflow-hidden">
           <div className="flex items-center justify-between">
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold">Weight Delta</h3>
             <LineChart className="h-4 w-4 text-white/30" />
@@ -294,7 +294,7 @@ export default function ProgressTrackerPage() {
       {/* Expanded Progress Features Grid */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Calorie Budget Tracker */}
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-6 text-left flex flex-col justify-between">
+        <div className="glass-surface p-6 rounded-3xl space-y-6 text-left flex flex-col justify-between">
           <div className="space-y-1">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
               <Heart className="h-4 w-4 text-luxury-gold" /> Metabolic Calorie Balance
@@ -315,15 +315,15 @@ export default function ProgressTrackerPage() {
             </div>
             
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between border-b border-white/[0.03] pb-1.5">
+              <div className="flex justify-between border-b border-[#00D4FF]/10 pb-1.5">
                 <span className="text-white/45">Target Budget:</span>
                 <span className="font-semibold text-white">{targetCalories} kcal</span>
               </div>
-              <div className="flex justify-between border-b border-white/[0.03] pb-1.5">
+              <div className="flex justify-between border-b border-[#00D4FF]/10 pb-1.5">
                 <span className="text-white/45">Diet Logged:</span>
                 <span className="font-semibold text-white">{todayCalories} kcal</span>
               </div>
-              <div className="flex justify-between border-b border-white/[0.03] pb-1.5">
+              <div className="flex justify-between border-b border-[#00D4FF]/10 pb-1.5">
                 <span className="text-white/45">Calculated BMR:</span>
                 <span className="font-semibold text-white/70">{bmr ? bmr.toFixed(0) : "--"} kcal</span>
               </div>
@@ -345,7 +345,7 @@ export default function ProgressTrackerPage() {
         </div>
 
         {/* Water Intake Tracker */}
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-6 text-left flex flex-col justify-between">
+        <div className="glass-surface p-6 rounded-3xl space-y-6 text-left flex flex-col justify-between">
           <div className="space-y-1">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
               <Droplet className="h-4 w-4 text-luxury-gold" /> Daily Hydration Audit
@@ -366,21 +366,21 @@ export default function ProgressTrackerPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => handleWaterUpdate(250)}
-                className="p-3 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-luxury-gold/10 hover:border-luxury-gold/30 text-white flex flex-col items-center gap-1 cursor-pointer transition-all duration-300 active:scale-95"
+                className="p-3 rounded-2xl border border-[#00D4FF]/12 bg-white/[0.01] hover:bg-luxury-gold/10 hover:border-accent/35 hover:shadow-[0_0_15px_rgba(0,212,255,0.1)] text-white flex flex-col items-center gap-1 cursor-pointer transition-all duration-300 active:scale-95"
               >
                 <Plus className="h-4 w-4 text-luxury-gold" />
                 <span className="text-[9px] font-semibold text-luxury-gold uppercase tracking-wider">+250ml</span>
               </button>
               <button
                 onClick={() => handleWaterUpdate(500)}
-                className="p-3 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-luxury-gold/10 hover:border-luxury-gold/30 text-white flex flex-col items-center gap-1 cursor-pointer transition-all duration-300 active:scale-95"
+                className="p-3 rounded-2xl border border-[#00D4FF]/12 bg-white/[0.01] hover:bg-luxury-gold/10 hover:border-accent/35 hover:shadow-[0_0_15px_rgba(0,212,255,0.1)] text-white flex flex-col items-center gap-1 cursor-pointer transition-all duration-300 active:scale-95"
               >
                 <Plus className="h-4 w-4 text-luxury-gold" />
                 <span className="text-[9px] font-semibold text-luxury-gold uppercase tracking-wider">+500ml</span>
               </button>
               <button
                 onClick={() => handleWaterUpdate(-250)}
-                className="px-3 py-3 rounded-2xl border border-white/[0.04] bg-white/[0.01] hover:bg-red-500/10 text-white/40 hover:text-red-400 cursor-pointer transition-all active:scale-95"
+                className="px-3 py-3 rounded-2xl border border-[#00D4FF]/12 bg-white/[0.01] hover:bg-red-500/10 text-white/40 hover:text-red-400 cursor-pointer transition-all active:scale-95"
                 title="Remove 250ml"
               >
                 <span className="text-[10px] font-bold">-250</span>
@@ -406,14 +406,14 @@ export default function ProgressTrackerPage() {
       {/* Weight History Charts & Checkin */}
       <div className="grid gap-6 md:grid-cols-12 items-start">
         {/* Weight timeline graph */}
-        <div className="md:col-span-8 glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-6 text-left">
+        <div className="md:col-span-8 glass-surface p-6 rounded-3xl space-y-6 text-left">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
             <LineChart className="h-4 w-4 text-luxury-gold" /> Weight Timeline
           </h3>
 
           {logs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center space-y-2.5">
-              <div className="p-3 rounded-full bg-white/[0.01] border border-white/[0.04] text-white/20">
+              <div className="p-3 rounded-full bg-white/[0.01] border border-[#00D4FF]/12 text-white/20">
                 <LineChart className="h-6 w-6" />
               </div>
               <p className="text-xs text-white/40 max-w-[200px]">Log your weight to see progress curves.</p>
@@ -426,7 +426,7 @@ export default function ProgressTrackerPage() {
                   return (
                     <div key={log.id} className="flex-1 flex flex-col items-center group relative h-full justify-end">
                       {/* Tooltip */}
-                      <div className="absolute bottom-[105%] bg-[#121212] border border-white/10 text-white text-[9px] font-semibold py-1 px-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-lg">
+                      <div className="absolute bottom-[105%] bg-[#121212] border border-[#00D4FF]/15 text-white text-[9px] font-semibold py-1 px-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-lg">
                         {log.weight} kg
                       </div>
                       {/* Dot indicator */}
@@ -450,7 +450,7 @@ export default function ProgressTrackerPage() {
         </div>
 
         {/* Logger checkin */}
-        <div className="md:col-span-4 glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-4 text-left">
+        <div className="md:col-span-4 glass-surface p-6 rounded-3xl space-y-4 text-left">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
             <Scale className="h-4 w-4 text-luxury-gold" /> Check-in Baseline
           </h3>
@@ -488,14 +488,14 @@ export default function ProgressTrackerPage() {
 
       {/* Historical weight logs */}
       {logs.length > 0 && (
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-4 text-left">
+        <div className="glass-surface p-6 rounded-3xl space-y-4 text-left">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
             <Calendar className="h-4 w-4 text-luxury-gold" /> Historical Weights
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-white/[0.04] text-white/30 font-bold">
+                <tr className="border-b border-[#00D4FF]/12 text-white/30 font-bold">
                   <th className="py-2.5">Date Logged</th>
                   <th className="py-2.5">Weight Value</th>
                   <th className="py-2.5 text-right">Actions</th>

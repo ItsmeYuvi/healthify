@@ -165,7 +165,7 @@ export default function LogWorkoutPage() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-8 rounded-3xl text-left">
+        <div className="glass-surface p-6 md:p-8 space-y-8 rounded-3xl text-left">
           
           {/* Form Input for Name */}
           <div className="space-y-2">
@@ -189,7 +189,7 @@ export default function LogWorkoutPage() {
                   key={preset.name}
                   type="button"
                   onClick={() => handleAddPreset(preset)}
-                  className="relative overflow-hidden rounded-2xl h-16 border border-white/[0.04] bg-[#1a1a1a] p-3 text-left group transition-all duration-350 hover:border-luxury-gold/30 hover:-translate-y-0.5"
+                  className="relative overflow-hidden rounded-2xl h-16 border border-[#00D4FF]/12 bg-[#0C1A26]/80 p-3 text-left group transition-all duration-350 hover:border-accent/35 hover:shadow-[0_0_15px_rgba(0,212,255,0.1)] hover:-translate-y-0.5"
                 >
                   <img
                     src={preset.image}
@@ -208,7 +208,7 @@ export default function LogWorkoutPage() {
 
           {/* Exercise items */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-white/[0.04] pb-3">
+            <div className="flex items-center justify-between border-b border-[#00D4FF]/12 pb-3">
               <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5">
                 <Dumbbell className="h-4 w-4 text-luxury-gold" />
                 Exercise List
@@ -216,7 +216,7 @@ export default function LogWorkoutPage() {
               <button
                 type="button"
                 onClick={addExercise}
-                className="text-[10px] font-semibold text-luxury-gold hover:text-luxury-goldHover flex items-center gap-1 bg-luxury-gold/10 border border-luxury-gold/25 px-3 py-1.5 rounded-xl transition-all"
+                className="text-[10px] font-semibold text-luxury-gold hover:text-accent/80 flex items-center gap-1 bg-luxury-gold/10 border border-luxury-gold/25 px-3 py-1.5 rounded-xl transition-all"
               >
                 <Plus className="h-3.5 w-3.5" /> Add Exercise
               </button>
@@ -226,7 +226,7 @@ export default function LogWorkoutPage() {
               {exercises.map((ex, index) => (
                 <div
                   key={index}
-                  className="p-5 rounded-2xl border border-white/[0.03] bg-white/[0.01] space-y-4 relative group"
+                  className="p-5 rounded-2xl border border-[#00D4FF]/10 bg-white/[0.01] space-y-4 relative group"
                 >
                   {exercises.length > 1 && (
                     <button
@@ -293,7 +293,7 @@ export default function LogWorkoutPage() {
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-end pt-4 border-t border-white/[0.04] gap-3">
+          <div className="flex justify-end pt-4 border-t border-[#00D4FF]/12 gap-3">
             <Link href="/dashboard">
               <GlassButton variant="outline" className="text-xs px-6 py-2.5">
                 Cancel

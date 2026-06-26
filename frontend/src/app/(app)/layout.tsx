@@ -11,7 +11,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Silk />
 
       {/* Satisfying click spark feedback */}
-      <ClickSpark sparkColor="#8B5CF6" />
+      <ClickSpark sparkColor="#00D4FF" />
 
       {/* Secure layout wrapper */}
       <AppShell>{children}</AppShell>

@@ -87,14 +87,14 @@ export function TodaySummary() {
 
   if (loading) {
     return (
-      <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-center items-center h-[280px]">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-luxury-gold/20 border-t-luxury-gold" />
+      <div className="glass-surface p-6 flex flex-col justify-center items-center h-[280px]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent/20 border-t-accent" />
       </div>
     );
   }
 
   return (
-    <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-between h-full space-y-6">
+    <div className="glass-surface p-6 flex flex-col justify-between h-full space-y-6">
       <div className="space-y-4">
         <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-2">
           <Scale className="h-4 w-4 text-luxury-gold" />
@@ -103,15 +103,15 @@ export function TodaySummary() {
 
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
-            <p className="text-xs text-white/40 max-w-[200px]">You haven't logged any active sessions or nutrition entries today.</p>
+            <p className="text-xs text-[#7A9BB5] max-w-[200px]">You haven't logged any active sessions or nutrition entries today.</p>
             <div className="flex gap-2">
               <Link href="/log/workout">
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-3 py-1.5 rounded-lg bg-luxury-gold/10 text-luxury-gold border border-luxury-gold/20 hover:bg-luxury-gold/20 transition-all cursor-pointer">
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-3 py-1.5 rounded-lg bg-accent/10 text-accent border border-accent/20 hover:bg-accent/20 transition-all cursor-pointer">
                   <PlusCircle className="h-3 w-3" /> Log active
                 </span>
               </Link>
               <Link href="/log/meal">
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-3 py-1.5 rounded-lg bg-white/5 text-white/80 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-3 py-1.5 rounded-lg bg-transparent text-white border border-accent/20 hover:bg-accent/10 transition-all cursor-pointer">
                   <PlusCircle className="h-3 w-3" /> Log diet
                 </span>
               </Link>
@@ -122,16 +122,16 @@ export function TodaySummary() {
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-3 rounded-2xl border border-white/[0.03] bg-white/[0.01]"
+                className="flex items-center justify-between p-3 rounded-2xl border border-[#00D4FF]/10 bg-white/[0.01]"
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`p-2 rounded-lg border ${
                       item.type === "workout"
-                        ? "text-luxury-gold border-luxury-gold/20 bg-luxury-gold/10"
+                        ? "text-accent border-accent/20 bg-accent/10"
                         : item.type === "meal"
-                        ? "text-white/60 border-white/10 bg-white/5"
-                        : "text-white/40 border-white/5 bg-white/[0.02]"
+                        ? "text-white/60 border-[#00D4FF]/15 bg-white/5"
+                        : "text-white/40 border-[#00D4FF]/10 bg-white/[0.02]"
                     }`}
                   >
                     {item.type === "workout" && <Dumbbell className="h-4 w-4" />}
@@ -140,7 +140,7 @@ export function TodaySummary() {
                   </div>
                   <div>
                     <h4 className="font-serif text-xs text-white font-medium">{item.title}</h4>
-                    <p className="text-[10px] text-white/40 mt-0.5 leading-snug">{item.subtitle}</p>
+                    <p className="text-[10px] text-[#7A9BB5] mt-0.5 leading-snug">{item.subtitle}</p>
                   </div>
                 </div>
                 <span className="text-[10px] font-semibold text-white/30">{item.time}</span>

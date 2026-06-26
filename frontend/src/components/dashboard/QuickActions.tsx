@@ -49,7 +49,7 @@ export function QuickActions() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {ACTIONS.map((action) => {
           return (
-            <Link key={action.title} href={action.href} className="block group relative overflow-hidden rounded-3xl h-40 bg-[#141414] border border-white/[0.04] p-6 transition-all duration-350 hover:-translate-y-1 hover:border-luxury-gold/30 hover:shadow-[0_12px_30px_rgba(197,168,128,0.04)]">
+            <Link key={action.title} href={action.href} className="block group relative overflow-hidden rounded-3xl h-40 bg-[#0C1A26]/80 border border-[#00D4FF]/10 p-6 transition-all duration-350 hover:-translate-y-1 hover:border-accent/35 hover:shadow-[0_12px_30px_rgba(0,212,255,0.06)]">
               {/* High Resolution Photography Background */}
               <img
                 src={action.image}
@@ -57,20 +57,20 @@ export function QuickActions() {
                 className="absolute inset-0 object-cover w-full h-full opacity-15 mix-blend-luminosity group-hover:scale-105 group-hover:opacity-25 transition-all duration-700 pointer-events-none"
               />
               
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/90 via-[#0e0e0e]/40 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050A0F]/90 via-[#050A0F]/40 to-transparent pointer-events-none" />
 
               <div className="relative h-full flex flex-col justify-between z-10 text-left">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] uppercase tracking-widest text-luxury-gold font-medium">
                     {action.label}
                   </span>
-                  <ArrowUpRight className="h-4 w-4 text-white/30 group-hover:text-luxury-gold transition-colors duration-300" />
+                  <ArrowUpRight className="h-4 w-4 text-white/30 group-hover:text-[#00D4FF] transition-colors duration-300" />
                 </div>
                 <div className="space-y-1 mt-auto">
-                  <h4 className="font-serif text-lg text-white font-medium group-hover:text-luxury-gold transition-colors duration-300">
+                  <h4 className="font-serif text-lg text-white font-medium group-hover:text-[#00D4FF] transition-colors duration-300">
                     {action.title}
                   </h4>
-                  <p className="text-xs text-white/50 leading-relaxed font-light">{action.description}</p>
+                  <p className="text-xs text-[#7A9BB5] leading-relaxed font-light">{action.description}</p>
                 </div>
               </div>
             </Link>

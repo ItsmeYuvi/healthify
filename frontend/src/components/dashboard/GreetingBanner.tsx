@@ -40,7 +40,7 @@ export function GreetingBanner() {
   });
 
   return (
-    <div className="border-b border-white/[0.04] pb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <div className="border-b border-[#00D4FF]/12 pb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
       <div className="space-y-1.5">
         <span className="text-xs uppercase tracking-widest text-luxury-gold font-medium">Bespoke Wellness Dashboard</span>
         <h1 className="text-3xl md:text-5xl font-serif text-white tracking-tight">

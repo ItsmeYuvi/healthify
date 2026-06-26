@@ -219,8 +219,8 @@ export default function ProfileSettingsPage() {
 
       {/* Account Info Details (from /auth/me) */}
       {!isOnboarding && (
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 rounded-3xl space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-white/[0.04] pb-2">
+        <div className="glass-surface p-6 rounded-3xl space-y-4">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-[#00D4FF]/12 pb-2">
             <Settings className="h-4 w-4 text-luxury-gold" /> Account Settings
           </h3>
           <div className="grid gap-4 sm:grid-cols-2 text-xs">
@@ -238,8 +238,8 @@ export default function ProfileSettingsPage() {
 
       {/* Profile Metrics Form */}
       <form onSubmit={handleSave}>
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-6 rounded-3xl">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-white/[0.04] pb-2">
+        <div className="glass-surface p-6 md:p-8 space-y-6 rounded-3xl">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-[#00D4FF]/12 pb-2">
             <User className="h-4 w-4 text-luxury-gold" /> Physical Metrics
           </h3>
 
@@ -333,14 +333,14 @@ export default function ProfileSettingsPage() {
           </div>
 
           {/* Yoga Interest Toggle */}
-          <div className="flex items-start gap-3 p-4 rounded-2xl border border-white/[0.04] bg-[#0c0c0c]/40">
+          <div className="flex items-start gap-3 p-4 rounded-2xl border border-[#00D4FF]/12 bg-[#050A0F]/40">
             <input
               type="checkbox"
               name="yoga_interest"
               id="yoga_interest"
               checked={form.yoga_interest}
               onChange={handleChange}
-              className="h-4.5 w-4.5 rounded border-white/[0.04] bg-[#141414] text-luxury-gold accent-luxury-gold focus:ring-0 cursor-pointer mt-0.5"
+              className="h-4.5 w-4.5 rounded  text-luxury-gold accent-luxury-gold focus:ring-0 cursor-pointer mt-0.5"
             />
             <div>
               <label htmlFor="yoga_interest" className="text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer select-none">
@@ -352,7 +352,7 @@ export default function ProfileSettingsPage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-white/[0.04] gap-3">
+          <div className="flex justify-end pt-4 border-t border-[#00D4FF]/12 gap-3">
             {!isOnboarding && (
               <GlassButton type="button" variant="outline" onClick={handleLogout} className="text-xs font-bold text-red-400 border-red-500/10 hover:bg-red-500/5">
                 Sign Out

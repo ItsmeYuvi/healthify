@@ -118,7 +118,7 @@ export default function LogMealPage() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-6 rounded-3xl text-left">
+        <div className="glass-surface p-6 md:p-8 space-y-6 rounded-3xl text-left">
           
           {/* Quick Presets Panel */}
           <div className="space-y-3">
@@ -129,7 +129,7 @@ export default function LogMealPage() {
                   key={preset.name}
                   type="button"
                   onClick={() => handleSelectPreset(preset)}
-                  className="relative overflow-hidden rounded-2xl h-16 border border-white/[0.04] bg-[#1a1a1a] p-3 text-left group transition-all duration-350 hover:border-luxury-gold/30 hover:-translate-y-0.5"
+                  className="relative overflow-hidden rounded-2xl h-16 border border-[#00D4FF]/12 bg-[#0C1A26]/80 p-3 text-left group transition-all duration-350 hover:border-accent/35 hover:shadow-[0_0_15px_rgba(0,212,255,0.1)] hover:-translate-y-0.5"
                 >
                   <img
                     src={preset.image}
@@ -189,7 +189,7 @@ export default function LogMealPage() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-white/[0.04] pb-2">
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-1.5 border-b border-[#00D4FF]/12 pb-2">
               <Utensils className="h-4 w-4 text-luxury-gold" /> Macro Splits
             </h3>
             <div className="grid gap-4 grid-cols-3">
@@ -231,7 +231,7 @@ export default function LogMealPage() {
 
           {/* Quick macro visualizer */}
           {(protein || carbs || fats) && (
-            <div className="p-4 rounded-2xl border border-white/[0.03] bg-white/[0.01] space-y-1">
+            <div className="p-4 rounded-2xl border border-[#00D4FF]/10 bg-white/[0.01] space-y-1">
               <span className="text-[9px] font-semibold uppercase tracking-widest text-white/30">Macro Preview</span>
               <div className="flex gap-4 text-xs font-semibold text-white/60">
                 {protein && <div>Protein: <span className="text-luxury-gold">{protein}g</span></div>}
@@ -242,7 +242,7 @@ export default function LogMealPage() {
           )}
 
           {/* Actions */}
-          <div className="flex justify-end pt-4 border-t border-white/[0.04] gap-3">
+          <div className="flex justify-end pt-4 border-t border-[#00D4FF]/12 gap-3">
             <Link href="/dashboard">
               <GlassButton variant="outline" className="text-xs px-6 py-2.5">
                 Cancel

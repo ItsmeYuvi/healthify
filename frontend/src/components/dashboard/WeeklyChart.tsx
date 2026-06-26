@@ -71,14 +71,14 @@ export function WeeklyChart() {
 
   if (loading) {
     return (
-      <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-center items-center h-[280px]">
+      <div className="glass-surface p-6 flex flex-col justify-center items-center h-[280px]">
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-luxury-gold/20 border-t-luxury-gold" />
       </div>
     );
   }
 
   return (
-    <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-between h-full space-y-6">
+    <div className="glass-surface p-6 flex flex-col justify-between h-full space-y-6">
       <div className="space-y-6">
         {/* Header and Toggles */}
         <div className="flex items-center justify-between">
@@ -91,7 +91,7 @@ export function WeeklyChart() {
               onClick={() => setActiveTab("calories")}
               className={`text-[10px] font-semibold px-3 py-1 rounded-lg transition-colors ${
                 activeTab === "calories"
-                  ? "bg-luxury-gold text-[#0c0c0c] shadow-sm"
+                  ? "bg-accent text-darkBase shadow-sm"
                   : "text-white/60 hover:text-white"
               }`}
             >
@@ -101,7 +101,7 @@ export function WeeklyChart() {
               onClick={() => setActiveTab("workouts")}
               className={`text-[10px] font-semibold px-3 py-1 rounded-lg transition-colors ${
                 activeTab === "workouts"
-                  ? "bg-luxury-gold text-[#0c0c0c] shadow-sm"
+                  ? "bg-accent text-darkBase shadow-sm"
                   : "text-white/60 hover:text-white"
               }`}
             >
@@ -117,14 +117,14 @@ export function WeeklyChart() {
               const activeVal = activeTab === "calories" ? day.calories : day.workouts;
               const activeHeight = activeTab === "calories" ? day.calorieHeight : day.workoutHeight;
               
-              // Soft gold bars
-              const barColor = "bg-luxury-gold/15 border-luxury-gold/30 hover:bg-luxury-gold/30 hover:border-luxury-gold/50";
-              const glowColor = "rgba(197, 168, 128, 0.15)";
+              // Soft cyan bars
+              const barColor = "bg-accent/15 border-accent/30 hover:bg-accent/30 hover:border-accent/50";
+              const glowColor = "rgba(0, 212, 255, 0.15)";
 
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center group relative h-full justify-end">
                   {/* Tooltip on hover */}
-                  <div className="absolute bottom-[105%] bg-[#121212] border border-white/10 text-white text-[9px] font-semibold py-1 px-2 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-xl">
+                  <div className="absolute bottom-[105%] bg-[#121212] border border-[#00D4FF]/15 text-white text-[9px] font-semibold py-1 px-2 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-xl">
                     {activeVal} {activeTab === "calories" ? "kcal" : "workout(s)"}
                   </div>
 

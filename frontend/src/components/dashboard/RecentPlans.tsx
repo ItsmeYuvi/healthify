@@ -50,14 +50,14 @@ export function RecentPlans() {
 
   if (loading) {
     return (
-      <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-center items-center h-[280px]">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-luxury-gold/20 border-t-luxury-gold" />
+      <div className="glass-surface p-6 flex flex-col justify-center items-center h-[280px]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent/20 border-t-accent" />
       </div>
     );
   }
 
   return (
-    <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 flex flex-col justify-between h-full space-y-6">
+    <div className="glass-surface p-6 flex flex-col justify-between h-full space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-luxury-gold flex items-center gap-2">
@@ -65,7 +65,7 @@ export function RecentPlans() {
             Active Blueprints
           </h3>
           {plans.length > 0 && (
-            <Link href="/plans" className="text-xs font-bold text-luxury-gold hover:text-luxury-goldHover flex items-center gap-1">
+            <Link href="/plans" className="text-xs font-bold text-accent hover:text-accent/80 flex items-center gap-1">
               View All <ArrowRight className="h-3 w-3" />
             </Link>
           )}
@@ -73,12 +73,12 @@ export function RecentPlans() {
 
         {plans.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
-            <div className="p-3 rounded-xl bg-white/[0.01] border border-white/[0.04]">
-              <ClipboardList className="h-6 w-6 text-white/20" />
+            <div className="p-3 rounded-xl bg-[#0C1A26]/50 border border-[#00D4FF]/10">
+              <ClipboardList className="h-6 w-6 text-[#7A9BB5]/40" />
             </div>
-            <p className="text-xs text-white/40 max-w-[200px]">No fitness plans found. Let's create your first one.</p>
+            <p className="text-xs text-[#7A9BB5]/60 max-w-[200px]">No fitness plans found. Let's create your first one.</p>
             <Link href="/plans/create">
-              <span className="inline-flex items-center text-xs font-semibold px-4 py-2 rounded-xl bg-luxury-gold/15 text-luxury-gold border border-luxury-gold/30 hover:bg-luxury-gold/25 transition-all">
+              <span className="inline-flex items-center text-xs font-semibold px-4 py-2 rounded-xl bg-accent/15 text-accent border border-accent/30 hover:bg-accent/25 transition-all">
                 Generate Plan
               </span>
             </Link>
@@ -96,13 +96,13 @@ export function RecentPlans() {
                 <div
                   key={plan.id}
                   onClick={() => router.push(`/plans/${plan.id}`)}
-                  className="group flex items-center justify-between p-3.5 rounded-2xl border border-white/[0.03] bg-white/[0.01] hover:bg-white/[0.03] hover:border-luxury-gold/20 transition-all duration-300 cursor-pointer"
+                  className="group flex items-center justify-between p-3.5 rounded-2xl border border-[#00D4FF]/10 bg-white/[0.01] hover:bg-[#0C1A26]/60 hover:border-accent/30 transition-all duration-300 cursor-pointer"
                 >
                   <div className="space-y-1">
-                    <h4 className="font-serif text-sm text-white font-medium group-hover:text-luxury-gold transition-colors duration-300">
+                    <h4 className="font-serif text-sm text-white font-medium group-hover:text-accent transition-colors duration-300">
                       {plan.plan_name}
                     </h4>
-                    <div className="flex items-center gap-2 text-[10px] text-white/40">
+                    <div className="flex items-center gap-2 text-[10px] text-[#7A9BB5]">
                       <span>{GOAL_LABELS[plan.goal] || plan.goal}</span>
                       <span>•</span>
                       <span className="flex items-center gap-0.5">
@@ -111,7 +111,7 @@ export function RecentPlans() {
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <span className="px-2 py-0.5 rounded-lg text-[9px] font-bold bg-luxury-gold/10 text-luxury-gold border border-luxury-gold/15">
+                    <span className="px-2 py-0.5 rounded-lg text-[9px] font-bold bg-accent/10 text-accent border border-accent/15">
                       {workoutDaysCount} workouts
                     </span>
                   </div>

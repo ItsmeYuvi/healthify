@@ -170,7 +170,7 @@ export default function CreatePlanPage() {
       )}
 
       {loading ? (
-        <div className="glass-surface bg-[#141414] border-white/[0.04] p-12 text-center flex flex-col items-center justify-center space-y-6 rounded-3xl h-[400px]">
+        <div className="glass-surface p-12 text-center flex flex-col items-center justify-center space-y-6 rounded-3xl h-[400px]">
           <div className="relative">
             <div className="absolute inset-0 rounded-full blur-2xl bg-luxury-gold/10 animate-pulse" />
             <div className="h-14 w-14 rounded-2xl border border-luxury-gold/30 bg-luxury-gold/10 flex items-center justify-center text-luxury-gold animate-spin">
@@ -187,8 +187,8 @@ export default function CreatePlanPage() {
       ) : (
         <form onSubmit={handleSubmit}>
           {step === 1 && (
-            <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-6 rounded-3xl">
-              <div className="space-y-1.5 border-b border-white/[0.04] pb-4">
+            <div className="glass-surface p-6 md:p-8 space-y-6 rounded-3xl">
+              <div className="space-y-1.5 border-b border-[#00D4FF]/12 pb-4">
                 <span className="text-[9px] uppercase tracking-widest text-luxury-gold font-medium">Bespoke Wellness</span>
                 <h2 className="text-xl font-serif text-white font-light flex items-center gap-2">
                   <Scale className="h-5 w-5 text-luxury-gold" />
@@ -208,7 +208,7 @@ export default function CreatePlanPage() {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 ${
                         form.goal === g.value
                           ? "bg-luxury-gold/5 border-luxury-gold/50 text-white shadow-sm"
-                          : "bg-white/[0.01] border-white/[0.03] text-white/60 hover:bg-[#1c1c1c]"
+                          : "bg-white/[0.01] border-[#00D4FF]/10 text-white/60 hover:bg-[#0C1A26]/80"
                       }`}
                     >
                       <h4 className="font-semibold text-sm">{g.label}</h4>
@@ -260,7 +260,7 @@ export default function CreatePlanPage() {
                 />
               </div>
 
-              <div className="flex justify-end pt-4 border-t border-white/[0.04]">
+              <div className="flex justify-end pt-4 border-t border-[#00D4FF]/12">
                 <GlassButton variant="primary" onClick={handleNext} className="gap-1 text-xs font-semibold px-6 py-2.5">
                   Next Step <ArrowRight className="h-3.5 w-3.5" />
                 </GlassButton>
@@ -269,8 +269,8 @@ export default function CreatePlanPage() {
           )}
 
           {step === 2 && (
-            <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-6 rounded-3xl">
-              <div className="space-y-1.5 border-b border-white/[0.04] pb-4">
+            <div className="glass-surface p-6 md:p-8 space-y-6 rounded-3xl">
+              <div className="space-y-1.5 border-b border-[#00D4FF]/12 pb-4">
                 <span className="text-[9px] uppercase tracking-widest text-luxury-gold font-medium">Bespoke Wellness</span>
                 <h2 className="text-xl font-serif text-white font-light flex items-center gap-2">
                   <Dumbbell className="h-5 w-5 text-luxury-gold" />
@@ -290,7 +290,7 @@ export default function CreatePlanPage() {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 ${
                         form.activity_level === a.value
                           ? "bg-luxury-gold/5 border-luxury-gold/50 text-white shadow-sm"
-                          : "bg-white/[0.01] border-white/[0.03] text-white/60 hover:bg-[#1c1c1c]"
+                          : "bg-white/[0.01] border-[#00D4FF]/10 text-white/60 hover:bg-[#0C1A26]/80"
                       }`}
                     >
                       <h4 className="font-semibold text-sm">{a.label}</h4>
@@ -311,7 +311,7 @@ export default function CreatePlanPage() {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 ${
                         form.diet_preference === d.value
                           ? "bg-luxury-gold/5 border-luxury-gold/50 text-white shadow-sm"
-                          : "bg-white/[0.01] border-white/[0.03] text-white/60 hover:bg-[#1c1c1c]"
+                          : "bg-white/[0.01] border-[#00D4FF]/10 text-white/60 hover:bg-[#0C1A26]/80"
                       }`}
                     >
                       <h4 className="font-semibold text-sm">{d.label}</h4>
@@ -333,7 +333,7 @@ export default function CreatePlanPage() {
                       className={`flex-1 h-10 rounded-xl font-bold border transition-all text-xs flex items-center justify-center cursor-pointer ${
                         form.workout_days_per_week === day
                           ? "bg-luxury-gold border-transparent text-obsidian-base shadow-sm scale-[1.02]"
-                          : "bg-white/[0.01] border-white/[0.04] text-white/60 hover:bg-[#1c1c1c] hover:text-white"
+                          : "bg-white/[0.01] border-[#00D4FF]/12 text-white/60 hover:bg-[#0C1A26]/80 hover:text-white"
                       }`}
                     >
                       {day}
@@ -370,7 +370,7 @@ export default function CreatePlanPage() {
                 </div>
               </div>
 
-              <div className="flex justify-between pt-4 border-t border-white/[0.04]">
+              <div className="flex justify-between pt-4 border-t border-[#00D4FF]/12">
                 <GlassButton variant="outline" onClick={handleBack} className="gap-1 text-xs font-semibold px-6 py-2.5">
                   <ArrowLeft className="h-3.5 w-3.5" /> Back
                 </GlassButton>
@@ -382,8 +382,8 @@ export default function CreatePlanPage() {
           )}
 
           {step === 3 && (
-            <div className="glass-surface bg-[#141414] border-white/[0.04] p-6 md:p-8 space-y-6 rounded-3xl">
-              <div className="space-y-1.5 border-b border-white/[0.04] pb-4">
+            <div className="glass-surface p-6 md:p-8 space-y-6 rounded-3xl">
+              <div className="space-y-1.5 border-b border-[#00D4FF]/12 pb-4">
                 <span className="text-[9px] uppercase tracking-widest text-luxury-gold font-medium">Bespoke Wellness</span>
                 <h2 className="text-xl font-serif text-white font-light flex items-center gap-2">
                   <Heart className="h-5 w-5 text-luxury-gold" />
@@ -410,14 +410,14 @@ export default function CreatePlanPage() {
                 />
 
                 {/* Yoga Interest Toggle */}
-                <div className="flex items-start gap-3 p-4 rounded-2xl border border-white/[0.04] bg-[#0c0c0c]/40">
+                <div className="flex items-start gap-3 p-4 rounded-2xl border border-[#00D4FF]/12 bg-[#050A0F]/40">
                   <input
                     type="checkbox"
                     name="yoga_interest"
                     id="yoga_interest"
                     checked={form.yoga_interest}
                     onChange={handleChange}
-                    className="h-4.5 w-4.5 rounded border-white/[0.04] bg-[#141414] text-luxury-gold accent-luxury-gold focus:ring-0 cursor-pointer mt-0.5"
+                    className="h-4.5 w-4.5 rounded  text-luxury-gold accent-luxury-gold focus:ring-0 cursor-pointer mt-0.5"
                   />
                   <div>
                     <label htmlFor="yoga_interest" className="text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer select-none">
@@ -431,8 +431,8 @@ export default function CreatePlanPage() {
               </div>
 
               {/* Review summary info */}
-              <div className="p-4 rounded-2xl border border-white/[0.04] bg-[#0c0c0c]/40 space-y-2.5">
-                <h4 className="text-[9px] font-bold uppercase tracking-wider text-white/30 border-b border-white/[0.04] pb-1.5">Blueprint Summary</h4>
+              <div className="p-4 rounded-2xl border border-[#00D4FF]/12 bg-[#050A0F]/40 space-y-2.5">
+                <h4 className="text-[9px] font-bold uppercase tracking-wider text-white/30 border-b border-[#00D4FF]/12 pb-1.5">Blueprint Summary</h4>
                 <div className="grid grid-cols-2 gap-y-2 text-xs">
                   <div><span className="text-white/40">Goal:</span> <span className="font-semibold text-white/80">{GOALS.find((g) => g.value === form.goal)?.label}</span></div>
                   <div><span className="text-white/40">Activity:</span> <span className="font-semibold text-white/80">{ACTIVITY_LEVELS.find((a) => a.value === form.activity_level)?.label}</span></div>
@@ -441,7 +441,7 @@ export default function CreatePlanPage() {
                 </div>
               </div>
 
-              <div className="flex justify-between pt-4 border-t border-white/[0.04]">
+              <div className="flex justify-between pt-4 border-t border-[#00D4FF]/12">
                 <GlassButton variant="outline" onClick={handleBack} className="gap-1 text-xs font-semibold px-6 py-2.5">
                   <ArrowLeft className="h-3.5 w-3.5" /> Back
                 </GlassButton>

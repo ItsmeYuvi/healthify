@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,25 +9,31 @@
    ═══════════════════════════════════════════ */
 @layer base {
   :root {
-    --glass-bg: rgba(250, 246, 240, 0.85);
-    --glass-border: rgba(0, 0, 0, 0.06);
+    --font-inter: 'Inter', sans-serif;
+    --font-space: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --glass-bg: rgba(12, 26, 38, 0.7);
+    --glass-border: rgba(0, 212, 255, 0.15);
     --glass-brightness: 1.0;
     --glass-saturation: 1.0;
-    --text-primary: #1c1a17;
-    --text-secondary: #6b6359;
-    --text-tertiary: #9c9284;
-    --bg-canvas: #faf6f0;
+    --text-primary: #F0F4FF;
+    --text-secondary: #7A9BB5;
+    --text-tertiary: #5A7A95;
+    --bg-canvas: #050A0F;
   }
 
   .dark {
-    --glass-bg: rgba(20, 20, 20, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.05);
+    --font-inter: 'Inter', sans-serif;
+    --font-space: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --glass-bg: rgba(12, 26, 38, 0.7);
+    --glass-border: rgba(0, 212, 255, 0.15);
     --glass-brightness: 1.0;
     --glass-saturation: 1.0;
-    --text-primary: #f5f5f7;
-    --text-secondary: #a1a1aa;
-    --text-tertiary: #52525b;
-    --bg-canvas: #0c0c0c;
+    --text-primary: #F0F4FF;
+    --text-secondary: #7A9BB5;
+    --text-tertiary: #5A7A95;
+    --bg-canvas: #050A0F;
   }
 
   html {
@@ -40,11 +48,11 @@
   }
 
   h1, h2, h3, h4, h5, h6, .serif-heading {
-    font-family: var(--font-serif), Georgia, serif;
-    letter-spacing: -0.01em;
+    font-family: var(--font-space), sans-serif;
+    letter-spacing: 0.04em;
   }
 
-  /* Custom scrollbar matching quiet luxury aesthetic */
+  /* Custom scrollbar matching futuristic aesthetic */
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -52,20 +60,20 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(197, 168, 128, 0.15);
+    background: rgba(0, 212, 255, 0.15);
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(197, 168, 128, 0.35);
+    background: rgba(0, 212, 255, 0.35);
   }
 }
 
 @layer components {
-  /* ── Quiet Luxury Bento Card primitive ── */
+  /* ── Classy Futuristic Bento Card primitive ── */
   .glass-surface {
     background: var(--glass-bg);
-    backdrop-filter: blur(30px) saturate(var(--glass-saturation)) brightness(var(--glass-brightness));
-    -webkit-backdrop-filter: blur(30px) saturate(var(--glass-saturation)) brightness(var(--glass-brightness));
+    backdrop-filter: blur(16px) saturate(var(--glass-saturation)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(16px) saturate(var(--glass-saturation)) brightness(var(--glass-brightness));
     border: 1px solid var(--glass-border);
     @apply rounded-3xl p-6 shadow-glass-light dark:shadow-glass-dark transition-all duration-300;
   }
@@ -74,34 +82,34 @@
     @apply transition-all duration-300 ease-out;
   }
   .glass-surface-hover:hover {
-    border-color: rgba(197, 168, 128, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(197, 168, 128, 0.05);
+    border-color: rgba(0, 212, 255, 0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 212, 255, 0.1);
   }
 
-  /* ── Quiet Luxury Interactive Form Elements ── */
+  /* ── Classy Futuristic Interactive Form Elements ── */
   .glass-input {
-    @apply w-full rounded-xl px-4 py-3 text-sm transition-all duration-200 outline-none;
-    background: rgba(255, 255, 255, 0.01);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
+    @apply w-full rounded-[10px] px-4 py-3 text-sm transition-all duration-200 outline-none;
+    background: rgba(0, 212, 255, 0.04);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    color: #F0F4FF;
   }
   .glass-input:focus {
-    border-color: #c5a880;
-    box-shadow: 0 0 0 2px rgba(197, 168, 128, 0.1);
-    background: rgba(255, 255, 255, 0.03);
+    border-color: #00D4FF;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
+    background: rgba(0, 212, 255, 0.06);
   }
 
   .glass-select {
-    @apply w-full rounded-xl px-4 py-3 text-sm transition-all duration-200 outline-none appearance-none;
-    background: rgba(255, 255, 255, 0.01);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
+    @apply w-full rounded-[10px] px-4 py-3 text-sm transition-all duration-200 outline-none appearance-none;
+    background: rgba(0, 212, 255, 0.04);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    color: #F0F4FF;
   }
   .glass-select:focus {
-    border-color: #c5a880;
-    box-shadow: 0 0 0 2px rgba(197, 168, 128, 0.1);
-    background: rgba(255, 255, 255, 0.03);
+    border-color: #00D4FF;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
+    background: rgba(0, 212, 255, 0.06);
   }
 
   .glass-label {

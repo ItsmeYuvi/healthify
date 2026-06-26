@@ -80,7 +80,7 @@ export function StatsGrid({ plansCount }: StatsGridProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {/* ── BENTO 1: VITALITY SCORE (col-span-2) ── */}
-      <div className="glass-surface lg:col-span-2 flex flex-col md:flex-row items-center justify-between gap-8 bg-[#141414] border-white/[0.04] p-8 rounded-3xl relative overflow-hidden">
+      <div className="glass-surface lg:col-span-2 flex flex-col md:flex-row items-center justify-between gap-8 p-8 rounded-3xl relative overflow-hidden">
         <div className="space-y-4 max-w-md text-left z-10">
           <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-luxury-gold font-semibold">
             <Award className="h-4 w-4" /> Executive Biometrics
@@ -88,14 +88,14 @@ export function StatsGrid({ plansCount }: StatsGridProps) {
           <h2 className="text-2xl md:text-3xl font-serif text-white leading-tight">
             Holistic <span className="italic text-luxury-gold">Vitality Index</span>
           </h2>
-          <p className="text-sm text-white/50 leading-relaxed">
+          <p className="text-sm text-[#7A9BB5] leading-relaxed">
             A single, comprehensive score of your metabolic compliance, active streaks, training consistency, and diet balance.
           </p>
-          <div className="grid grid-cols-3 gap-4 pt-2 border-t border-white/[0.03]">
+          <div className="grid grid-cols-3 gap-4 pt-2 border-t border-[#00D4FF]/10">
             <div className="space-y-0.5">
               <span className="text-[10px] uppercase tracking-wider text-white/30 block">Active Streak</span>
               <span className="text-sm font-semibold text-white flex items-center gap-1">
-                <Flame className="h-3.5 w-3.5 text-luxury-gold fill-luxury-gold/10" /> {stats.streak} days
+                <Flame className="h-3.5 w-3.5 text-accent fill-accent/10" /> {stats.streak} days
               </span>
             </div>
             <div className="space-y-0.5">
@@ -128,7 +128,7 @@ export function StatsGrid({ plansCount }: StatsGridProps) {
               cx="50"
               cy="50"
               r={radius}
-              className="stroke-luxury-gold transition-all duration-1000 ease-out"
+              className="stroke-accent transition-all duration-1000 ease-out"
               strokeWidth="6"
               fill="transparent"
               strokeDasharray={circumference}
@@ -144,9 +144,9 @@ export function StatsGrid({ plansCount }: StatsGridProps) {
       </div>
 
       {/* ── BENTO 2: AI CONCIERGE (col-span-1) ── */}
-      <div className="glass-surface bg-[#141414] border-white/[0.04] p-8 rounded-3xl flex flex-col justify-between space-y-6 relative overflow-hidden">
+      <div className="glass-surface p-8 rounded-3xl flex flex-col justify-between space-y-6 relative overflow-hidden">
         {/* Ambient warm glow in background */}
-        <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-luxury-gold/5 blur-3xl pointer-events-none" />
+        <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-accent/5 blur-3xl pointer-events-none" />
 
         <div className="space-y-3 z-10">
           <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-luxury-gold font-semibold">
@@ -155,11 +155,11 @@ export function StatsGrid({ plansCount }: StatsGridProps) {
           <h3 className="text-xl font-serif text-white">Bespoke Wellness Advisory</h3>
         </div>
 
-        <p className="text-xs text-white/70 leading-relaxed italic font-light z-10 border-l border-luxury-gold/30 pl-4 py-1">
+        <p className="text-xs text-white/70 leading-relaxed italic font-light z-10 border-l border-accent/30 pl-4 py-1">
           "{conciergeMsg}"
         </p>
 
-        <div className="text-[10px] text-white/30 uppercase tracking-widest pt-2 border-t border-white/[0.03] z-10">
+        <div className="text-[10px] text-white/30 uppercase tracking-widest pt-2 border-t border-[#00D4FF]/10 z-10">
           Concierge Signature • Active Support
         </div>
       </div>

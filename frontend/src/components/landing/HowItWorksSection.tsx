@@ -46,33 +46,47 @@ export function HowItWorksSection() {
         {steps.map((s, idx) => {
           const Icon = s.icon;
           return (
-            <div
-              key={idx}
-              className="sticky top-28 transition-transform duration-300"
-              style={{
-                zIndex: idx + 10,
-                transform: `scale(${1 - (steps.length - 1 - idx) * 0.03})`,
-              }}
-            >
-              <div className="bg-[#141414] border border-white/[0.04] flex flex-col md:flex-row items-start md:items-center justify-between gap-8 py-8 md:py-10 px-8 md:px-12 rounded-3xl shadow-2xl relative overflow-hidden">
-                {/* Radial ambient gold glow in card background */}
-                <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-luxury-gold/5 blur-3xl pointer-events-none" />
-
-                <div className="space-y-4 max-w-xl text-left">
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-semibold text-luxury-gold px-3 py-1 bg-luxury-gold/10 border border-luxury-gold/20 rounded-lg uppercase tracking-wider">
-                      Stage {s.step}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-serif text-white tracking-tight">{s.title}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed font-light">{s.description}</p>
+            <React.Fragment key={idx}>
+              {idx > 0 && (
+                <div className="w-full flex justify-center py-2 relative z-0">
+                  <div className="h-10 w-0.5 border-l border-dashed border-[#00D4FF]/40" />
                 </div>
+              )}
+              <div
+                className="sticky top-28 transition-transform duration-300"
+                style={{
+                  zIndex: idx + 10,
+                  transform: `scale(${1 - (steps.length - 1 - idx) * 0.03})`,
+                }}
+              >
+                <div 
+                  className="bg-[#0C1A26]/80 border border-[#00D4FF]/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 py-8 md:py-10 px-8 md:px-12 rounded-3xl shadow-2xl relative overflow-hidden"
+                  style={{ borderLeft: "3px solid #C9A84C" }}
+                >
+                  {/* Watermark stage number */}
+                  <div className="absolute right-6 bottom-[-20px] text-[7rem] md:text-[9rem] font-mono font-bold text-[#00D4FF]/5 select-none pointer-events-none z-0">
+                    {s.step}
+                  </div>
 
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.01] border border-white/5 text-luxury-gold shrink-0 mx-auto md:mx-0 shadow-sm">
-                  <Icon className="h-6 w-6 text-luxury-gold" />
+                  {/* Radial ambient cyan glow in card background */}
+                  <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#00D4FF]/5 blur-3xl pointer-events-none" />
+
+                  <div className="space-y-4 max-w-xl text-left relative z-10">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] font-semibold text-[#00D4FF] px-3 py-1 bg-[#00D4FF]/10 border border-[#00D4FF]/20 rounded-lg uppercase tracking-wider font-mono">
+                        Stage {s.step}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-serif text-white tracking-tight">{s.title}</h3>
+                    <p className="text-sm text-[#7A9BB5] leading-relaxed font-light">{s.description}</p>
+                  </div>
+
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.01] border border-[#00D4FF]/10 text-[#00D4FF] shrink-0 mx-auto md:mx-0 shadow-sm relative z-10">
+                    <Icon className="h-6 w-6 text-[#00D4FF]" />
+                  </div>
                 </div>
               </div>
-            </div>
+            </React.Fragment>
           );
         })}
       </div>
